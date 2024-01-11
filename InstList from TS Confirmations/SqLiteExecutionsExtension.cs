@@ -646,6 +646,7 @@ namespace WindowsFormsApp1
                         percent.PercentReturn = Math.Round((double)((percent.P_LDividedByQty / marginToPoints) * 100), 1);
                     }
                 }
+                //  set source.InstrumentType to 'Stock' for working with TS confirmation reports
                 if (source.InstrumentType == "Stock")
                 {
                         //  Stocks use 4 to 1 leverage
