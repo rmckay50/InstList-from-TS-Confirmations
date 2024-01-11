@@ -647,6 +647,7 @@ namespace WindowsFormsApp1
                     }
                 }
                 //  set source.InstrumentType to 'Stock' for working with TS confirmation reports
+                source.InstrumentType = "Stock";
                 if (source.InstrumentType == "Stock")
                 {
                         //  Stocks use 4 to 1 leverage

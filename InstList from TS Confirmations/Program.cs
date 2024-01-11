@@ -15,7 +15,8 @@
  * 342 - 393    Create List<NTDrawLineForLINQtoCSV>'columnsWithAttributes' from nTDrawLine and save to file'
  *                  "@"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
  * 
- * 
+ * 2024 01 10
+ *  Everything works in creating csvNTDrawLine.csv exceptp printing to file
  */
 
 
