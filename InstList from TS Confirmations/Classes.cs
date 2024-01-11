@@ -24,6 +24,35 @@ namespace WindowsFormsApp1
             public int Qty { get; set; }
 
         }
+        public class CSV
+        {
+            //public int EntryId { get; set; }
+            public int EntryId { get; set; }                                                                //	class CSV
+            public string Name { get; set; }
+            public int FilledBy { get; set; }                                                               //	class CSV
+            public long? RemainingExits { get; set; }                                                         //	class CSV
+            public long? StartTimeTicks { get; set; }
+            public string StartTime { get; set; }
+            public double? Entry { get; set; }                                                               //	class CSV
+            public long? EndTimeTicks { get; set; }
+            public string EndTime { get; set; }
+            public double? Exit { get; set; }                                                                //	class CSV
+            public string Long_Short { get; set; }
+            public double P_L { get; set; }
+            public long? Qty { get; set; }                                                                    //	class CSV
+            public double? P_LDividedByQty { get; set; }
+            public double? PercentReturn { get; set; }
+            public double? DailyPercentTotal { get; set; }
+            public double? DailyDollarTotal { get; set; }
+            public int? TotalTrades { get; set; }
+
+
+            public IEnumerator GetEnumerator()                                                              //	class CSV
+            {
+                return (IEnumerator)this;                                                                       //	class CSV
+            }
+        }
+
         public class LinesJoined
         {
             //	Concatenate even lines to prior odd
@@ -166,6 +195,82 @@ namespace WindowsFormsApp1
                 Long_Short = long_Short;
             }
         }
+        public class Source
+        {
+            public int ActiveEntryId { get; set; }                                                          //	class source
+            public long? ActiveEntryRemaining { get; set; }                                                   //	class source
+            public double? ActiveEntryPrice { get; set; }                                                    //	class source
+            public bool IsReversal { get; set; }
+            public int Margin { get; set; }
+            public string InstrumentType { get; set; }
+            public string Name { get; set; }
+            public long PositionAfterReverse { get; set; }                                                   //	class source
+            public long RowOfReverse { get; set; }                                                           //	class source
+            public long Position { get; set; }                                                               //	class source
+            public double? StartingExitPrice { get; set; }                                                   //	class source
+            public int rowInTrades { get; set; }                                                            //	class source
+            public int RowInTrades { get; set; }                                                            //	class source
+            public long? ExitQty { get; set; }                                                                //	class source
+            public long? Remaining { get; set; }                                                              //	class source
+            public List<Trade> Trades { get; set; }                                                         //	class source
+            public List<CSV> Csv { get; set; }                                                              //	class source
+            public List<NTDrawLine> NTDrawLine { get; set; }
+
+        }
+        public class Trade
+        {
+            public int Id { get; set; }
+            public long ExecId { get; set; }                                                                     // 	class Trade
+            public string Name { get; set; }
+            public long? Position { get; set; }                                                                    // 	class Trade
+            public long? Qty { get; set; }                                                                    // 	class Trade
+            public bool? IsEntry { get; set; }                                                                 // 	class Trade
+            public bool? IsExit { get; set; }                                                                  // 	class Trade
+            public bool IsRev { get; set; }                                                                 // 	class Trade
+            public bool Matched { get; set; }                                                               // 	class Trade
+            public double? Price { get; set; }                                                               // 	class Trade
+            public long? Time { get; set; }
+            public string HumanTime { get; set; }
+            public long Instrument { get; set; }
+            public string Expiry { get; set; }
+            public double? P_L { get; set; }
+            public string Long_Short { get; set; }
+            public int TradeNo { get; set; }
+
+            public IEnumerator GetEnumerator()
+            {
+                return (IEnumerator)this;
+            }
+
+            public Trade() { }
+
+            //  Without int execId (second cstr, code runs
+            //  public Ret(int instId, int execId, string name, int? position, int? quantity, bool? isEntry, bool? isExit, double? price, long? time,
+            //	string humanTime, long instrument, string expiry, double? p_L, string long_Short)
+            public Trade(long execId, long? position, string name, long? qty, bool? isEntry, bool? isExit, double? price, long? time,
+                string humanTime, long instrument, string expiry, double? p_L, string long_Short)
+            {
+                //InstId = instId;
+                ExecId = execId;
+                Position = position;
+                Name = name;
+                Qty = qty;
+                IsEntry = isEntry;
+                IsExit = isExit;
+                Price = price;
+                Time = time;
+                HumanTime = humanTime;
+                Instrument = instrument;
+                Expiry = expiry;
+                P_L = p_L;
+                Long_Short = long_Short;
+            }
+
+            public Trade(int id)
+            {
+                Id = id;
+            }
+        }
         public class TradeStationCsv
         {
             public int Id { get; set; }
@@ -179,7 +284,6 @@ namespace WindowsFormsApp1
             public decimal P_L { get; set; }
             public decimal Cum_NetProfit { get; set; }
         }
-
         #endregion Classes 
 
     }
