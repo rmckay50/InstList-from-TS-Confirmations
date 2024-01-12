@@ -577,7 +577,12 @@ namespace WindowsFormsApp1
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
 
-
+            /**************************************************************************
+             * 
+             *                  Second Section
+             * 
+             * 
+             * ************************************************************************/
 
             //	Concat lines 
             lineCount = 0;
