@@ -652,7 +652,7 @@ namespace WindowsFormsApp1
                 {
                         //  Stocks use 4 to 1 leverage
                         var entryDividedByFour = (double)percent.Entry / 4;
-                        percent.PercentReturn = Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 1);
+                        percent.PercentReturn = Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
 
                 }
             }

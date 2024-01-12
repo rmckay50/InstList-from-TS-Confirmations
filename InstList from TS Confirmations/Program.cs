@@ -16,7 +16,7 @@
  *                  "@"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
  * 
  * 2024 01 10
- *  Everything works in creating csvNTDrawLine.csv exceptp printing to file
+ *  Everything works in creating csvNTDrawLine.csv except printing to file
  */
 
 
@@ -562,90 +562,17 @@ namespace WindowsFormsApp1
                                         };
             columnsWithAttributes.ToList();
 
-            //  bPlayback != true:
-            //      create CsvFileDescription
-            //      create and write to 'csvNTDrawline.csv'
-            //
-            //  bPlayback == true:
-            //      appendPlayback == true && firstPassAppend == true
-            //          create CsvFileDescription
-            //          create and write to 'csvNTDrawline.csv'
-            //          firstPassAppend = false
-            //      
-            //      appendPlayback == true && firstPassAppend == false ( second pass )
-            //          create CsvFileDescription with write headers set to false
-            //          append to 'csvNTDrawline.csv'
-            //  
-            //   'csvNTDrawline.csv' will start over each time script is reloaded
-            //
-            //  stored properties are:
-            //        Name                      Default  
-            //      storedDate                  01/01/2000
-            //      
 
-            //  settings.settings are stored in:
-            //      C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader.exe_Url_shzns1vopnf0i3cchzgtlapow3ck1y4r\8.1.1.7\user.config
-            //      C:\Users\Owner\Documents\NinjaTrader 8\bin\Custom\App.config
-            //      
-            //  set up date for persistence when reloading - the script variables are reset
-            //var storedDate = NinjaTrader.Custom.AddOns.Properties.Settings.Default.storedDate;
-            //var dateNow = DateTime.Now.ToString("MM/dd/yyyy");
-            //var firstPassAppend = Settings.Default.firstPassAppend;
-
-            //  if they are the same this is the first pass
-            //  append to csvNTDrawline
-            //if (storedDate != dateNow)
-            //{
-            //    Settings.Default.storedDate = DateTime.Now.ToString("MM/dd/yyyy");
-            //    Properties.Settings.Default.Save();
-            //}
             ////  write to csvNTDrawline if not in Playback mode
-            //if (parameters.BPlayback == false)
-            //{
-            //CsvFileDescription scvDescript = new CsvFileDescription();
-            //CsvContext cc = new CsvContext();
-            ////  write to parameters.OutputPath - normally cscNTDrawline
-            //cc.Write
-            //(
-            //columnsWithAttributes,
-            //"C:\\Data\\InstList.csv"
-            //);
-            //}
-            ////  this section is used when bPlayback is true
-            //else
-            //{
-            //    //  create and write to 'csvNTDrawline.csv'
-            //    if (parameters.AppendPlayback == true && firstPassAppend == true)
-            //    {
-            //        CsvFileDescription scvDescript = new CsvFileDescription();
-            //        CsvContext cc = new CsvContext();
-            //        //  write to parameters.OutputPath - normally cscNTDrawline
-            //        cc.Write
-            //        (
-            //        columnsWithAttributes,
-            //        parameters.OutputPath
-            //        );
-            //        //  set firstPass flag to false
-            //        Settings.Default.firstPassAppend = false;
-            //        Properties.Settings.Default.Save();
-            //    }
-            //    else if (parameters.AppendPlayback == true && firstPassAppend == false)
-            //    {
-            //        //  create a new file description that will does not use file headers
-            //        var csvDescAppend = new CsvFileDescription();
-            //        csvDescAppend.FirstLineHasColumnNames = false;
-            //        csvDescAppend.EnforceCsvColumnAttribute = true;
-            //        CsvContext ccApend = new CsvContext();
+                CsvFileDescription scvDescript = new CsvFileDescription();
+                CsvContext cc = new CsvContext();
+                //  write to parameters.OutputPath - normally cscNTDrawline
+                cc.Write
+                (
+                columnsWithAttributes,
+                @"C:\Data\InstList.csv"
+                );
 
-            //        //  write using StreamWriter to csvNTDrawline
-            //        //  fileName, true - true is append (now with no columns)
-            //        using (var stream = new StreamWriter(parameters.OutputPath, true))
-
-            //        {
-            //            ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
-            //        }
-            //    }
-            //}
             #endregion Use LINQtoCSV on combined list to write
 
 
@@ -764,6 +691,8 @@ namespace WindowsFormsApp1
             {
                 n.P_LDividedByQty = (double)n.P_L / n.Qty;
                 n.Percent = (double)n.P_L / (n.Qty) / (double)(n.StartY / 4);
+                n.Percent = (double?)Math.Round((double)n.Percent * 100, 2);
+                //Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
             }
 
             #endregion Fill in Percent Column and P_LDividedByQty
@@ -809,8 +738,8 @@ namespace WindowsFormsApp1
 
             #region Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website" + fileSelectedName + " TradeStation Results " + ".csv"
 
-            CsvFileDescription scvDescript = new CsvFileDescription();
-            CsvContext cc = new CsvContext();
+            //CsvFileDescription scvDescript = new CsvFileDescription();
+            //CsvContext cc = new CsvContext();
 
             //cc.Write
             //(
@@ -1066,7 +995,8 @@ public static class Extensions
             {
                 //Math.Round((double)((percent.P_LDividedByQty / marginToPoints) * 100), 1);
                 //nTDrawLine[iD - 1].DailyPercentTotal = runningTotal;
-                nTDrawLine[iD - 1].DailyPercentTotal = Math.Round((runningTotal * 100), 1);
+                //nTDrawLine[iD - 1].DailyPercentTotal = Math.Round((runningTotal * 100), 1);
+                nTDrawLine[iD - 1].DailyPercentTotal = runningTotal;
 
 
                 //  enter number of trades in TotalTrades
