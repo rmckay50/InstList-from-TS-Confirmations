@@ -9,6 +9,7 @@
  * 168 - 200    Split the strings in 'fullReport' so that they can be entered into List<Confirmation> splitFullReport
  * 201 - 202    Use Linq to sort 'fullReport' by Day and then timed into List<Confirmation> 'splitFullReport'
  * 203 - 224    Create variables that will be filled from the individual lines of 'orderedFullReport' List<Confirmation>
+ * 220          Order by time
  * 225 - 277    Create List<NTDrawline> 'listFromTwoLines' by selecting needed data from Bought/Sold lines
  * 284 - 307    Change "Bought/Sold" to "Long/Short" which is used by 'RecordAndDisplayTradesWithButtons'
  * 310 - 339    Create List<NTDrawLine> nTDrawLine from 'listFromTwoLines'  Fill in empty columns 
@@ -227,9 +228,10 @@ namespace WindowsFormsApp1
              * 
             /******************************************************************/
             List<Ret> instList = new List<Ret>();
-            foreach (Confirmation c in splitFullReport)
-            {
-                instList.Add(
+            //foreach (Confirmation c in splitFullReport)
+            foreach (Confirmation c in orderedFullReport)
+                {
+                    instList.Add(
                 new Ret
                 {
                     Account = 1,
@@ -536,7 +538,7 @@ namespace WindowsFormsApp1
 
             #endregion Create NTDrawLine list for use in saving to file and later in NT
 
-            #region Use LINQtoCSV on combined list to write
+            #region Use LINQtoCSV on combined list to write - Not adjusted for LIFO
             //  foreach through source.NTDrawLine to create list with correct order for cc.write
             //  uses 'NTDrawLineForLINQtoCSV' which has column attributes
             var columnsWithAttributes = from l in source.NTDrawLine
@@ -573,7 +575,7 @@ namespace WindowsFormsApp1
                 @"C:\Data\InstList.csv"
                 );
 
-            #endregion Use LINQtoCSV on combined list to write
+            #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
 
 
 
