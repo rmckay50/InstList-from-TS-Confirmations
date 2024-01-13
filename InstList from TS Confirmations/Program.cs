@@ -495,7 +495,7 @@ namespace WindowsFormsApp1
 
             #region foreach through .csv and add StartTimeTicks StartTime ExitTimeTicks ExitTime Long_Short
 
-            foreach (var csv in source.Csv) 
+            foreach (var csv in source.Csv)
             {
                 //	fill in blank spaces from workingTrades with time and tick//
 
@@ -574,200 +574,206 @@ namespace WindowsFormsApp1
                 columnsWithAttributes,
                 @"C:\Data\InstList.csv"
                 );
+                cc.Write
+                (
+                    columnsWithAttributes,
+                    @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
+                );
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
 
             /**************************************************************************
              * 
              *                  Second Section
+             *                  Causing problems with sold sold bot
              * 
              * 
              * ************************************************************************/
 
-            //	Concat lines 
-            lineCount = 0;
-            iD = 0;
-            bool playback = false;
-            string symbol = "";
-            string long_Short = "";
-            long startTimeTicks = 0;
-            string startTime = "";
-            double startY = 0;
-            long endTimeTicks = 0;
-            string endTime = "";
-            double endY = 0;
-            double p_L = 0;
-            int qty = 0;
-            double? p_LDividedByQty = 0;
-            double? percent = 0;
-            int? TotalTrades = 0;
-            int entryQty = 0;
-            int exitQty = 0;
-            List<NTDrawLine> listFromTwoLines = new List<NTDrawLine>();
-            //  Foreach through orderedFullReport and fill in rows for NTDrawLine
-            //  This will be used to access extensions
-            ////  Reset lineCount for 2nd pass
-            foreach (var l in orderedFullReport)
-            {
-                if (lineCount % 2 == 0)
-                {
-                    //	Save needed variable from entry
-                    iD = l.ID;
-                    symbol = l.Symbol;
-                    long_Short = l.Long_Short;
-                    startTimeTicks = l.TimeTicks;
-                    startTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
-                    startY = l.Price;
-                    qty = l.Qty;
-                    entryQty = l.Qty;
+            ////	Concat lines 
+            //lineCount = 0;
+            //iD = 0;
+            //bool playback = false;
+            //string symbol = "";
+            //string long_Short = "";
+            //long startTimeTicks = 0;
+            //string startTime = "";
+            //double startY = 0;
+            //long endTimeTicks = 0;
+            //string endTime = "";
+            //double endY = 0;
+            //double p_L = 0;
+            //int qty = 0;
+            //double? p_LDividedByQty = 0;
+            //double? percent = 0;
+            //int? TotalTrades = 0;
+            //int entryQty = 0;
+            //int exitQty = 0;
+            //List<NTDrawLine> listFromTwoLines = new List<NTDrawLine>();
+            ////  Foreach through orderedFullReport and fill in rows for NTDrawLine
+            ////  This will be used to access extensions
+            //////  Reset lineCount for 2nd pass
+            //foreach (var l in orderedFullReport)
+            //{
+            //    if (lineCount % 2 == 0)
+            //    {
+            //        //	Save needed variable from entry
+            //        iD = l.ID;
+            //        symbol = l.Symbol;
+            //        long_Short = l.Long_Short;
+            //        startTimeTicks = l.TimeTicks;
+            //        startTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
+            //        startY = l.Price;
+            //        qty = l.Qty;
+            //        entryQty = l.Qty;
 
-                }
-                else if (lineCount % 2 == 1)
-                {
-                    endTimeTicks = l.TimeTicks;
-                    endTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
-                    endY = l.Price;
-                    exitQty = l.Qty;
-                    var compareQuantities = entryQty - exitQty;
-                    if (compareQuantities != 0)
-                    {
-                        Console.WriteLine(" Check Quantities match");
-                        MessageBox.Show("Check Quantities Match");
+            //    }
+            //    else if (lineCount % 2 == 1)
+            //    {
+            //        endTimeTicks = l.TimeTicks;
+            //        endTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
+            //        endY = l.Price;
+            //        exitQty = l.Qty;
+            //        var compareQuantities = entryQty - exitQty;
+            //        if (compareQuantities != 0)
+            //        {
+            //            Console.WriteLine(" Check Quantities match");
+            //            MessageBox.Show("Check Quantities Match");
 
-                    }
-                    listFromTwoLines.Add(
-                    new NTDrawLine
-                    {
-                        Id = iD,
-                        Playback = false,
-                        Symbol = symbol,
-                        Long_Short = long_Short,
-                        StartTimeTicks = startTimeTicks,
-                        StartTime = startTime,
-                        StartY = startY,
-                        EndTimeTicks = endTimeTicks,
-                        EndTime = endTime,
-                        EndY = endY,
-                        P_L = p_L,
-                        Qty = qty
+            //        }
+            //        listFromTwoLines.Add(
+            //        new NTDrawLine
+            //        {
+            //            Id = iD,
+            //            Playback = false,
+            //            Symbol = symbol,
+            //            Long_Short = long_Short,
+            //            StartTimeTicks = startTimeTicks,
+            //            StartTime = startTime,
+            //            StartY = startY,
+            //            EndTimeTicks = endTimeTicks,
+            //            EndTime = endTime,
+            //            EndY = endY,
+            //            P_L = p_L,
+            //            Qty = qty
 
-                    }
-                    );
-                }
-                lineCount++;
-            }
-
-
-            #region List<NTDrawLIne> listFromTwoLines - Change 'Bought/Sold' to 'Long/Short'
-            // Foreach through list and change 'Bought/Sold' to 'Long/Short'
-            try
-            {
-                foreach (NTDrawLine n in listFromTwoLines)
-                {
-                    if (n.Long_Short == "Bought")
-                    {
-                        n.Long_Short = "Long";
-                    }
-                    if (n.Long_Short == "Sold")
-                    {
-                        n.Long_Short = "Short";
-                    }
+            //        }
+            //        );
+            //    }
+            //    lineCount++;
+            //}
 
 
-                }
-            }
-            catch
-            {
+            //#region List<NTDrawLIne> listFromTwoLines - Change 'Bought/Sold' to 'Long/Short'
+            //// Foreach through list and change 'Bought/Sold' to 'Long/Short'
+            //try
+            //{
+            //    foreach (NTDrawLine n in listFromTwoLines)
+            //    {
+            //        if (n.Long_Short == "Bought")
+            //        {
+            //            n.Long_Short = "Long";
+            //        }
+            //        if (n.Long_Short == "Sold")
+            //        {
+            //            n.Long_Short = "Short";
+            //        }
 
-            }
 
-            #endregion Change 'Bought/Sold' to Long/Short
+            //    }
+            //}
+            //catch
+            //{
 
-            #region Fill in P_L column and create nTDrawline
+            //}
 
-            listFromTwoLines.FillProfitLossColumnInTradesList();
-            //  Switch to nTDrawline to enable use of written Extensions
-            List<NTDrawLine> nTDrawLine = new List<NTDrawLine>();
-            nTDrawLine = listFromTwoLines.ToList();
+            //#endregion Change 'Bought/Sold' to Long/Short
 
-            #endregion Fill in P_L column and create nTDrawline
+            //#region Fill in P_L column and create nTDrawline
 
-            #region Fill in Percent Column and P_LDividedByQty
+            //listFromTwoLines.FillProfitLossColumnInTradesList();
+            ////  Switch to nTDrawline to enable use of written Extensions
+            //List<NTDrawLine> nTDrawLine = new List<NTDrawLine>();
+            //nTDrawLine = listFromTwoLines.ToList();
 
-            foreach (NTDrawLine n in nTDrawLine)
-            {
-                n.P_LDividedByQty = (double)n.P_L / n.Qty;
-                n.Percent = (double)n.P_L / (n.Qty) / (double)(n.StartY / 4);
-                n.Percent = (double?)Math.Round((double)n.Percent * 100, 2);
-                //Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
-            }
+            //#endregion Fill in P_L column and create nTDrawline
 
-            #endregion Fill in Percent Column and P_LDividedByQty
+            //#region Fill in Percent Column and P_LDividedByQty
 
-            #region Fill in DailyDollarTotal
+            //foreach (NTDrawLine n in nTDrawLine)
+            //{
+            //    n.P_LDividedByQty = (double)n.P_L / n.Qty;
+            //    n.Percent = (double)n.P_L / (n.Qty) / (double)(n.StartY / 4);
+            //    n.Percent = (double?)Math.Round((double)n.Percent * 100, 2);
+            //    //Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
+            //}
 
-            Extensions.FillDailyTotalColumn(nTDrawLine);
+            //#endregion Fill in Percent Column and P_LDividedByQty
 
-            #endregion Fill in DailyDollarTotal
+            //#region Fill in DailyDollarTotal
 
-            #region Fill in DailyPercentTotal
+            //Extensions.FillDailyTotalColumn(nTDrawLine);
 
-            Extensions.FillDailyPercentColumn(nTDrawLine);
+            //#endregion Fill in DailyDollarTotal
 
-            #endregion Fill in DailyPercentTotal
+            //#region Fill in DailyPercentTotal
 
-            #region Use LINQtoCSV on combined list to write
-            //  foreach through source.NTDrawLine to create list with correct order for cc.write
-            //  uses 'NTDrawLineForLINQtoCSV' which has column attributes
-            columnsWithAttributes = from l in nTDrawLine
-                                        select new NTDrawLineForLINQtoCSV
-                                        {
-                                            Id = l.Id,
-                                            Playback = false,
-                                            Symbol = l.Symbol,
-                                            Long_Short = l.Long_Short,
-                                            StartTimeTicks = l.StartTimeTicks,
-                                            StartTime = l.StartTime,
-                                            StartY = l.StartY,
-                                            EndTimeTicks = l.EndTimeTicks,
-                                            EndTime = l.EndTime,
-                                            EndY = l.EndY,
-                                            P_L = l.P_L,
-                                            Qty = l.Qty,
-                                            P_LDividedByQty = l.P_LDividedByQty,
-                                            Percent = l.Percent,
-                                            DailyPercentTotal = l.DailyPercentTotal,
-                                            DailyDollarTotal = l.DailyDollarTotal,
-                                            TotalTrades = l.TotalTrades
-                                        };
-            columnsWithAttributes.ToList();
-            #endregion Use LINQtoCSV on combined list to write
+            //Extensions.FillDailyPercentColumn(nTDrawLine);
 
-            #region Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website" + fileSelectedName + " TradeStation Results " + ".csv"
+            //#endregion Fill in DailyPercentTotal
 
-            //CsvFileDescription scvDescript = new CsvFileDescription();
-            //CsvContext cc = new CsvContext();
+            //#region Use LINQtoCSV on combined list to write
+            ////  foreach through source.NTDrawLine to create list with correct order for cc.write
+            ////  uses 'NTDrawLineForLINQtoCSV' which has column attributes
+            //columnsWithAttributes = from l in nTDrawLine
+            //                            select new NTDrawLineForLINQtoCSV
+            //                            {
+            //                                Id = l.Id,
+            //                                Playback = false,
+            //                                Symbol = l.Symbol,
+            //                                Long_Short = l.Long_Short,
+            //                                StartTimeTicks = l.StartTimeTicks,
+            //                                StartTime = l.StartTime,
+            //                                StartY = l.StartY,
+            //                                EndTimeTicks = l.EndTimeTicks,
+            //                                EndTime = l.EndTime,
+            //                                EndY = l.EndY,
+            //                                P_L = l.P_L,
+            //                                Qty = l.Qty,
+            //                                P_LDividedByQty = l.P_LDividedByQty,
+            //                                Percent = l.Percent,
+            //                                DailyPercentTotal = l.DailyPercentTotal,
+            //                                DailyDollarTotal = l.DailyDollarTotal,
+            //                                TotalTrades = l.TotalTrades
+            //                            };
+            //columnsWithAttributes.ToList();
+            //#endregion Use LINQtoCSV on combined list to write
 
+            //#region Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website" + fileSelectedName + " TradeStation Results " + ".csv"
+
+            ////CsvFileDescription scvDescript = new CsvFileDescription();
+            ////CsvContext cc = new CsvContext();
+
+            ////cc.Write
+            ////(
+            ////    nTDrawLine,
+            ////    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\csvNTDrawline.csv"
+            ////);
+
+            ////  Write results to ...\2023 12 05 TradeStation Results.cs
+            ////cc.Write
+            ////(
+            ////    nTDrawLine,
+            ////    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
+            ////);
             //cc.Write
             //(
-            //    nTDrawLine,
-            //    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\csvNTDrawline.csv"
+            //    columnsWithAttributes,
+            //    @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
             //);
 
-            //  Write results to ...\2023 12 05 TradeStation Results.cs
-            //cc.Write
-            //(
-            //    nTDrawLine,
-            //    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
-            //);
-            cc.Write
-            (
-                columnsWithAttributes,
-                @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
-            );
 
-
-            #endregion Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
+            //#endregion Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
 
 
         }
