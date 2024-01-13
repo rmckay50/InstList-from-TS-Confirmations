@@ -129,6 +129,8 @@ namespace WindowsFormsApp1
             //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
             fileSelectedName = fileSelected.Remove(0, 76);
 
+            fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
+
             //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
             //	Create new file name 'xxx Modified.csv'
             string filePathIDrive = fileSelected + " Modified.csv";
@@ -588,7 +590,7 @@ namespace WindowsFormsApp1
              *                  Causing problems with sold sold bot
              * 
              * 
-             * ************************************************************************/ 
+             * ************************************************************************/
 
             ////	Concat lines 
             //lineCount = 0;
