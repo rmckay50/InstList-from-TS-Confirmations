@@ -495,7 +495,7 @@ namespace WindowsFormsApp1
 
             #region foreach through .csv and add StartTimeTicks StartTime ExitTimeTicks ExitTime Long_Short
 
-            foreach (var csv in source.Csv)
+            foreach (var csv in source.Csv) 
             {
                 //	fill in blank spaces from workingTrades with time and tick//
 
