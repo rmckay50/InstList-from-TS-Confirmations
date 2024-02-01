@@ -14,7 +14,7 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
         public FileSource FileOrigin { get; set; }
-        public bool maleBtn { get; set; }
+        //public bool maleBtn { get; set; }
         public bool tSSource { get; set; }
         public Form1()
         {

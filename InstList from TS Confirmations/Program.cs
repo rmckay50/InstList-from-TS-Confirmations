@@ -18,6 +18,11 @@
  * 
  * 2024 01 10
  *  Everything works in creating csvNTDrawLine.csv except printing to file
+ *  
+ * 2024 01 31
+ *  Adding code to use 'Trade Station' selection in form
+ *  Use new branch - Activate Trade Station Button
+ *  Create property in Form1.cs (double click on radio button to access From1.cs)
  */
 
 
@@ -69,7 +74,7 @@ namespace WindowsFormsApp1
             //  Begins running a standard application message loop on the current thread, without a form.
             Application.Run(form);
             //bool fileSource = form.FileSource;
-            bool maleBtn = form.maleBtn;
+            //bool maleBtn = form.maleBtn;
 
             //  Get results of file source radio buttons
             FileSource fileSource = new FileSource();
