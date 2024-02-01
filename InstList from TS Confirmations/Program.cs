@@ -105,12 +105,12 @@ namespace WindowsFormsApp1
             {
                 //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
                 //Title = "Browse Trade Station .csv Files"
-                InitialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website",
+                InitialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 01 Jan\Downloads",
                 Title = "Browse Trade Station .csv Files"
 
                 //C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website
             };
-
+ 
             //	Show dialog
             var fileToOpen = openFileDialog.ShowDialog();
             //string fileSelected = openFileDialog.FileName.Dump();
