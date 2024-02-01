@@ -23,6 +23,11 @@
  *  Adding code to use 'Trade Station' selection in form
  *  Use new branch - Activate Trade Station Button
  *  Create property in Form1.cs (double click on radio button to access From1.cs)
+ *  Created string initialDirectory to choose which directory to open
+ *  After 'Concat lines from TS report into fullLine' need to create instList for TS App report and then
+ *      call extension instList.
+ *  In Ryzen - 2\WPFDemo.Read All Lines WinForms an instList can be created from subs[] -> instList = new List<Ret>()
+ *  
  */
 
 
@@ -108,33 +113,30 @@ namespace WindowsFormsApp1
             //DateTime endDST24 = new DateTime(2024, 11, 03);
             //  Set InitialDirectory to ...\Data from Website or ...C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis
             string initialDirectory = "";
+            string title = "";
             if (fileSource == FileSource.TSWebsite)
             {
                 initialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 01 Jan\Downloads";
+                title = "Select Confirmation From Website.csv";
             }
             if (fileSource == FileSource.TSApp)
             {
                 initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
+                title = "Select File Created by TradeStation App";
             }
 
-            //string initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
-
-            //if (fileSource == FileSource.TSWebsite)
-            //{
+            //  
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
             {
                 //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
                 //Title = "Browse Trade Station .csv Files"
-                //InitialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 01 Jan\Downloads",
                 InitialDirectory = initialDirectory,
-                Title = "Browse Trade Station .csv Files"
-                //C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website
+                Title = title
             };
-        //}
 
-        //	Show dialog
-        var fileToOpen = openFileDialog.ShowDialog();
+            //	Show dialog
+            var fileToOpen = openFileDialog.ShowDialog();
             //string fileSelected = openFileDialog.FileName.Dump();
             string fileSelected = openFileDialog.FileName;
 
