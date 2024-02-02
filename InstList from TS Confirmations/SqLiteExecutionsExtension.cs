@@ -214,7 +214,6 @@ namespace WindowsFormsApp1
             return source;
         }
 
-
         #endregion FillDailyPercentColumn
 
         #region FillDailyTotalColumn
