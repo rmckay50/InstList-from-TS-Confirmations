@@ -52,7 +52,6 @@ namespace WindowsFormsApp1
                 return (IEnumerator)this;                                                                       //	class CSV
             }
         }
-
         public class LinesJoined
         {
             //	Concatenate even lines to prior odd

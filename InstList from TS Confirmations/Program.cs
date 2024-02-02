@@ -119,11 +119,6 @@ namespace WindowsFormsApp1
                 initialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 01 Jan\Downloads";
                 title = "Select Confirmation From Website.csv";
             }
-            if (fileSource == FileSource.TSApp)
-            {
-                initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
-                title = "Select File Created by TradeStation App";
-            }
 
             //  
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
@@ -214,15 +209,16 @@ namespace WindowsFormsApp1
             string[] subs;
             int iD = 0;
             string timeOnly;
-            long priceInTicks;
+            long timeInTicks;
+            DateTime dt;
             foreach (var f in fullReport)
             {
 
                 subs = f.LinePlusLine.Split(' ');
-                var dt = DateTime.Parse(subs[0] + " " + subs[16]);
+                dt = DateTime.Parse(subs[0] + " " + subs[16]);
                 //  Convert to MST from EST
                 dt = dt.AddMinutes(-120);
-                priceInTicks = dt.Ticks;
+                timeInTicks = dt.Ticks;
                 //  Get time only for entry into list
                 timeOnly = dt.ToString("HH:mm:ss");
 
@@ -233,7 +229,7 @@ namespace WindowsFormsApp1
                     Symbol = subs[6],
                     TradeDate = subs[0],
                     TradeTime = timeOnly,
-                    TimeTicks = priceInTicks,
+                    TimeTicks = timeInTicks,
                     DTTradeTime = dt,
                     Price = Math.Round(Convert.ToDouble(subs[8]), 2),
                     Qty = Int32.Parse(subs[7])
@@ -273,6 +269,38 @@ namespace WindowsFormsApp1
             }
             instList.ToList();
             #endregion Concat lines from TS report 
+
+            if (fileSource == FileSource.TSApp)
+            {
+                initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
+                title = "Select File Created by TradeStation App";
+            }
+
+
+            #region Write and read instList.json
+            // 	Write List to .json file
+            string fileName = @"C:\Data\InstList.json";
+            //  set Serialize options
+            var options = new JsonSerializerOptions { WriteIndented = true };
+
+            //  Create Json string
+            string jsonString = JsonSerializer.Serialize(instList, options);
+
+            //  Write to C:\data\ArrowLines.json
+            //  Write arrowList to file
+            File.WriteAllText(fileName, jsonString);
+
+            //  Read file into 'jsonStringReturned'
+            var jsonStringReturned = File.ReadAllText(fileName);
+
+            //  Clear original list and deserialize into it - works
+            instList.Clear();
+            instList = System.Text.Json.JsonSerializer.Deserialize<List<Ret>>(jsonStringReturned);
+
+            //  Read file contents into Json format 'arrowLinesList'
+            var myDeserializedClass = System.Text.Json.JsonSerializer.Deserialize<List<Ret>>(jsonStringReturned);
+
+            #endregion Write and read instList.json
 
             #region Fill Position column
             //	Foreach through 'byTime' and fill in Position
@@ -370,30 +398,6 @@ namespace WindowsFormsApp1
             instList.Reverse();
             #endregion Fill Position column
 
-            #region Write and read instList.json
-            // 	Write List to .json file
-            string fileName = @"C:\Data\InstList.json";
-            //  set Serialize options
-            var options = new JsonSerializerOptions { WriteIndented = true };
-
-            //  Create Json string
-            string jsonString = JsonSerializer.Serialize(instList, options);
-
-            //  Write to C:\data\ArrowLines.json
-            //  Write arrowList to file
-            File.WriteAllText(fileName, jsonString);
-
-            //  Read file into 'jsonStringReturned'
-            var jsonStringReturned = File.ReadAllText(fileName);
-
-            //  Clear original list and deserialize into it - works
-            instList.Clear();
-            instList = System.Text.Json.JsonSerializer.Deserialize<List<Ret>>(jsonStringReturned);
-
-            //  Read file contents into Json format 'arrowLinesList'
-            var myDeserializedClass = System.Text.Json.JsonSerializer.Deserialize<List<Ret>>(jsonStringReturned);
-
-            #endregion Write and read instList.json
 
             #region Create List<Trade> workingTrades
             List<CSV> CSv = new List<CSV>();
@@ -608,203 +612,12 @@ namespace WindowsFormsApp1
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
 
-            /**************************************************************************
-             * 
-             *                  Second Section
-             *                  Causing problems with sold sold bot
-             * 
-             * 
-             * ************************************************************************/
-
-            ////	Concat lines 
-            //lineCount = 0;
-            //iD = 0;
-            //bool playback = false;
-            //string symbol = "";
-            //string long_Short = "";
-            //long startTimeTicks = 0;
-            //string startTime = "";
-            //double startY = 0;
-            //long endTimeTicks = 0;
-            //string endTime = "";
-            //double endY = 0;
-            //double p_L = 0;
-            //int qty = 0;
-            //double? p_LDividedByQty = 0;
-            //double? percent = 0;
-            //int? TotalTrades = 0;
-            //int entryQty = 0;
-            //int exitQty = 0;
-            //List<NTDrawLine> listFromTwoLines = new List<NTDrawLine>();
-            ////  Foreach through orderedFullReport and fill in rows for NTDrawLine
-            ////  This will be used to access extensions
-            //////  Reset lineCount for 2nd pass
-            //foreach (var l in orderedFullReport)
-            //{
-            //    if (lineCount % 2 == 0)
-            //    {
-            //        //	Save needed variable from entry
-            //        iD = l.ID;
-            //        symbol = l.Symbol;
-            //        long_Short = l.Long_Short;
-            //        startTimeTicks = l.TimeTicks;
-            //        startTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
-            //        startY = l.Price;
-            //        qty = l.Qty;
-            //        entryQty = l.Qty;
-
-            //    }
-            //    else if (lineCount % 2 == 1)
-            //    {
-            //        endTimeTicks = l.TimeTicks;
-            //        endTime = l.DTTradeTime.ToString("HH:mm:ss  MM/dd/yyy");
-            //        endY = l.Price;
-            //        exitQty = l.Qty;
-            //        var compareQuantities = entryQty - exitQty;
-            //        if (compareQuantities != 0)
-            //        {
-            //            Console.WriteLine(" Check Quantities match");
-            //            MessageBox.Show("Check Quantities Match");
-
-            //        }
-            //        listFromTwoLines.Add(
-            //        new NTDrawLine
-            //        {
-            //            Id = iD,
-            //            Playback = false,
-            //            Symbol = symbol,
-            //            Long_Short = long_Short,
-            //            StartTimeTicks = startTimeTicks,
-            //            StartTime = startTime,
-            //            StartY = startY,
-            //            EndTimeTicks = endTimeTicks,
-            //            EndTime = endTime,
-            //            EndY = endY,
-            //            P_L = p_L,
-            //            Qty = qty
-
-            //        }
-            //        );
-            //    }
-            //    lineCount++;
-            //}
-
-
-            //#region List<NTDrawLIne> listFromTwoLines - Change 'Bought/Sold' to 'Long/Short'
-            //// Foreach through list and change 'Bought/Sold' to 'Long/Short'
-            //try
-            //{
-            //    foreach (NTDrawLine n in listFromTwoLines)
-            //    {
-            //        if (n.Long_Short == "Bought")
-            //        {
-            //            n.Long_Short = "Long";
-            //        }
-            //        if (n.Long_Short == "Sold")
-            //        {
-            //            n.Long_Short = "Short";
-            //        }
-
-
-            //    }
-            //}
-            //catch
-            //{
-
-            //}
-
-            //#endregion Change 'Bought/Sold' to Long/Short
-
-            //#region Fill in P_L column and create nTDrawline
-
-            //listFromTwoLines.FillProfitLossColumnInTradesList();
-            ////  Switch to nTDrawline to enable use of written Extensions
-            //List<NTDrawLine> nTDrawLine = new List<NTDrawLine>();
-            //nTDrawLine = listFromTwoLines.ToList();
-
-            //#endregion Fill in P_L column and create nTDrawline
-
-            //#region Fill in Percent Column and P_LDividedByQty
-
-            //foreach (NTDrawLine n in nTDrawLine)
-            //{
-            //    n.P_LDividedByQty = (double)n.P_L / n.Qty;
-            //    n.Percent = (double)n.P_L / (n.Qty) / (double)(n.StartY / 4);
-            //    n.Percent = (double?)Math.Round((double)n.Percent * 100, 2);
-            //    //Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
-            //}
-
-            //#endregion Fill in Percent Column and P_LDividedByQty
-
-            //#region Fill in DailyDollarTotal
-
-            //Extensions.FillDailyTotalColumn(nTDrawLine);
-
-            //#endregion Fill in DailyDollarTotal
-
-            //#region Fill in DailyPercentTotal
-
-            //Extensions.FillDailyPercentColumn(nTDrawLine);
-
-            //#endregion Fill in DailyPercentTotal
-
-            //#region Use LINQtoCSV on combined list to write
-            ////  foreach through source.NTDrawLine to create list with correct order for cc.write
-            ////  uses 'NTDrawLineForLINQtoCSV' which has column attributes
-            //columnsWithAttributes = from l in nTDrawLine
-            //                            select new NTDrawLineForLINQtoCSV
-            //                            {
-            //                                Id = l.Id,
-            //                                Playback = false,
-            //                                Symbol = l.Symbol,
-            //                                Long_Short = l.Long_Short,
-            //                                StartTimeTicks = l.StartTimeTicks,
-            //                                StartTime = l.StartTime,
-            //                                StartY = l.StartY,
-            //                                EndTimeTicks = l.EndTimeTicks,
-            //                                EndTime = l.EndTime,
-            //                                EndY = l.EndY,
-            //                                P_L = l.P_L,
-            //                                Qty = l.Qty,
-            //                                P_LDividedByQty = l.P_LDividedByQty,
-            //                                Percent = l.Percent,
-            //                                DailyPercentTotal = l.DailyPercentTotal,
-            //                                DailyDollarTotal = l.DailyDollarTotal,
-            //                                TotalTrades = l.TotalTrades
-            //                            };
-            //columnsWithAttributes.ToList();
-            //#endregion Use LINQtoCSV on combined list to write
-
-            //#region Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website" + fileSelectedName + " TradeStation Results " + ".csv"
-
-            ////CsvFileDescription scvDescript = new CsvFileDescription();
-            ////CsvContext cc = new CsvContext();
-
-            ////cc.Write
-            ////(
-            ////    nTDrawLine,
-            ////    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\csvNTDrawline.csv"
-            ////);
-
-            ////  Write results to ...\2023 12 05 TradeStation Results.cs
-            ////cc.Write
-            ////(
-            ////    nTDrawLine,
-            ////    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
-            ////);
-            //cc.Write
-            //(
-            //    columnsWithAttributes,
-            //    @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
-            //);
-
-
-            //#endregion Write to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\" + fileSelectedName + " TradeStation Results " + ".csv"
 
 
         }
     }
 }
+
 //#region enums
 //public enum TimeAdjust
 //{
