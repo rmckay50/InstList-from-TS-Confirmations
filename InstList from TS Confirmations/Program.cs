@@ -392,6 +392,10 @@ namespace WindowsFormsApp1
                     {
                         exitTradeType = "Bought";
                     }
+                    if (subs[1] == "Sell Short")
+                    {
+                        entryTradeType = "Sold";
+                    }
                     //long = x.parse
                     instList.Add(
                         new Ret
