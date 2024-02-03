@@ -49,7 +49,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
-
+ 
 
 namespace WindowsFormsApp1
 {
