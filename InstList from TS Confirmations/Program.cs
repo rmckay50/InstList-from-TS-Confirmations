@@ -122,7 +122,7 @@ namespace WindowsFormsApp1
 
             if (fileSource == FileSource.TSWebsite)
             {
-                initialDirectory = @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 01 Jan\Downloads";
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
                 title = "Select Confirmation From Website.csv";
                 //}
 
@@ -151,7 +151,7 @@ namespace WindowsFormsApp1
 
                 //  Trim file path - keep name
                 //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 76);
+                fileSelectedName = fileSelected.Remove(0, 74);
 
                 fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
 
@@ -166,7 +166,7 @@ namespace WindowsFormsApp1
                 //File.WriteAllLines(filePathIDrive, linesToKeep);
                 #endregion Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
-                #region Concat lines from TS report into fullLine
+            #region Concat lines from TS report into fullLine
                 //	Save strings starting with the Id (int) and add to next string
                 string priorString = "";
                 char stringChar;
@@ -285,11 +285,12 @@ namespace WindowsFormsApp1
                 ////initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
                 //initialDirectory = @"C: \Users\Owner\IDrive - Sync\TradeManagerAnalysis";
                 //title = "Select File Created by TradeStation App";
-
+                //InitialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis",
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
                 {
-                    InitialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis",
+
+                    InitialDirectory = @"C:\Users\Rod\Cloud-Drive\TradeManagerAnalysis",
                     Title = "Browse Trade Station .csv Files"
                 };
 
@@ -309,7 +310,7 @@ namespace WindowsFormsApp1
 
                 //  Trim file path - keep name
                 //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 48);
+                fileSelectedName = fileSelected.Remove(0, 46);
 
                 //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
                 //	Create new file name 'xxx Modified.csv'
@@ -322,7 +323,7 @@ namespace WindowsFormsApp1
                 File.WriteAllLines(filePathIDrive, linesToKeep);
                 #endregion Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
-                #region Concat lines from TS report into fullLine
+            #region Concat lines from TS report into fullLine
                 //	Save strings starting with the Id (int) and add to next string
                 string priorString = "";
                 char stringChar;
@@ -772,7 +773,7 @@ namespace WindowsFormsApp1
                 cc.Write
                 (
                     columnsWithAttributes,
-                    @"C:\Users\Owner\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
+                    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
                 );
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
