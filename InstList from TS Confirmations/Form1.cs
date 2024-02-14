@@ -143,5 +143,10 @@ namespace WindowsFormsApp1
             }
 
         }
+
+        private void rbNTExport_CheckedChanged_1(object sender, EventArgs e)
+        {
+            int x = 0;
+        }
     }
 }

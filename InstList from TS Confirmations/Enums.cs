@@ -18,6 +18,7 @@ namespace WindowsFormsApp1
         }
         public enum FileSource
         {
+            NTExport,
             TSApp,
             TSWebsite
         }

@@ -441,6 +441,52 @@ namespace WindowsFormsApp1
             }
             #endregion Create instList 
 
+            #region Create instList from NT Export
+            if (fileSource == FileSource.NTExport)
+            {
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
+                title = "Select Export from NinjaTrader";
+                //}
+
+                //  
+                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+
+                {
+                    //InitialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports",
+                    //Title = "Select Export from NinjaTrader"
+                    InitialDirectory = initialDirectory,
+                    Title = title
+                };
+
+                //	Show dialog
+                var fileToOpen = openFileDialog.ShowDialog();
+                //string fileSelected = openFileDialog.FileName.Dump();
+                string fileSelected = openFileDialog.FileName;
+
+                //  Get actual file name without path
+
+                //	Query to get lines
+                //	First line is title line
+                int fileIndex = 0;
+                var linesToKeep = File.ReadLines(fileSelected).Where(l => l == l).ToList();
+
+                //	Remove 'NinjaTrader Grid' and '.csv'
+                fileSelected = fileSelected.Replace("NinjaTrader Grid ", "");
+                fileSelected = fileSelected.Replace(".csv", "");
+
+                //  Trim file path - keep name
+                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+                fileSelectedName = fileSelected.Remove(0, 96);
+
+
+
+            }
+
+            #endregion Create instList from NT Export
+
+
+
+
             #region Write and read instList.json
             // 	Write List to .json file
             string fileName = @"C:\Data\InstList.json";
