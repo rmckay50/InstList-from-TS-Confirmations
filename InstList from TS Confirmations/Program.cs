@@ -441,8 +441,6 @@ namespace WindowsFormsApp1
             }
             #endregion Create instList 
 
-
-
             #region Write and read instList.json
             // 	Write List to .json file
             string fileName = @"C:\Data\InstList.json";
@@ -563,7 +561,6 @@ namespace WindowsFormsApp1
             }
             instList.Reverse();
             #endregion Fill Position column
-
 
             #region Create List<Trade> workingTrades
             List<CSV> CSv = new List<CSV>();
