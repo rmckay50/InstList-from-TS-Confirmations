@@ -913,35 +913,7 @@ namespace WindowsFormsApp1
     }
 }
 
-//#region enums
-//public enum TimeAdjust
-//{
-//    PlusOne,
-//    None,
-//    SubtractOne,
-//    Unassigned
-//}
-//public enum FileSource
-//{
-//    TSApp,
-//    TSWebsite
-//}
-
-//#endregion enums
-//public class Confirmation
-//{
-//    public int ID { get; set; }
-//    public string Long_Short { get; set; }
-//    public string Symbol { get; set; }
-//    public string TradeDate { get; set; }
-//    public string TradeTime { get; set; }
-//    public long TimeTicks { get; set; }
-//    public DateTime DTTradeTime { get; set; }
-//    public double Price { get; set; }
-//    public int Qty { get; set; }
-
-//}
-
+/*
 public static class Extensions
 {
     public static List<NTDrawLine> FillProfitLossColumnInTradesList (this List<NTDrawLine> nTDrawLine)
@@ -1154,6 +1126,5 @@ public static class Extensions
 
         return nTDrawLine;
     }
-
-
 }
+*/
