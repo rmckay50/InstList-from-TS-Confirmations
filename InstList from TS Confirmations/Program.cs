@@ -45,6 +45,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static WindowsFormsApp1.Classes;
@@ -68,16 +69,16 @@ namespace WindowsFormsApp1
             #region Start form
             //  This method enables visual styles for the application.
             //  Visual styles are the colors, fonts, and other visual elements that form an operating system theme.
-            Application.EnableVisualStyles();
+            System.Windows.Forms.Application.EnableVisualStyles();
 
             //  Sets the application-wide default for the UseCompatibleTextRendering property defined on certain controls.
-            Application.SetCompatibleTextRenderingDefault(false);
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
             //  need to create form before calling it for return values
             Form1 form = new Form1();
 
             //  Begins running a standard application message loop on the current thread, without a form.
-            Application.Run(form);
+            System.Windows.Forms.Application.Run(form);
             //bool fileSource = form.FileSource;
             //bool maleBtn = form.maleBtn;
 
@@ -120,6 +121,7 @@ namespace WindowsFormsApp1
             string fileSelectedName = "";
             List<LinesJoined> fullLine = new List<LinesJoined>();
 
+            ////    TSWebsite
             if (fileSource == FileSource.TSWebsite)
             {
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
@@ -278,8 +280,8 @@ namespace WindowsFormsApp1
 
             #region Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
-
-           if (fileSource == FileSource.TSApp)
+            ////    TSApp
+            if (fileSource == FileSource.TSApp)
             {
 
                 ////initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
@@ -441,7 +443,11 @@ namespace WindowsFormsApp1
             }
             #endregion Create instList 
 
+            ////    NTExport
             #region Create instList from NT Export
+
+            //  Format is similar to TSApp - entry and exit is on same line
+            //  
             if (fileSource == FileSource.NTExport)
             {
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
@@ -478,8 +484,82 @@ namespace WindowsFormsApp1
                 //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
                 fileSelectedName = fileSelected.Remove(0, 96);
 
+                //  Remove '-' from date -> 2024 02 13
+                fileSelectedName = fileSelectedName.Replace("-", " ");
 
+                //  Create instList from list 'linesToKeep'
+                lineCount = 0;
+                //  Create instList to allow use of extensions
+                //  fullLine format is both entry and exit so split into two lines
+                //List<Ret> instList = new List<Ret>();
+                DateTime dtEntry;
+                DateTime dtExit;
 
+                long entryTimeInTicks;
+                long exitTimeInTicks;
+
+                //  Use Bought and Sold for transaction type to make instList work with existing code
+                string entryTradeType = "";
+                string exitTradeType = "";
+                //	Split lines into subs
+
+                foreach ( var line in linesToKeep) 
+                {
+                    //  Skip first line.
+                    if (lineCount == 0)
+                    {
+                        lineCount++;
+                        continue;
+                    }
+                    string[] subs;  //  = s.Split(' ', '.');
+                    string s = line;
+                    subs = s.Split(',');
+                    subs.ToList();
+                    var x = subs[7];                    
+                    dtEntry = DateTime.Parse(subs[8]);
+                    entryTimeInTicks = dtEntry.Ticks;
+                    dtExit = DateTime.Parse(subs[9]);
+                    exitTimeInTicks = dtExit.Ticks;
+
+                    //  Change Long / Short to Bought / Sold
+                    if (subs[4] == "Long")
+                    {
+                        entryTradeType = "Bought";
+                        exitTradeType = "Sold";
+                    }
+                    else if (subs[4] == "Short")
+                    {
+                        entryTradeType = "Sold";
+                        exitTradeType = "Bought";
+                    }
+
+                    //  Need to make two lines for each line in NT report
+                    instList.Add(
+                        new Ret
+                        {
+                            Account = 1,
+                            Name = subs[2],
+                            Quantity = (long?)Convert.ToInt64(subs[5]),
+                            Price = (double?)Decimal.Parse(subs[6]),
+                            Time = entryTimeInTicks,
+                            //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+                            HumanTime = dtEntry.ToString(),
+                            Long_Short = entryTradeType,
+                        });
+                    instList.Add(
+                    new Ret
+                    {
+                        Account = 1,
+                        Name = subs[2],
+                        Quantity = (long?)Convert.ToInt64(subs[5]),
+                        Price = (double?)Decimal.Parse(subs[6]),
+                        Time = entryTimeInTicks,
+                        //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+                        HumanTime = dtEntry.ToString(),
+                        Long_Short = entryTradeType,
+                    });
+
+                }
             }
 
             #endregion Create instList from NT Export
