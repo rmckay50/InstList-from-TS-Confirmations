@@ -841,7 +841,7 @@ namespace WindowsFormsApp1
             #endregion Fill in Percent Column
 
             #region Fill in Daily Percent Column
-
+             
             source.FillDailyPercentColumn();
             #endregion Fill in Daily Percent Column
 
