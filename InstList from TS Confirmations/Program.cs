@@ -538,24 +538,24 @@ namespace WindowsFormsApp1
                         new Ret
                         {
                             Account = 1,
-                            Name = subs[2],
+                            Name = subs[1],
                             Quantity = (long?)Convert.ToInt64(subs[5]),
                             Price = (double?)Decimal.Parse(subs[6]),
                             Time = entryTimeInTicks,
                             //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                            HumanTime = dtEntry.ToString(),
+                            HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
                             Long_Short = entryTradeType,
                         });
                     instList.Add(
                         new Ret
                         {
                             Account = 1,
-                            Name = subs[2],
+                            Name = subs[1],
                             Quantity = (long?)Convert.ToInt64(subs[5]),
                             Price = (double?)Decimal.Parse(subs[7]),
                             Time = entryTimeInTicks,
                             //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                            HumanTime = dtExit.ToString(),
+                            HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
                             Long_Short = exitTradeType,
                         });
 
