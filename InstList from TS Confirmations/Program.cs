@@ -120,10 +120,14 @@ namespace WindowsFormsApp1
             int lineCount = 0;
             string fileSelectedName = "";
             List<LinesJoined> fullLine = new List<LinesJoined>();
+            //  Used for location where file is to be written
+            //  Set in each of the different secions (TSApp, TSWebsite, NTExport)
+            string filePath = null;
 
             ////    TSWebsite
             if (fileSource == FileSource.TSWebsite)
             {
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
                 title = "Select Confirmation From Website.csv";
                 //}
@@ -153,8 +157,8 @@ namespace WindowsFormsApp1
 
                 //  Trim file path - keep name
                 //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 74);
-
+                //fileSelectedName = fileSelected.Remove(0, 74);
+                fileSelectedName = fileSelected.Remove(0, 96);
                 fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
 
                 //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
@@ -283,13 +287,9 @@ namespace WindowsFormsApp1
             ////    TSApp
             if (fileSource == FileSource.TSApp)
             {
-
-                ////initialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis";
-                //initialDirectory = @"C: \Users\Owner\IDrive - Sync\TradeManagerAnalysis";
-                //title = "Select File Created by TradeStation App";
-                //InitialDirectory = @"C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis",
+                //   C: \Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
-
                 {
 
                     InitialDirectory = @"C:\Users\Rod\Cloud-Drive\TradeManagerAnalysis",
@@ -450,6 +450,7 @@ namespace WindowsFormsApp1
             //  
             if (fileSource == FileSource.NTExport)
             {
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
                 title = "Select Export from NinjaTrader";
                 //}
@@ -893,10 +894,15 @@ namespace WindowsFormsApp1
                 columnsWithAttributes,
                 @"C:\Data\InstList.csv"
                 );
-                cc.Write
+            //  C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results
+            //  2024 02 15 Set file path in each section (TSApp, TSWebsite. NTExport)
+            //filePath = "C:\\Users\\Rod\\AppData\\Local\\NinjaTrader\\NinjaTrader Data\\Data from Website\\";
+            cc.Write
                 (
                     columnsWithAttributes,
-                    @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
+                    //@"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\" + fileSelectedName + " Confirmation Results" + ".csv"
+                    filePath + fileSelectedName + " Confirmation Results" + ".csv"
+
                 );
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
