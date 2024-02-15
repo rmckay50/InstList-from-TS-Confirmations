@@ -40,11 +40,11 @@
             this.btnSubmit = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.gbFileSource = new System.Windows.Forms.GroupBox();
+            this.rbNinjaTrader = new System.Windows.Forms.RadioButton();
             this.rbTSWebsite = new System.Windows.Forms.RadioButton();
             this.rbTradeStation = new System.Windows.Forms.RadioButton();
             this.lblDatePicker = new System.Windows.Forms.Label();
             this.lblAdjustForDST = new System.Windows.Forms.Label();
-            this.rbNinjaTrader = new System.Windows.Forms.RadioButton();
             this.groupBoxBefore.SuspendLayout();
             this.groupBoxAfter.SuspendLayout();
             this.gbFileSource.SuspendLayout();
@@ -55,7 +55,7 @@
             this.dateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimePicker1.Location = new System.Drawing.Point(80, 125);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(4);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(380, 38);
             this.dateTimePicker1.TabIndex = 2;
@@ -68,9 +68,9 @@
             this.groupBoxBefore.Controls.Add(this.radioButton1AddHour);
             this.groupBoxBefore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxBefore.Location = new System.Drawing.Point(1017, 125);
-            this.groupBoxBefore.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxBefore.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxBefore.Name = "groupBoxBefore";
-            this.groupBoxBefore.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxBefore.Padding = new System.Windows.Forms.Padding(4);
             this.groupBoxBefore.Size = new System.Drawing.Size(377, 198);
             this.groupBoxBefore.TabIndex = 7;
             this.groupBoxBefore.TabStop = false;
@@ -80,7 +80,7 @@
             // 
             this.radioButton1Subtract.AutoSize = true;
             this.radioButton1Subtract.Location = new System.Drawing.Point(20, 139);
-            this.radioButton1Subtract.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton1Subtract.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton1Subtract.Name = "radioButton1Subtract";
             this.radioButton1Subtract.Size = new System.Drawing.Size(288, 35);
             this.radioButton1Subtract.TabIndex = 7;
@@ -93,7 +93,7 @@
             // 
             this.radioButton1NoChange.AutoSize = true;
             this.radioButton1NoChange.Location = new System.Drawing.Point(20, 95);
-            this.radioButton1NoChange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton1NoChange.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton1NoChange.Name = "radioButton1NoChange";
             this.radioButton1NoChange.Size = new System.Drawing.Size(185, 35);
             this.radioButton1NoChange.TabIndex = 6;
@@ -106,7 +106,7 @@
             // 
             this.radioButton1AddHour.AutoSize = true;
             this.radioButton1AddHour.Location = new System.Drawing.Point(20, 49);
-            this.radioButton1AddHour.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton1AddHour.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton1AddHour.Name = "radioButton1AddHour";
             this.radioButton1AddHour.Size = new System.Drawing.Size(229, 35);
             this.radioButton1AddHour.TabIndex = 5;
@@ -122,9 +122,9 @@
             this.groupBoxAfter.Controls.Add(this.radioButton6);
             this.groupBoxAfter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxAfter.Location = new System.Drawing.Point(1017, 370);
-            this.groupBoxAfter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxAfter.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxAfter.Name = "groupBoxAfter";
-            this.groupBoxAfter.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxAfter.Padding = new System.Windows.Forms.Padding(4);
             this.groupBoxAfter.Size = new System.Drawing.Size(377, 198);
             this.groupBoxAfter.TabIndex = 8;
             this.groupBoxAfter.TabStop = false;
@@ -134,7 +134,7 @@
             // 
             this.radioButton4.AutoSize = true;
             this.radioButton4.Location = new System.Drawing.Point(44, 126);
-            this.radioButton4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton4.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(288, 35);
             this.radioButton4.TabIndex = 10;
@@ -146,7 +146,7 @@
             // 
             this.radioButton5.AutoSize = true;
             this.radioButton5.Location = new System.Drawing.Point(44, 82);
-            this.radioButton5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton5.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.Size = new System.Drawing.Size(185, 35);
             this.radioButton5.TabIndex = 9;
@@ -158,7 +158,7 @@
             // 
             this.radioButton6.AutoSize = true;
             this.radioButton6.Location = new System.Drawing.Point(44, 36);
-            this.radioButton6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton6.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton6.Name = "radioButton6";
             this.radioButton6.Size = new System.Drawing.Size(229, 35);
             this.radioButton6.TabIndex = 8;
@@ -170,7 +170,7 @@
             // 
             this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.Location = new System.Drawing.Point(276, 549);
-            this.btnSubmit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSubmit.Margin = new System.Windows.Forms.Padding(4);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(431, 91);
             this.btnSubmit.TabIndex = 11;
@@ -190,20 +190,34 @@
             this.gbFileSource.Controls.Add(this.rbTradeStation);
             this.gbFileSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.gbFileSource.Location = new System.Drawing.Point(80, 252);
-            this.gbFileSource.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbFileSource.Margin = new System.Windows.Forms.Padding(4);
             this.gbFileSource.Name = "gbFileSource";
-            this.gbFileSource.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbFileSource.Padding = new System.Windows.Forms.Padding(4);
             this.gbFileSource.Size = new System.Drawing.Size(449, 244);
             this.gbFileSource.TabIndex = 14;
             this.gbFileSource.TabStop = false;
             this.gbFileSource.Text = "File Source";
+            // 
+            // rbNinjaTrader
+            // 
+            this.rbNinjaTrader.AutoSize = true;
+            this.rbNinjaTrader.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.rbNinjaTrader.Location = new System.Drawing.Point(0, 65);
+            this.rbNinjaTrader.Margin = new System.Windows.Forms.Padding(4);
+            this.rbNinjaTrader.Name = "rbNinjaTrader";
+            this.rbNinjaTrader.Size = new System.Drawing.Size(290, 35);
+            this.rbNinjaTrader.TabIndex = 2;
+            this.rbNinjaTrader.TabStop = true;
+            this.rbNinjaTrader.Text = "NinjaTrader Export";
+            this.rbNinjaTrader.UseVisualStyleBackColor = true;
+            this.rbNinjaTrader.CheckedChanged += new System.EventHandler(this.rbNTExport_CheckedChanged_1);
             // 
             // rbTSWebsite
             // 
             this.rbTSWebsite.AutoSize = true;
             this.rbTSWebsite.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.rbTSWebsite.Location = new System.Drawing.Point(0, 175);
-            this.rbTSWebsite.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbTSWebsite.Margin = new System.Windows.Forms.Padding(4);
             this.rbTSWebsite.Name = "rbTSWebsite";
             this.rbTSWebsite.Size = new System.Drawing.Size(334, 35);
             this.rbTSWebsite.TabIndex = 1;
@@ -217,12 +231,12 @@
             this.rbTradeStation.AutoSize = true;
             this.rbTradeStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.rbTradeStation.Location = new System.Drawing.Point(0, 118);
-            this.rbTradeStation.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbTradeStation.Margin = new System.Windows.Forms.Padding(4);
             this.rbTradeStation.Name = "rbTradeStation";
-            this.rbTradeStation.Size = new System.Drawing.Size(221, 35);
+            this.rbTradeStation.Size = new System.Drawing.Size(280, 35);
             this.rbTradeStation.TabIndex = 0;
             this.rbTradeStation.TabStop = true;
-            this.rbTradeStation.Text = "Trade Station";
+            this.rbTradeStation.Text = "Trade Station App";
             this.rbTradeStation.UseVisualStyleBackColor = true;
             this.rbTradeStation.CheckedChanged += new System.EventHandler(this.rbTradeStation_CheckedChanged);
             // 
@@ -248,20 +262,6 @@
             this.lblAdjustForDST.TabIndex = 16;
             this.lblAdjustForDST.Text = "Adjust for DST";
             // 
-            // rbNinjaTrader
-            // 
-            this.rbNinjaTrader.AutoSize = true;
-            this.rbNinjaTrader.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
-            this.rbNinjaTrader.Location = new System.Drawing.Point(0, 65);
-            this.rbNinjaTrader.Margin = new System.Windows.Forms.Padding(4);
-            this.rbNinjaTrader.Name = "rbNinjaTrader";
-            this.rbNinjaTrader.Size = new System.Drawing.Size(290, 35);
-            this.rbNinjaTrader.TabIndex = 2;
-            this.rbNinjaTrader.TabStop = true;
-            this.rbNinjaTrader.Text = "NinjaTrader Export";
-            this.rbNinjaTrader.UseVisualStyleBackColor = true;
-            this.rbNinjaTrader.CheckedChanged += new System.EventHandler(this.rbNTExport_CheckedChanged_1);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -274,7 +274,7 @@
             this.Controls.Add(this.groupBoxAfter);
             this.Controls.Add(this.groupBoxBefore);
             this.Controls.Add(this.dateTimePicker1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.groupBoxBefore.ResumeLayout(false);
