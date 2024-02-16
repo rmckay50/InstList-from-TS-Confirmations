@@ -1247,7 +1247,7 @@ namespace WindowsFormsApp1
     }
 }
 //}
-
+ 
 /*
 public static class Extensions
 {
