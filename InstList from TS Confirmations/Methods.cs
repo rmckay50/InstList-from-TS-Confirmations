@@ -22,7 +22,7 @@ namespace InstList_from_TS_Confirmations
             ////    TSWebsite
             if (fileSource == FileSource.TSWebsite)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+                //filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
                 title = "Select Confirmation From Website.csv";
                 //}
@@ -192,7 +192,7 @@ namespace InstList_from_TS_Confirmations
 
             List<LinesJoined> fullLine = new List<LinesJoined>();
                 //   C: \Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+                //filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
                 {
 
@@ -359,7 +359,7 @@ namespace InstList_from_TS_Confirmations
         {
             List<Ret> instList = new List<Ret>();
 
-            filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
+            //filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
             initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
             title = "Select Export from NinjaTrader";
             //}

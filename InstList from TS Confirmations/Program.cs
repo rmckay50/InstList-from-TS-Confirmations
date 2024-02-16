@@ -70,17 +70,9 @@ namespace WindowsFormsApp1
     }
     public static class Program
     {
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
-            //List<NTDrawLine> nTDrawLines = new List<NTDrawLine>();
             #region Start form
             //  This method enables visual styles for the application.
             //  Visual styles are the colors, fonts, and other visual elements that form an operating system theme.
@@ -94,48 +86,11 @@ namespace WindowsFormsApp1
 
             //  Begins running a standard application message loop on the current thread, without a form.
             System.Windows.Forms.Application.Run(form);
-            //bool fileSource = form.FileSource;
-            //bool maleBtn = form.maleBtn;
 
             //  Get results of file source radio buttons
-            //FileSource fileSource = new FileSource();
             fileSource = form.FileOrigin;
-            //if (fileSource == FileSource.TSApp)
-            //{
-            //    MessageBox.Show("App is source");
-
-            //}
-            //else if (fileSource == FileSource.TSWebsite )
-            //    {
-            //    MessageBox.Show("Website is source");
-
-            //}
-            //bool tSApp = form.tSSource;
-            //  File dialog to get file from either ...App Data\NinjaTrader\NinjaTrader Data\Trade Station Confirmations
-            //  or ...C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis
-            //  Use fileSource to set InitialDirectory
-            //  
-            //maleB
             #endregion Start form
 
-
-            //  2023 DST Sun, Mar 12, 2023 2:00 AM - Sun, Nov 5, 2023 2:00
-            //DateTime startDST22 = new DateTime(2022, 03, 13);
-            //DateTime endDST22 = new DateTime(2022, 11, 06);
-            //DateTime startDST23 = new DateTime(2023, 03, 12);
-            //DateTime endDST23 = new DateTime(2023, 11, 05);
-            //DateTime startDST24 = new DateTime(2024, 03, 10);
-            //DateTime endDST24 = new DateTime(2024, 11, 03);
-            //  Set InitialDirectory to ...\Data from Website or ...C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis
-            //string initialDirectory = "";
-            //string title = "";
-
-            //List<Ret> instList = new List<Ret>();
-            //int lineCount = 0;
-            //string fileSelectedName = "";
-            //List<LinesJoined> fullLine = new List<LinesJoined>();
-            //  Used for location where file is to be written
-            //  Set in each of the different secions (TSApp, TSWebsite, NTExport)
             string filePath = null;
 
 
