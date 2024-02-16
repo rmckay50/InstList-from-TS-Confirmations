@@ -50,12 +50,28 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
- 
+using static WindowsFormsApp1.Variables;
+using static InstList_from_TS_Confirmations.Methods;
+
 
 namespace WindowsFormsApp1
 {
-    internal static class Program
+    public class Variables
     {
+        public static string filePath = null;
+        Form1 form = new Form1();
+        public static FileSource fileSource = new FileSource();
+        public static string initialDirectory = "";
+        public static string title = "";
+        public static string fileSelected = null;
+        public static string fileSelectedName = "";
+        public static int lineCount = 0;
+        //public static List<LinesJoined> fullLine = new List<LinesJoined>();
+        public static List<Ret> instList = new List<Ret>();
+    }
+    public static class Program
+    {
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -83,7 +99,7 @@ namespace WindowsFormsApp1
             //bool maleBtn = form.maleBtn;
 
             //  Get results of file source radio buttons
-            FileSource fileSource = new FileSource();
+            //FileSource fileSource = new FileSource();
             fileSource = form.FileOrigin;
             //if (fileSource == FileSource.TSApp)
             //{
@@ -103,7 +119,6 @@ namespace WindowsFormsApp1
             //maleB
             #endregion Start form
 
-            #region Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
             //  2023 DST Sun, Mar 12, 2023 2:00 AM - Sun, Nov 5, 2023 2:00
             //DateTime startDST22 = new DateTime(2022, 03, 13);
@@ -113,460 +128,485 @@ namespace WindowsFormsApp1
             //DateTime startDST24 = new DateTime(2024, 03, 10);
             //DateTime endDST24 = new DateTime(2024, 11, 03);
             //  Set InitialDirectory to ...\Data from Website or ...C:\Users\Owner\IDrive-Sync\TradeManagerAnalysis
-            string initialDirectory = "";
-            string title = "";
+            //string initialDirectory = "";
+            //string title = "";
 
-            List<Ret> instList = new List<Ret>();
-            int lineCount = 0;
-            string fileSelectedName = "";
-            List<LinesJoined> fullLine = new List<LinesJoined>();
+            //List<Ret> instList = new List<Ret>();
+            //int lineCount = 0;
+            //string fileSelectedName = "";
+            //List<LinesJoined> fullLine = new List<LinesJoined>();
             //  Used for location where file is to be written
             //  Set in each of the different secions (TSApp, TSWebsite, NTExport)
             string filePath = null;
 
-            ////    TSWebsite
+
             if (fileSource == FileSource.TSWebsite)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
-                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
-                title = "Select Confirmation From Website.csv";
-                //}
-
-                //  
-                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
-
-                {
-                    //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
-                    //Title = "Browse Trade Station .csv Files"
-                    InitialDirectory = initialDirectory,
-                    Title = title
-                };
-
-                //	Show dialog
-                var fileToOpen = openFileDialog.ShowDialog();
-                //string fileSelected = openFileDialog.FileName.Dump();
-                string fileSelected = openFileDialog.FileName;
-
-                //  Get actual file name without path
-
-                //	Query to get lines containg '$'	
-                var linesToKeep = File.ReadLines(fileSelected).Where(l => l.Contains("Principal") || l.Contains("Execution")).ToList();
-
-                //	Trim '.csv' from string
-                fileSelected = fileSelected.Replace("Confirmation From Website.csv", "");
-
-                //  Trim file path - keep name
-                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                //fileSelectedName = fileSelected.Remove(0, 74);
-                fileSelectedName = fileSelected.Remove(0, 96);
-                fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
-
-                //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
-                //	Create new file name 'xxx Modified.csv'
-                string filePathIDrive = fileSelected + " Modified.csv";
-
-                //	Write query to new file
-                //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
-                //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
-                //      and then closes the file. If the target file already exists, it is overwritten.' (string)
-                //File.WriteAllLines(filePathIDrive, linesToKeep);
-                #endregion Create FileDialog, display, read file into query, and create new class that will be useable by instList
-
-            #region Concat lines from TS report into fullLine
-                //	Save strings starting with the Id (int) and add to next string
-                string priorString = "";
-                char stringChar;
-                List<LinesJoined> fullReport = new List<LinesJoined>();
-                List<LinesJoined> lastPass = new List<LinesJoined>();
-
-                //  Confirmation format is:
-                //      01/05/2024 ... Bought ... TSLA ... 238.95
-                //          ... 10:02:44 ...
-                //      01/05/2024 ... Sold ... TSLA ... 238.46
-                //         ... 10:15:24 ...
-                //  Use lineCount from 0 to end of list
-                //  Increment lineCount after each line
-                //  If modulus division is 0 save line
-                //  If modulus division is 1 concat lines
-                //  First pass creates full Bought/Sold line and second pass results in 'Bought...Sold...'
-
-                foreach (var l in linesToKeep)
-                {
-                    //string myString = "dummy";
-                    //stringChar = l[0];
-                    //if (Char.IsDigit(l[0]))
-                    if (lineCount % 2 == 0)
-                    {
-                        //	Save line for 
-                        priorString = l;
-                        //Console.WriteLine(@$" First char is digit {l[0]}");
-                    }
-                    else if (lineCount % 2 == 1)
-                    {
-                        //Console.WriteLine(@$" Second char is char {l[0]}");
-                        fullLine.Add(new LinesJoined { LinePlusLine = priorString + " " + l });
-                    }
-                    lineCount++;
-                }
-                foreach (var l in fullLine)
-                {
-                    fullReport.Add(l);
-                }
-                fullReport = fullReport.ToList();
-
-                //  Create list using subs from fullReport to be used in sorting
-                List<Confirmation> splitFullReport = new List<Confirmation>();
-                string[] subs;
-                int iD = 0;
-                string timeOnly;
-                long timeInTicks;
-                DateTime dt;
-                foreach (var f in fullReport)
-                {
-
-                    subs = f.LinePlusLine.Split(' ');
-                    dt = DateTime.Parse(subs[0] + " " + subs[16]);
-                    //  Convert to MST from EST
-                    dt = dt.AddMinutes(-120);
-                    timeInTicks = dt.Ticks;
-                    //  Get time only for entry into list
-                    timeOnly = dt.ToString("HH:mm:ss");
-
-                    splitFullReport.Add(new Confirmation
-                    {
-                        ID = iD,
-                        Long_Short = subs[2],
-                        Symbol = subs[6],
-                        TradeDate = subs[0],
-                        TradeTime = timeOnly,
-                        TimeTicks = timeInTicks,
-                        DTTradeTime = dt,
-                        Price = Math.Round(Convert.ToDouble(subs[8]), 2),
-                        Qty = Int32.Parse(subs[7])
-                    });
-                    iD++;
-                    //list[0].TradeTime;
-                    //splitFullReport.Dump();
-                }
-                splitFullReport.ToList();
-                //var sortedByTime = list.OrderBy(l => l.TradeTime);
-                var orderedFullReport = splitFullReport.OrderBy(l => l.DTTradeTime.Day).ThenBy(l => l.DTTradeTime.TimeOfDay).ToList();
-
-                /******************************************************************
-                 * 
-                 *  Create List<Ret> instList here from orderedFullReport
-                 *  Need to include code for creating Position column
-                 * 
-                 * 
-                /******************************************************************/
-                //foreach (Confirmation c in splitFullReport)
-                foreach (Confirmation c in orderedFullReport)
-                {
-                    instList.Add(
-                    new Ret
-                    {
-                        Account = 1,
-                        Name = c.Symbol,
-                        Quantity = c.Qty,
-                        Price = c.Price,
-                        Time = c.TimeTicks,
-                        HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                        Long_Short = c.Long_Short,
-
-                    });
-                
-                }
-                instList.ToList();
+                instList = Website();
             }
-            #endregion Concat lines from TS report 
-
-            #region Create instList from TS App
-
-            #region Create FileDialog, display, read file into query, and create new class that will be useable by instList
-
-            ////    TSApp
-            if (fileSource == FileSource.TSApp)
+            else if (fileSource == FileSource.TSApp)
             {
-                //   C: \Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
-                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
-                {
+                instList = TSApp();
+            }
+            else if (fileSource == FileSource.NTExport)
+            {
+                instList = NTExport();
+            }
+            string stop = null;
 
-                    InitialDirectory = @"C:\Users\Rod\Cloud-Drive\TradeManagerAnalysis",
-                    Title = "Browse Trade Station .csv Files"
-                };
 
-                //	Show dialog
-                var fileToOpen = openFileDialog.ShowDialog();
-                //string fileSelected = openFileDialog.FileName.Dump();
-                string fileSelected = openFileDialog.FileName;
 
-                //  Get actual file name without path
-                //string fileSelectedName;
+            #region Website - instList
 
-                //	Query to get lines containg '$'	
-                var linesToKeep = File.ReadLines(fileSelected).Where(l => l.Contains("$")).ToList();
+            //////    TSWebsite
+            //if (fileSource == FileSource.TSWebsite)
+            //{
+            //    filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+            //    initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
+            //    title = "Select Confirmation From Website.csv";
+            //    //}
 
-                //	Trim '.csv' from string
-                fileSelected = fileSelected.Replace(".csv", "");
+            //    //  
+            //    System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
-                //  Trim file path - keep name
-                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 46);
+            //    {
+            //        //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
+            //        //Title = "Browse Trade Station .csv Files"
+            //        InitialDirectory = initialDirectory,
+            //        Title = title
+            //    };
 
-                //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
-                //	Create new file name 'xxx Modified.csv'
-                string filePathIDrive = fileSelected + " Modified.csv";
+            //    //	Show dialog
+            //    var fileToOpen = openFileDialog.ShowDialog();
+            //    //string fileSelected = openFileDialog.FileName.Dump();
+            //    string fileSelected = openFileDialog.FileName;
 
-                //	Write query to new file
-                //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
-                //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
-                //      and then closes the file. If the target file already exists, it is overwritten.' (string)
-                File.WriteAllLines(filePathIDrive, linesToKeep);
-                #endregion Create FileDialog, display, read file into query, and create new class that will be useable by instList
+            //    //  Get actual file name without path
 
-            #region Concat lines from TS report into fullLine
-                //	Save strings starting with the Id (int) and add to next string
-                string priorString = "";
-                char stringChar;
-                //List<LinesJoined> fullLine = new List<LinesJoined>();
+            //    //	Query to get lines containg '$'	
+            //    var linesToKeep = File.ReadLines(fileSelected).Where(l => l.Contains("Principal") || l.Contains("Execution")).ToList();
 
-                //	Keep only lines starting with a digit and concat with next line
-                foreach (var l in linesToKeep)
-                {
-                    //string myString = "dummy";
-                    stringChar = l[0];
-                    if (Char.IsDigit(l[0]))
-                    {
-                        //	Save line for 
-                        priorString = l;
-                        //Console.WriteLine(@$" First char is digit {l[0]}");
-                    }
-                    else
-                    {
-                        //Console.WriteLine(@$" Second char is char {l[0]}");
-                        fullLine.Add(new LinesJoined { LinePlusLine = priorString + l });
-                    }
-                }
-                fullLine =fullLine.ToList();
-                #endregion Concat lines from TS report 
+            //    //	Trim '.csv' from string
+            //    fileSelected = fileSelected.Replace("Confirmation From Website.csv", "");
+
+            //    //  Trim file path - keep name
+            //    //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+            //    //fileSelectedName = fileSelected.Remove(0, 74);
+            //    fileSelectedName = fileSelected.Remove(0, 96);
+            //    fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
+
+            //    //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
+            //    //	Create new file name 'xxx Modified.csv'
+            //    string filePathIDrive = fileSelected + " Modified.csv";
+
+            //    //	Write query to new file
+            //    //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
+            //    //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
+            //    //      and then closes the file. If the target file already exists, it is overwritten.' (string)
+            //    //File.WriteAllLines(filePathIDrive, linesToKeep);
+
+            //    #region Concat lines from TS report into fullLine
+            //    //	Save strings starting with the Id (int) and add to next string
+            //    string priorString = "";
+            //    char stringChar;
+            //    List<LinesJoined> fullReport = new List<LinesJoined>();
+            //    List<LinesJoined> lastPass = new List<LinesJoined>();
+
+            //    //  Confirmation format is:
+            //    //      01/05/2024 ... Bought ... TSLA ... 238.95
+            //    //          ... 10:02:44 ...
+            //    //      01/05/2024 ... Sold ... TSLA ... 238.46
+            //    //         ... 10:15:24 ...
+            //    //  Use lineCount from 0 to end of list
+            //    //  Increment lineCount after each line
+            //    //  If modulus division is 0 save line
+            //    //  If modulus division is 1 concat lines
+            //    //  First pass creates full Bought/Sold line and second pass results in 'Bought...Sold...'
+
+            //    foreach (var l in linesToKeep)
+            //    {
+            //        //string myString = "dummy";
+            //        //stringChar = l[0];
+            //        //if (Char.IsDigit(l[0]))
+            //        if (lineCount % 2 == 0)
+            //        {
+            //            //	Save line for 
+            //            priorString = l;
+            //            //Console.WriteLine(@$" First char is digit {l[0]}");
+            //        }
+            //        else if (lineCount % 2 == 1)
+            //        {
+            //            //Console.WriteLine(@$" Second char is char {l[0]}");
+            //            fullLine.Add(new LinesJoined { LinePlusLine = priorString + " " + l });
+            //        }
+            //        lineCount++;
+            //    }
+            //    foreach (var l in fullLine)
+            //    {
+            //        fullReport.Add(l);
+            //    }
+            //    fullReport = fullReport.ToList();
+
+            //    //  Create list using subs from fullReport to be used in sorting
+            //    List<Confirmation> splitFullReport = new List<Confirmation>();
+            //    string[] subs;
+            //    int iD = 0;
+            //    string timeOnly;
+            //    long timeInTicks;
+            //    DateTime dt;
+            //    foreach (var f in fullReport)
+            //    {
+
+            //        subs = f.LinePlusLine.Split(' ');
+            //        dt = DateTime.Parse(subs[0] + " " + subs[16]);
+            //        //  Convert to MST from EST
+            //        dt = dt.AddMinutes(-120);
+            //        timeInTicks = dt.Ticks;
+            //        //  Get time only for entry into list
+            //        timeOnly = dt.ToString("HH:mm:ss");
+
+            //        splitFullReport.Add(new Confirmation
+            //        {
+            //            ID = iD,
+            //            Long_Short = subs[2],
+            //            Symbol = subs[6],
+            //            TradeDate = subs[0],
+            //            TradeTime = timeOnly,
+            //            TimeTicks = timeInTicks,
+            //            DTTradeTime = dt,
+            //            Price = Math.Round(Convert.ToDouble(subs[8]), 2),
+            //            Qty = Int32.Parse(subs[7])
+            //        });
+            //        iD++;
+            //        //list[0].TradeTime;
+            //        //splitFullReport.Dump();
+            //    }
+            //    splitFullReport.ToList();
+            //    //var sortedByTime = list.OrderBy(l => l.TradeTime);
+            //    var orderedFullReport = splitFullReport.OrderBy(l => l.DTTradeTime.Day).ThenBy(l => l.DTTradeTime.TimeOfDay).ToList();
+
+            //    /******************************************************************
+            //     * 
+            //     *  Create List<Ret> instList here from orderedFullReport
+            //     *  Need to include code for creating Position column
+            //     * 
+            //     * 
+            //    /******************************************************************/
+            //    //foreach (Confirmation c in splitFullReport)
+            //    foreach (Confirmation c in orderedFullReport)
+            //    {
+            //        instList.Add(
+            //        new Ret
+            //        {
+            //            Account = 1,
+            //            Name = c.Symbol,
+            //            Quantity = c.Qty,
+            //            Price = c.Price,
+            //            Time = c.TimeTicks,
+            //            HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            //            Long_Short = c.Long_Short,
+
+            //        });
+
+            //    }
+            //    instList.ToList();
             //}
-            #endregion Create instList from TS App
+            //#endregion Concat lines from TS report 
 
-            #region Create instList 
-            //  Create instList to allow use of extensions
-            //  fullLine format is both entry and exit so split into two lines
-            //List<Ret> instList = new List<Ret>();
-            DateTime dtEntry;
-            DateTime dtExit;
+            #endregion Website - instList
 
-            long entryTimeInTicks;
-            long exitTimeInTicks;
+            #region TS App - instList Moved to Methods
 
-            //  Use Bought and Sold for transaction type to make instList work with existing code
-            string entryTradeType = "";
-            string exitTradeType = "";
-                //	Split lines into subs
+            //#region Create instList from TS App
 
-                foreach (LinesJoined sub in fullLine)
-                {
-                    string[] subs;  //  = s.Split(' ', '.');
-                    string s = sub.LinePlusLine;
-                    subs = s.Split(',');
-                    subs.ToList();
-                    var x = subs[7];
-                    dtEntry = DateTime.Parse(subs[2]);
-                    entryTimeInTicks = dtEntry.Ticks;
-                    dtExit = DateTime.Parse(subs[15]);
-                    exitTimeInTicks = dtExit.Ticks;
-                    if (subs[1] == "Buy")
-                    {
-                        entryTradeType = "Bought";
-                    }
-                    else if (subs[1] == "Sell")
-                    {
-                        entryTradeType = "Sold";
-                    }
-                    else if (subs[1] == "Sell Short")
-                    {
-                        entryTradeType = "Sold";
-                    }
-                    if (subs[14] == "Sell")
-                    {
-                        exitTradeType = "Sold";
-                    }
-                    else if (subs[14] == "Buy")
-                    {
-                        exitTradeType = "Bought";
-                    }
-                    else if (subs[14] == "Buy to Cover")
-                    {
-                        exitTradeType = "Bought";
-                    }
-                    //long = x.parse
-                    instList.Add(
-                        new Ret
-                        {
-                            Account = 1,
-                            Name = subs[4],
-                            Quantity = (long?)Convert.ToInt64(subs[7]),
+            //#region Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
-                            Price = (double?)Decimal.Parse(subs[5],
-                                NumberStyles.AllowCurrencySymbol |
-                                NumberStyles.AllowDecimalPoint |
-                                NumberStyles.AllowThousands,
-                                new CultureInfo("en-US")),
-                            Time = entryTimeInTicks,
-                            HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
-                            Long_Short = entryTradeType
-                        }
+            //////    TSApp
+            //if (fileSource == FileSource.TSApp)
+            //{
+            //    List<LinesJoined> fullLine = new List<LinesJoined>();
+            //    //   C: \Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results
+            //    filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+            //    System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+            //    {
 
-                        );
-                    instList.Add(
-                        new Ret
-                        {
-                            Account = 1,
-                            Name = subs[17],
-                            Quantity = (long?)Convert.ToInt64(subs[7]),
+            //        InitialDirectory = @"C:\Users\Rod\Cloud-Drive\TradeManagerAnalysis",
+            //        Title = "Browse Trade Station .csv Files"
+            //    };
 
-                            Price = (double?)Decimal.Parse(subs[18],
-                                NumberStyles.AllowCurrencySymbol |
-                                NumberStyles.AllowDecimalPoint |
-                                NumberStyles.AllowThousands,
-                                new CultureInfo("en-US")),
-                            Time = exitTimeInTicks,
-                            HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
-                            Long_Short = exitTradeType
-                        });
-                        
-                }
-            }
-            #endregion Create instList 
+            //    //	Show dialog
+            //    var fileToOpen = openFileDialog.ShowDialog();
+            //    //string fileSelected = openFileDialog.FileName.Dump();
+            //    string fileSelected = openFileDialog.FileName;
 
-            ////    NTExport
-            #region Create instList from NT Export
+            //    //  Get actual file name without path
+            //    //string fileSelectedName;
 
-            //  Format is similar to TSApp - entry and exit is on same line
-            //  
-            if (fileSource == FileSource.NTExport)
-            {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
-                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
-                title = "Select Export from NinjaTrader";
-                //}
+            //    //	Query to get lines containg '$'	
+            //    var linesToKeep = File.ReadLines(fileSelected).Where(l => l.Contains("$")).ToList();
 
-                //  
-                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+            //    //	Trim '.csv' from string
+            //    fileSelected = fileSelected.Replace(".csv", "");
 
-                {
-                    //InitialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports",
-                    //Title = "Select Export from NinjaTrader"
-                    InitialDirectory = initialDirectory,
-                    Title = title
-                };
+            //    //  Trim file path - keep name
+            //    //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+            //    fileSelectedName = fileSelected.Remove(0, 46);
 
-                //	Show dialog
-                var fileToOpen = openFileDialog.ShowDialog();
-                //string fileSelected = openFileDialog.FileName.Dump();
-                string fileSelected = openFileDialog.FileName;
+            //    //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
+            //    //	Create new file name 'xxx Modified.csv'
+            //    string filePathIDrive = fileSelected + " Modified.csv";
 
-                //  Get actual file name without path
+            //    //	Write query to new file
+            //    //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
+            //    //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
+            //    //      and then closes the file. If the target file already exists, it is overwritten.' (string)
+            //    File.WriteAllLines(filePathIDrive, linesToKeep);
+            //    #endregion Create FileDialog, display, read file into query, and create new class that will be useable by instList
 
-                //	Query to get lines
-                //	First line is title line
-                int fileIndex = 0;
-                var linesToKeep = File.ReadLines(fileSelected).Where(l => l == l).ToList();
+            //#region Concat lines from TS report into fullLine
+            //    //	Save strings starting with the Id (int) and add to next string
+            //    string priorString = "";
+            //    char stringChar;
+            //    //List<LinesJoined> fullLine = new List<LinesJoined>();
 
-                //	Remove 'NinjaTrader Grid' and '.csv'
-                fileSelected = fileSelected.Replace("NinjaTrader Grid ", "");
-                fileSelected = fileSelected.Replace(".csv", "");
+            //    //	Keep only lines starting with a digit and concat with next line
+            //    foreach (var l in linesToKeep)
+            //    {
+            //        //string myString = "dummy";
+            //        stringChar = l[0];
+            //        if (Char.IsDigit(l[0]))
+            //        {
+            //            //	Save line for 
+            //            priorString = l;
+            //            //Console.WriteLine(@$" First char is digit {l[0]}");
+            //        }
+            //        else
+            //        {
+            //            //Console.WriteLine(@$" Second char is char {l[0]}");
+            //            fullLine.Add(new LinesJoined { LinePlusLine = priorString + l });
+            //        }
+            //    }
+            //    fullLine =fullLine.ToList();
+            //    #endregion Concat lines from TS report 
+            ////}
+            //#endregion Create instList from TS App
 
-                //  Trim file path - keep name
-                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 96);
+            //#region Create instList 
+            ////  Create instList to allow use of extensions
+            ////  fullLine format is both entry and exit so split into two lines
+            ////List<Ret> instList = new List<Ret>();
+            //DateTime dtEntry;
+            //DateTime dtExit;
 
-                //  Remove '-' from date -> 2024 02 13
-                fileSelectedName = fileSelectedName.Replace("-", " ");
+            //long entryTimeInTicks;
+            //long exitTimeInTicks;
 
-                //  Create instList from list 'linesToKeep'
-                lineCount = 0;
-                //  Create instList to allow use of extensions
-                //  fullLine format is both entry and exit so split into two lines
-                //List<Ret> instList = new List<Ret>();
-                DateTime dtEntry;
-                DateTime dtExit;
+            ////  Use Bought and Sold for transaction type to make instList work with existing code
+            //string entryTradeType = "";
+            //string exitTradeType = "";
+            //    //	Split lines into subs
 
-                long entryTimeInTicks;
-                long exitTimeInTicks;
+            //    foreach (LinesJoined sub in fullLine)
+            //    {
+            //        string[] subs;  //  = s.Split(' ', '.');
+            //        string s = sub.LinePlusLine;
+            //        subs = s.Split(',');
+            //        subs.ToList();
+            //        var x = subs[7];
+            //        dtEntry = DateTime.Parse(subs[2]);
+            //        entryTimeInTicks = dtEntry.Ticks;
+            //        dtExit = DateTime.Parse(subs[15]);
+            //        exitTimeInTicks = dtExit.Ticks;
+            //        if (subs[1] == "Buy")
+            //        {
+            //            entryTradeType = "Bought";
+            //        }
+            //        else if (subs[1] == "Sell")
+            //        {
+            //            entryTradeType = "Sold";
+            //        }
+            //        else if (subs[1] == "Sell Short")
+            //        {
+            //            entryTradeType = "Sold";
+            //        }
+            //        if (subs[14] == "Sell")
+            //        {
+            //            exitTradeType = "Sold";
+            //        }
+            //        else if (subs[14] == "Buy")
+            //        {
+            //            exitTradeType = "Bought";
+            //        }
+            //        else if (subs[14] == "Buy to Cover")
+            //        {
+            //            exitTradeType = "Bought";
+            //        }
+            //        //long = x.parse
+            //        instList.Add(
+            //            new Ret
+            //            {
+            //                Account = 1,
+            //                Name = subs[4],
+            //                Quantity = (long?)Convert.ToInt64(subs[7]),
 
-                //  Use Bought and Sold for transaction type to make instList work with existing code
-                string entryTradeType = "";
-                string exitTradeType = "";
-                //	Split lines into subs
+            //                Price = (double?)Decimal.Parse(subs[5],
+            //                    NumberStyles.AllowCurrencySymbol |
+            //                    NumberStyles.AllowDecimalPoint |
+            //                    NumberStyles.AllowThousands,
+            //                    new CultureInfo("en-US")),
+            //                Time = entryTimeInTicks,
+            //                HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                Long_Short = entryTradeType
+            //            }
 
-                foreach ( var line in linesToKeep) 
-                {
-                    //  Skip first line.
-                    if (lineCount == 0)
-                    {
-                        lineCount++;
-                        continue;
-                    }
-                    string[] subs;  //  = s.Split(' ', '.');
-                    string s = line;
-                    subs = s.Split(',');
-                    subs.ToList();
-                    var x = subs[7];                    
-                    dtEntry = DateTime.Parse(subs[8]);
-                    entryTimeInTicks = dtEntry.Ticks;
-                    dtExit = DateTime.Parse(subs[9]);
-                    exitTimeInTicks = dtExit.Ticks;
+            //            );
+            //        instList.Add(
+            //            new Ret
+            //            {
+            //                Account = 1,
+            //                Name = subs[17],
+            //                Quantity = (long?)Convert.ToInt64(subs[7]),
 
-                    //  Change Long / Short to Bought / Sold
-                    if (subs[4] == "Long")
-                    {
-                        entryTradeType = "Bought";
-                        exitTradeType = "Sold";
-                    }
-                    else if (subs[4] == "Short")
-                    {
-                        entryTradeType = "Sold";
-                        exitTradeType = "Bought";
-                    }
+            //                Price = (double?)Decimal.Parse(subs[18],
+            //                    NumberStyles.AllowCurrencySymbol |
+            //                    NumberStyles.AllowDecimalPoint |
+            //                    NumberStyles.AllowThousands,
+            //                    new CultureInfo("en-US")),
+            //                Time = exitTimeInTicks,
+            //                HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                Long_Short = exitTradeType
+            //            });
 
-                    //  Need to make two lines for each line in NT report
-                    instList.Add(
-                        new Ret
-                        {
-                            Account = 1,
-                            Name = subs[1],
-                            Quantity = (long?)Convert.ToInt64(subs[5]),
-                            Price = (double?)Decimal.Parse(subs[6]),
-                            Time = entryTimeInTicks,
-                            //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                            HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
-                            Long_Short = entryTradeType,
-                        });
-                    instList.Add(
-                        new Ret
-                        {
-                            Account = 1,
-                            Name = subs[1],
-                            Quantity = (long?)Convert.ToInt64(subs[5]),
-                            Price = (double?)Decimal.Parse(subs[7]),
-                            Time = entryTimeInTicks,
-                            //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                            HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
-                            Long_Short = exitTradeType,
-                        });
+            //    }
+            //}
+            //#endregion Create instList 
+            #endregion TS App - instList - Moved to Methods
 
-                }
-            }
+            #region NTExport - instList
 
-            #endregion Create instList from NT Export
+            //////    NTExport
+            //#region Create instList from NT Export
 
+            ////  Format is similar to TSApp - entry and exit is on same line
+            ////  
+            //if (fileSource == FileSource.NTExport)
+            //{
+            //    filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
+            //    initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
+            //    title = "Select Export from NinjaTrader";
+            //    //}
 
+            //    //  
+            //    System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
+            //    {
+            //        //InitialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports",
+            //        //Title = "Select Export from NinjaTrader"
+            //        InitialDirectory = initialDirectory,
+            //        Title = title
+            //    };
+
+            //    //	Show dialog
+            //    var fileToOpen = openFileDialog.ShowDialog();
+            //    //string fileSelected = openFileDialog.FileName.Dump();
+            //    string fileSelected = openFileDialog.FileName;
+
+            //    //  Get actual file name without path
+
+            //    //	Query to get lines
+            //    //	First line is title line
+            //    int fileIndex = 0;
+            //    var linesToKeep = File.ReadLines(fileSelected).Where(l => l == l).ToList();
+
+            //    //	Remove 'NinjaTrader Grid' and '.csv'
+            //    fileSelected = fileSelected.Replace("NinjaTrader Grid ", "");
+            //    fileSelected = fileSelected.Replace(".csv", "");
+
+            //    //  Trim file path - keep name
+            //    //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+            //    fileSelectedName = fileSelected.Remove(0, 96);
+
+            //    //  Remove '-' from date -> 2024 02 13
+            //    fileSelectedName = fileSelectedName.Replace("-", " ");
+
+            //    //  Create instList from list 'linesToKeep'
+            //    lineCount = 0;
+            //    //  Create instList to allow use of extensions
+            //    //  fullLine format is both entry and exit so split into two lines
+            //    //List<Ret> instList = new List<Ret>();
+            //    DateTime dtEntry;
+            //    DateTime dtExit;
+
+            //    long entryTimeInTicks;
+            //    long exitTimeInTicks;
+
+            //    //  Use Bought and Sold for transaction type to make instList work with existing code
+            //    string entryTradeType = "";
+            //    string exitTradeType = "";
+            //    //	Split lines into subs
+
+            //    foreach ( var line in linesToKeep) 
+            //    {
+            //        //  Skip first line.
+            //        if (lineCount == 0)
+            //        {
+            //            lineCount++;
+            //            continue;
+            //        }
+            //        string[] subs;  //  = s.Split(' ', '.');
+            //        string s = line;
+            //        subs = s.Split(',');
+            //        subs.ToList();
+            //        var x = subs[7];                    
+            //        dtEntry = DateTime.Parse(subs[8]);
+            //        entryTimeInTicks = dtEntry.Ticks;
+            //        dtExit = DateTime.Parse(subs[9]);
+            //        exitTimeInTicks = dtExit.Ticks;
+
+            //        //  Change Long / Short to Bought / Sold
+            //        if (subs[4] == "Long")
+            //        {
+            //            entryTradeType = "Bought";
+            //            exitTradeType = "Sold";
+            //        }
+            //        else if (subs[4] == "Short")
+            //        {
+            //            entryTradeType = "Sold";
+            //            exitTradeType = "Bought";
+            //        }
+
+            //        //  Need to make two lines for each line in NT report
+            //        instList.Add(
+            //            new Ret
+            //            {
+            //                Account = 1,
+            //                Name = subs[1],
+            //                Quantity = (long?)Convert.ToInt64(subs[5]),
+            //                Price = (double?)Decimal.Parse(subs[6]),
+            //                Time = entryTimeInTicks,
+            //                //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                Long_Short = entryTradeType,
+            //            });
+            //        instList.Add(
+            //            new Ret
+            //            {
+            //                Account = 1,
+            //                Name = subs[1],
+            //                Quantity = (long?)Convert.ToInt64(subs[5]),
+            //                Price = (double?)Decimal.Parse(subs[7]),
+            //                Time = entryTimeInTicks,
+            //                //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
+            //                Long_Short = exitTradeType,
+            //            });
+
+            //    }
+            //}
+
+            //#endregion Create instList from NT Export
+
+            #endregion NTExport - instList
 
             #region Write and read instList.json
             // 	Write List to .json file
@@ -841,7 +881,7 @@ namespace WindowsFormsApp1
             #endregion Fill in Percent Column
 
             #region Fill in Daily Percent Column
-             
+
             source.FillDailyPercentColumn();
             #endregion Fill in Daily Percent Column
 
@@ -886,17 +926,23 @@ namespace WindowsFormsApp1
 
 
             ////  write to csvNTDrawline if not in Playback mode
-                CsvFileDescription scvDescript = new CsvFileDescription();
-                CsvContext cc = new CsvContext();
-                //  write to parameters.OutputPath - normally cscNTDrawline
-                cc.Write
-                (
-                columnsWithAttributes,
-                @"C:\Data\InstList.csv"
-                );
-            //  C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results
-            //  2024 02 15 Set file path in each section (TSApp, TSWebsite. NTExport)
-            //filePath = "C:\\Users\\Rod\\AppData\\Local\\NinjaTrader\\NinjaTrader Data\\Data from Website\\";
+            CsvFileDescription scvDescript = new CsvFileDescription();
+            CsvContext cc = new CsvContext();
+            //  write to parameters.OutputPath - normally cscNTDrawline
+            cc.Write
+            (
+            columnsWithAttributes,
+            @"C:\Data\InstList.csv"
+            );
+            if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
+            {
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+            }
+            else if (fileSource == FileSource.NTExport)
+            {
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
+            }
+
             cc.Write
                 (
                     columnsWithAttributes,
@@ -906,12 +952,301 @@ namespace WindowsFormsApp1
                 );
 
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
-
-
-
         }
+
+        #region NTExport
+        //public static List<Ret> NTExport()
+        //{
+
+        //    filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
+        //    initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
+        //    title = "Select Export from NinjaTrader";
+        //    //}
+
+        //    //  
+        //    System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+
+        //    {
+        //        //InitialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports",
+        //        //Title = "Select Export from NinjaTrader"
+        //        InitialDirectory = initialDirectory,
+        //        Title = title
+        //    };
+
+        //    //	Show dialog
+        //    var fileToOpen = openFileDialog.ShowDialog();
+        //    //string fileSelected = openFileDialog.FileName.Dump();
+        //    string fileSelected = openFileDialog.FileName;
+
+        //    //  Get actual file name without path
+
+        //    //	Query to get lines
+        //    //	First line is title line
+        //    int fileIndex = 0;
+        //    var linesToKeep = File.ReadLines(fileSelected).Where(l => l == l).ToList();
+
+        //    //	Remove 'NinjaTrader Grid' and '.csv'
+        //    fileSelected = fileSelected.Replace("NinjaTrader Grid ", "");
+        //    fileSelected = fileSelected.Replace(".csv", "");
+
+        //    //  Trim file path - keep name
+        //    //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+        //    fileSelectedName = fileSelected.Remove(0, 96);
+
+        //    //  Remove '-' from date -> 2024 02 13
+        //    fileSelectedName = fileSelectedName.Replace("-", " ");
+
+        //    //  Create instList from list 'linesToKeep'
+        //    lineCount = 0;
+        //    //  Create instList to allow use of extensions
+        //    //  fullLine format is both entry and exit so split into two lines
+        //    //List<Ret> instList = new List<Ret>();
+        //    DateTime dtEntry;
+        //    DateTime dtExit;
+
+        //    long entryTimeInTicks;
+        //    long exitTimeInTicks;
+
+        //    //  Use Bought and Sold for transaction type to make instList work with existing code
+        //    string entryTradeType = "";
+        //    string exitTradeType = "";
+        //    //	Split lines into subs
+
+        //    foreach (var line in linesToKeep)
+        //    {
+        //        //  Skip first line.
+        //        if (lineCount == 0)
+        //        {
+        //            lineCount++;
+        //            continue;
+        //        }
+        //        string[] subs;  //  = s.Split(' ', '.');
+        //        string s = line;
+        //        subs = s.Split(',');
+        //        subs.ToList();
+        //        var x = subs[7];
+        //        dtEntry = DateTime.Parse(subs[8]);
+        //        entryTimeInTicks = dtEntry.Ticks;
+        //        dtExit = DateTime.Parse(subs[9]);
+        //        exitTimeInTicks = dtExit.Ticks;
+
+        //        //  Change Long / Short to Bought / Sold
+        //        if (subs[4] == "Long")
+        //        {
+        //            entryTradeType = "Bought";
+        //            exitTradeType = "Sold";
+        //        }
+        //        else if (subs[4] == "Short")
+        //        {
+        //            entryTradeType = "Sold";
+        //            exitTradeType = "Bought";
+        //        }
+
+        //        //  Need to make two lines for each line in NT report
+        //        instList.Add(
+        //            new Ret
+        //            {
+        //                Account = 1,
+        //                Name = subs[1],
+        //                Quantity = (long?)Convert.ToInt64(subs[5]),
+        //                Price = (double?)Decimal.Parse(subs[6]),
+        //                Time = entryTimeInTicks,
+        //                //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+        //                HumanTime = dtEntry.ToString("HH:mm:ss MM/dd/yyyy"),
+        //                Long_Short = entryTradeType,
+        //            });
+        //        instList.Add(
+        //            new Ret
+        //            {
+        //                Account = 1,
+        //                Name = subs[1],
+        //                Quantity = (long?)Convert.ToInt64(subs[5]),
+        //                Price = (double?)Decimal.Parse(subs[7]),
+        //                Time = entryTimeInTicks,
+        //                //HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+        //                HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
+        //                Long_Short = exitTradeType,
+        //            });
+
+        //    }
+        //    return instList;
+
+        //}
+
+
+        //}
+
+        #endregion NTExport
+
+
+        #region Website - Moved to Methods.cs
+        /*
+        public static List<Ret> Website()
+        {
+            List<LinesJoined> fullLine = new List<LinesJoined>();
+            List<Ret> instList = new List<Ret>();
+            //MessageBox.Show("In website");
+            ////    TSWebsite
+            if (fileSource == FileSource.TSWebsite)
+            {
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
+                title = "Select Confirmation From Website.csv";
+                //}
+
+                //  
+                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+
+                {
+                    //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
+                    //Title = "Browse Trade Station .csv Files"
+                    InitialDirectory = initialDirectory,
+                    Title = title
+                };
+
+                //	Show dialog
+                var fileToOpen = openFileDialog.ShowDialog();
+                //string fileSelected = openFileDialog.FileName.Dump();
+                string fileSelected = openFileDialog.FileName;
+
+                //  Get actual file name without path
+
+                //	Query to get lines containg '$'	
+                var linesToKeep = File.ReadLines(fileSelected).Where(l => l.Contains("Principal") || l.Contains("Execution")).ToList();
+
+                //	Trim '.csv' from string
+                fileSelected = fileSelected.Replace("Confirmation From Website.csv", "");
+
+                //  Trim file path - keep name
+                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+                //fileSelectedName = fileSelected.Remove(0, 74);
+                fileSelectedName = fileSelected.Remove(0, 96);
+                fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
+
+                //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
+                //	Create new file name 'xxx Modified.csv'
+                string filePathIDrive = fileSelected + " Modified.csv";
+
+                //	Write query to new file
+                //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
+                //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
+                //      and then closes the file. If the target file already exists, it is overwritten.' (string)
+                //File.WriteAllLines(filePathIDrive, linesToKeep);
+
+                #region Concat lines from TS report into fullLine
+                //	Save strings starting with the Id (int) and add to next string
+                string priorString = "";
+                char stringChar;
+                List<LinesJoined> fullReport = new List<LinesJoined>();
+                List<LinesJoined> lastPass = new List<LinesJoined>();
+
+                //  Confirmation format is:
+                //      01/05/2024 ... Bought ... TSLA ... 238.95
+                //          ... 10:02:44 ...
+                //      01/05/2024 ... Sold ... TSLA ... 238.46
+                //         ... 10:15:24 ...
+                //  Use lineCount from 0 to end of list
+                //  Increment lineCount after each line
+                //  If modulus division is 0 save line
+                //  If modulus division is 1 concat lines
+                //  First pass creates full Bought/Sold line and second pass results in 'Bought...Sold...'
+                int lineCount = 0;
+                foreach (var l in linesToKeep)
+                {
+                    //string myString = "dummy";
+                    //stringChar = l[0];
+                    //if (Char.IsDigit(l[0]))
+                    if (lineCount % 2 == 0)
+                    {
+                        //	Save line for 
+                        priorString = l;
+                        //Console.WriteLine(@$" First char is digit {l[0]}");
+                    }
+                    else if (lineCount % 2 == 1)
+                    {
+                        //Console.WriteLine(@$" Second char is char {l[0]}");
+                        fullLine.Add(new LinesJoined { LinePlusLine = priorString + " " + l });
+                    }
+                    lineCount++;
+                }
+                foreach (var l in fullLine)
+                {
+                    fullReport.Add(l);
+                }
+                fullReport = fullReport.ToList();
+
+                //  Create list using subs from fullReport to be used in sorting
+                List<Confirmation> splitFullReport = new List<Confirmation>();
+                string[] subs;
+                int iD = 0;
+                string timeOnly;
+                long timeInTicks;
+                DateTime dt;
+                foreach (var f in fullReport)
+                {
+
+                    subs = f.LinePlusLine.Split(' ');
+                    dt = DateTime.Parse(subs[0] + " " + subs[16]);
+                    //  Convert to MST from EST
+                    dt = dt.AddMinutes(-120);
+                    timeInTicks = dt.Ticks;
+                    //  Get time only for entry into list
+                    timeOnly = dt.ToString("HH:mm:ss");
+
+                    splitFullReport.Add(new Confirmation
+                    {
+                        ID = iD,
+                        Long_Short = subs[2],
+                        Symbol = subs[6],
+                        TradeDate = subs[0],
+                        TradeTime = timeOnly,
+                        TimeTicks = timeInTicks,
+                        DTTradeTime = dt,
+                        Price = Math.Round(Convert.ToDouble(subs[8]), 2),
+                        Qty = Int32.Parse(subs[7])
+                    });
+                    iD++;
+                    //list[0].TradeTime;
+                    //splitFullReport.Dump();
+                }
+                splitFullReport.ToList();
+                //var sortedByTime = list.OrderBy(l => l.TradeTime);
+                var orderedFullReport = splitFullReport.OrderBy(l => l.DTTradeTime.Day).ThenBy(l => l.DTTradeTime.TimeOfDay).ToList();
+
+                /******************************************************************
+                 * 
+                 *  Create List<Ret> instList here from orderedFullReport
+                 *  Need to include code for creating Position column
+                 * 
+                 * 
+                /******************************************************************
+                //foreach (Confirmation c in splitFullReport)
+                foreach (Confirmation c in orderedFullReport)
+                {
+                    instList.Add(
+                    new Ret
+                    {
+                        Account = 1,
+                        Name = c.Symbol,
+                        Quantity = c.Qty,
+                        Price = c.Price,
+                        Time = c.TimeTicks,
+                        HumanTime = c.DTTradeTime.ToString("HH:mm:ss MM/dd/yyyy"),
+                        Long_Short = c.Long_Short,
+
+                    });
+
+                }
+                instList.ToList();
+            }
+            #endregion Concat lines from TS report 
+            return instList;
+        }
+        */
+        #endregion Website - Moved to Methods.cs
     }
 }
+//}
 
 /*
 public static class Extensions
