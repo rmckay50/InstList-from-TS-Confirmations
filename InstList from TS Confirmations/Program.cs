@@ -91,9 +91,7 @@ namespace WindowsFormsApp1
             fileSource = form.FileOrigin;
             #endregion Start form
 
-            string filePath = null;
-
-
+            #region Select Method
             if (fileSource == FileSource.TSWebsite)
             {
                 instList = Website();
@@ -106,6 +104,7 @@ namespace WindowsFormsApp1
             {
                 instList = NTExport();
             }
+            #endregion Select Method
 
             #region Write and read instList.json
             // 	Write List to .json file
@@ -240,7 +239,7 @@ namespace WindowsFormsApp1
             //      Allow only one pass
             if (trades.Count == 0)
             {
-                //	Create 'workingTrades' list																		//	Main
+                //	Create 'workingTrades' list																		
                 //	Slimmed down instList that is added to source list to make transfer to extension easier
                 // 	foreach through instList and add to trades list
 
@@ -253,15 +252,16 @@ namespace WindowsFormsApp1
             //	Top row in Trades is last trade.  Position should be zero.  If not db error or trade was exited 
             //		next day
             //	Check that position is flat
-            //if (t.Id == 0 && t.IsExit == true)
+            //  if (t.Id == 0 && t.IsExit == true)
             //  Need to change from Console.WriteLine() to NT Print
             try
             {
                 if (trades[0].Position != 0)
 
                 {
-                    Console.WriteLine(@"Postion on - not flat");                                                  //	Main
-                    Console.WriteLine(string.Format("Trades position = {0}", (trades[0].Position)));        //System.Environment.Exit(-1);                                                                //	Main																
+                    Console.WriteLine(@"Postion on - not flat");                                                  
+                    Console.WriteLine(string.Format("Trades position = {0}", (trades[0].Position)));        
+                    //System.Environment.Exit(-1);                                                               															
                 }
             }
             catch
@@ -274,7 +274,7 @@ namespace WindowsFormsApp1
 
             #endregion Create List<Trade> workingTrades
 
-            #region Code from 'Fill finList Prices Return List and Csv from Extension'							//	Main
+            #region Code from 'Fill finList Prices Return List and Csv from Extension'							
 
             #region Create Lists
             //  Lists added to source which is used in extensions
@@ -292,53 +292,51 @@ namespace WindowsFormsApp1
             source.IsReversal = false;                                                                          //	Main
             #endregion Initialize flags and variables in source
 
-            #region Fill in Id	Not used on Ryzen-2																				//	Main
+            #region Fill in Id	
             //	Add Id to workingTrades
-            int i = 0;                                                                                          //	Main
-                                                                                                                //  var workingTrades2 = workingTrades.ToList();
-
-            foreach (var t in workingTrades)                                                                        //	Main
+            int i = 0;
+            foreach (var t in workingTrades) 
             {
-                t.Id = i;                                                                                       //	Main
-                i++;                                                                                            //	Main
+                t.Id = i;
+                i++;  
             }
-            #endregion Fill in Id																					//	Main
+            #endregion Fill in Id
 
             #region foreach() through source.Trades
-            foreach (var t in source.Trades)                                                                    //	Main
+            foreach (var t in source.Trades) 
             {
                 //	Record size of first entry and Id
                 //	Need to keep record of how many entries are matched on split exits
                 //	Updated in UpdateActiveEntery()
                 if (t.Id == 0 && t.IsEntry == true)
                 {
-                    source.ActiveEntryId = t.Id;                                                                //	Main
-                    source.ActiveEntryRemaining = t.Qty;                                                        //	Main
-                    source.ActiveEntryPrice = t.Price;                                                          //	Main
+                    source.ActiveEntryId = t.Id;   
+                    source.ActiveEntryRemaining = t.Qty;     
+                    source.ActiveEntryPrice = t.Price;   
                 }
 
                 //	Is trade a normal exit?
                 //	If previous trade was reversal the source.Trades.IsRev is == true
-                //if (t.Entry == false && t.Exit == true && source.Trades[source.rowInTrades - 1].IsRev == false) //	Main
-                if (t.IsEntry == false && t.IsExit == true) //	Main
+                //if (t.Entry == false && t.Exit == true && source.Trades[source.rowInTrades - 1].IsRev == false) 
+                if (t.IsEntry == false && t.IsExit == true) 
                 {
                     source.Fill();
                 }
 
                 //	Set reversal flags row numbers
-                if (t.IsEntry == true && t.IsExit == true)                                                          //	Main
+                if (t.IsEntry == true && t.IsExit == true) 
                 {
                     //	Set source.IsReversal = true - used to break out of Fill()
-                    source.IsReversal = true;                                                                   //	Main
-                    source.RowOfReverse = source.rowInTrades;                                                   //	Main
-                    source.RowInTrades = source.rowInTrades;                                                    //	Main
-                    source.rowInTrades = source.rowInTrades;                                                    //	Main
-                    source.Fill();                                                                              //	Main		
+                    source.IsReversal = true; 
+                    source.RowOfReverse = source.rowInTrades;
+                    source.RowInTrades = source.rowInTrades; 
+                    source.rowInTrades = source.rowInTrades; 
+                    source.Fill(); 	
                 }
 
-                source.rowInTrades++;  // = rowInTrades;														//	Main
-                                       //	Increase source.rowInTrades it was cycled through in the Fill extension
-                source.RowInTrades++;                                                                           //	Main
+                source.rowInTrades++; 
+                //	Increase source.rowInTrades it was cycled through in the Fill extension
+                source.RowInTrades++; 
             }
 
             #endregion foreach() through source.Trades
@@ -371,7 +369,6 @@ namespace WindowsFormsApp1
             #region Fill in P_L column in source.csv
             //	Call 'FillProfitLossColumnInTradesList' to fill in csv P_L column
             source.FillProfitLossColumnInTradesList();
-            //source.
             #endregion Fill in P_L coulmn in source.csv
 
             #region Fill in Percent Column
@@ -424,7 +421,7 @@ namespace WindowsFormsApp1
             columnsWithAttributes.ToList();
 
 
-            ////  write to csvNTDrawline if not in Playback mode
+            //  write to csvNTDrawline if not in Playback mode
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
             //  write to parameters.OutputPath - normally cscNTDrawline
