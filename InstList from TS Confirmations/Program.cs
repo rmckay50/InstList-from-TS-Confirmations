@@ -30,24 +30,12 @@
  *  
  */
 
-
-//using InstList_from_TS_Confirmations.Properties;
 using LINQtoCSV;
 using System;
 using System.Collections.Generic;
-//using System.Diagnostics;
-//using System.Globalization;
 using System.IO;
 using System.Linq;
-//using System.Net;
-//using System.Security.Cryptography;
 using System.Text.Json;
-//using System.Threading.Tasks;
-//using System.Windows.Forms;
-//using System.Xml.Linq;
-//using static System.Net.Mime.MediaTypeNames;
-//using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-//using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
 using static WindowsFormsApp1.Variables;
