@@ -420,7 +420,6 @@ namespace WindowsFormsApp1
                                         };
             columnsWithAttributes.ToList();
 
-
             //  write to csvNTDrawline if not in Playback mode
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
