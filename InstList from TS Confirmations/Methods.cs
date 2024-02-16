@@ -20,27 +20,19 @@ namespace InstList_from_TS_Confirmations
         {
             List<LinesJoined> fullLine = new List<LinesJoined>();
             List<Ret> instList = new List<Ret>();
-            //MessageBox.Show("In website");
-            ////    TSWebsite
             if (fileSource == FileSource.TSWebsite)
             {
                 initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
                 title = "Select Confirmation From Website.csv";
-                //}
-
-                //  
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
                 {
-                    //InitialDirectory = @"C:\Users\Rod\Cloud - Drive\TradeManagerAnalysis",
-                    //Title = "Browse Trade Station .csv Files"
                     InitialDirectory = initialDirectory,
                     Title = title
                 };
 
                 //	Show dialog
                 var fileToOpen = openFileDialog.ShowDialog();
-                //string fileSelected = openFileDialog.FileName.Dump();
                 string fileSelected = openFileDialog.FileName;
 
                 //  Get actual file name without path
@@ -53,11 +45,9 @@ namespace InstList_from_TS_Confirmations
 
                 //  Trim file path - keep name
                 //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                //fileSelectedName = fileSelected.Remove(0, 74);
                 fileSelectedName = fileSelected.Remove(0, 96);
                 fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
 
-                //  \\RYZEN-1\TradeManagerAnalysis\2023 12 05
                 //	Create new file name 'xxx Modified.csv'
                 string filePathIDrive = fileSelected + " Modified.csv";
 
@@ -65,7 +55,6 @@ namespace InstList_from_TS_Confirmations
                 //  WritAllLines - 'Creates a new file, writes one or more strings to the file, and then closes the file.' (string array)
                 //  WriteAllText - 'File class method that is used to create a new file, writes the specified string to the file,
                 //      and then closes the file. If the target file already exists, it is overwritten.' (string)
-                //File.WriteAllLines(filePathIDrive, linesToKeep);
 
                 #region Concat lines from TS report into fullLine
                 //	Save strings starting with the Id (int) and add to next string
@@ -87,18 +76,13 @@ namespace InstList_from_TS_Confirmations
                 int lineCount = 0;
                 foreach (var l in linesToKeep)
                 {
-                    //string myString = "dummy";
-                    //stringChar = l[0];
-                    //if (Char.IsDigit(l[0]))
                     if (lineCount % 2 == 0)
                     {
-                        //	Save line for 
+                        //	Save line for later concatenation
                         priorString = l;
-                        //Console.WriteLine(@$" First char is digit {l[0]}");
                     }
                     else if (lineCount % 2 == 1)
                     {
-                        //Console.WriteLine(@$" Second char is char {l[0]}");
                         fullLine.Add(new LinesJoined { LinePlusLine = priorString + " " + l });
                     }
                     lineCount++;
@@ -140,21 +124,12 @@ namespace InstList_from_TS_Confirmations
                         Qty = Int32.Parse(subs[7])
                     });
                     iD++;
-                    //list[0].TradeTime;
-                    //splitFullReport.Dump();
                 }
                 splitFullReport.ToList();
-                //var sortedByTime = list.OrderBy(l => l.TradeTime);
+                //  Create list sorted by day then time
                 var orderedFullReport = splitFullReport.OrderBy(l => l.DTTradeTime.Day).ThenBy(l => l.DTTradeTime.TimeOfDay).ToList();
 
-                /******************************************************************
-                 * 
-                 *  Create List<Ret> instList here from orderedFullReport
-                 *  Need to include code for creating Position column
-                 * 
-                 * 
-                /******************************************************************/
-                //foreach (Confirmation c in splitFullReport)
+                //  Create List<Ret> instList here from orderedFullReport
                 foreach (Confirmation c in orderedFullReport)
                 {
                     instList.Add(
@@ -271,7 +246,8 @@ namespace InstList_from_TS_Confirmations
                 entryTimeInTicks = dtEntry.Ticks;
                 dtExit = DateTime.Parse(subs[15]);
                 exitTimeInTicks = dtExit.Ticks;
-            //  Change Buy/Sell to Bought/Sold
+
+                //  Change Buy/Sell to Bought/Sold
                 if (subs[1] == "Buy")
                 {
                     entryTradeType = "Bought";
@@ -343,31 +319,24 @@ namespace InstList_from_TS_Confirmations
         {
             List<Ret> instList = new List<Ret>();
 
-            //filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
             initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports";
             title = "Select Export from NinjaTrader";
-            //}
-
-            //  
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
             {
-                //InitialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Exports",
-                //Title = "Select Export from NinjaTrader"
                 InitialDirectory = initialDirectory,
                 Title = title
             };
 
             //	Show dialog
             var fileToOpen = openFileDialog.ShowDialog();
-            //string fileSelected = openFileDialog.FileName.Dump();
             string fileSelected = openFileDialog.FileName;
 
             //  Get actual file name without path
-
             //	Query to get lines
             //	First line is title line
             int fileIndex = 0;
+            //  Select all lines
             var linesToKeep = File.ReadLines(fileSelected).Where(l => l == l).ToList();
 
             //	Remove 'NinjaTrader Grid' and '.csv'
@@ -385,7 +354,6 @@ namespace InstList_from_TS_Confirmations
             lineCount = 0;
             //  Create instList to allow use of extensions
             //  fullLine format is both entry and exit so split into two lines
-            //List<Ret> instList = new List<Ret>();
             DateTime dtEntry;
             DateTime dtExit;
 
@@ -455,12 +423,8 @@ namespace InstList_from_TS_Confirmations
 
             }
             return instList;
-
         }
-
-
     }
-
     #endregion NTExport
 
 }
