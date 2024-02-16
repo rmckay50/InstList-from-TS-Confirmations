@@ -41,7 +41,6 @@ using static WindowsFormsApp1.Enums;
 using static WindowsFormsApp1.Variables;
 using static InstList_from_TS_Confirmations.Methods;
 
-
 namespace WindowsFormsApp1
 {
     public class Variables

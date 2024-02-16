@@ -345,6 +345,10 @@ namespace InstList_from_TS_Confirmations
             //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
             fileSelectedName = fileSelected.Remove(0, 96);
 
+            //  Result is '"2024-02-16 01-55 PM"'
+            //  Remove after '2024-02-16'
+            fileSelectedName = fileSelectedName.Remove(10);
+
             //  Remove '-' from date -> 2024 02 13
             fileSelectedName = fileSelectedName.Replace("-", " ");
 
