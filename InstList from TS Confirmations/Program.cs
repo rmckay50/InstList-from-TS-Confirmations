@@ -30,6 +30,8 @@
  *  
  * 2024 02 26
  *  Adding code to Methods.TSApp to calculate Win/Loss ratio
+ *  Try adding more variables to CSV (source.Csv is list that is modified by extensions)
+ *      Added Win as decimal.  Others are double? and I think decimal caused a problem.
  */
 
 using LINQtoCSV;
@@ -365,6 +367,11 @@ namespace WindowsFormsApp1
             source.FillPercentColumn();
             #endregion Fill in Percent Column
 
+            #region Fill in Win/Loss Columns
+            //  Copy P/L numbers into Win, Loss, or Zero columns
+            source.FillWinLossColumn();
+
+            #endregion Fill in Win/Loss Columns
             #region Fill in Daily Percent Column
 
             source.FillDailyPercentColumn();

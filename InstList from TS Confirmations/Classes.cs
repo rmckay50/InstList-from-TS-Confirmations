@@ -42,6 +42,24 @@ namespace WindowsFormsApp1
             public double? DailyPercentTotal { get; set; }
             public double? DailyDollarTotal { get; set; }
             public int? TotalTrades { get; set; }
+            public double? Win { get; set; }
+            public double? Loss { get; set; }
+            public double? Zero {  get; set; }
+            public double? WinTot {  get; set; }
+            public double? LossTot { get; set; }
+            public int? WinCount { get; set; }
+            public int? LossCount { get; set; }
+            public int? ZeroCount { get; set; }
+            public int? Count { get; set; }
+            public double? Win_Loss { get; set; }
+            public double? AvgWin { get; set; }
+            public double? AvgLoss { get; set; }
+            public double? WinLossRatio { get; set; }
+
+
+
+
+
 
 
             public IEnumerator GetEnumerator()                                                              //	class CSV

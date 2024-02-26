@@ -656,6 +656,54 @@ namespace WindowsFormsApp1
         }
         #endregion FillPercentColumn
 
+        #region FillWinLossColumn
+        //  Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
+        public static Source FillWinLossColumn(this Source source)
+        {
+            //  Keep track of position in .Csv list
+            //  At end fill in total values
+            int lineCount = 0;
+            double? winTotal = null;
+            int? winCount = null;
+            double? lossTotal = null;
+            int? lossCount = null;
+            int? zeroCount = null;
+
+
+            foreach (var winLoss in source.Csv)
+            {
+                if (winLoss.P_L > 0)
+                {
+                    winLoss.Win = winLoss.P_L;
+                    winTotal += winLoss.P_L;
+                    winCount += 1;
+                }
+                else if (winLoss.P_L < 0)
+                {  
+                    winLoss.Loss = winLoss.P_L;
+                    lossTotal += winLoss.P_L;
+                    lossCount += 1;
+
+                }
+                else if (winLoss.P_L < 0)
+                {
+                    winLoss.Zero = winLoss.P_L;
+                    zeroCount += 1;
+                }
+                lineCount++;
+
+                //  At last line in .Csv?
+                if (lineCount == source.Csv.Count)
+                {
+                    winLoss.WinTot = winTotal;
+                    winLoss.WinTot =  
+                }
+            }
+            return source;
+        }
+        #endregion FillWinLossColumn
+
+
         #region GetActiveEntry - Finds applicable entry in Trades 
         //	On first pass ActiveEntry numbers have been set in Main()
         //	Get starting entry price row and values
