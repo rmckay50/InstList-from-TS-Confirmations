@@ -28,6 +28,8 @@
  *      call extension instList.
  *  In Ryzen - 2\WPFDemo.Read All Lines WinForms an instList can be created from subs[] -> instList = new List<Ret>()
  *  
+ * 2024 02 26
+ *  Adding code to Methods.TSApp to calculate Win/Loss ratio
  */
 
 using LINQtoCSV;
