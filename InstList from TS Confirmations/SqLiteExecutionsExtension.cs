@@ -575,7 +575,7 @@ namespace WindowsFormsApp1
                             pl.P_L = (double)pl.Exit - (double)pl.Entry;
 
                             //  Multiply PL by qty to get correct value
-                            pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
+                            pl.P_L = (double)pl.Qty * winLoss.;
                         }
                         catch
                         {
@@ -663,11 +663,11 @@ namespace WindowsFormsApp1
             //  Keep track of position in .Csv list
             //  At end fill in total values
             int lineCount = 0;
-            double? winTotal = null;
-            int? winCount = null;
-            double? lossTotal = null;
-            int? lossCount = null;
-            int? zeroCount = null;
+            double? winTotal = 0;
+            int? winCount = 0;
+            double? lossTotal = 0;
+            int? lossCount = 0;
+            int? zeroCount = 0;
 
 
             foreach (var winLoss in source.Csv)
@@ -685,9 +685,9 @@ namespace WindowsFormsApp1
                     lossCount += 1;
 
                 }
-                else if (winLoss.P_L < 0)
+                else if (winLoss.P_L == 0)
                 {
-                    winLoss.Zero = winLoss.P_L;
+                    winLoss.Zero = 0;
                     zeroCount += 1;
                 }
                 lineCount++;
@@ -696,11 +696,22 @@ namespace WindowsFormsApp1
                 if (lineCount == source.Csv.Count)
                 {
                     winLoss.WinTot = winTotal;
-                    winLoss.WinTot =  
+                    winLoss.WinCount = winCount;
+                    winLoss.LossTot = lossTotal;
+                    winLoss.LossCount = lossCount;
+                    winLoss.ZeroCount = zeroCount;
+                    winLoss.Count = winCount + lossCount + zeroCount;
+                    winLoss.Win_LossPercent = (double?)Math.Round((Double)(winCount / (winCount + lossCount)));
+                    //var x = (double?)Math.Round((Double)winLoss.Win_LossPercent);
+                    winLoss.AvgWin = winTotal / winCount;
+                    winLoss.AvgLoss = lossTotal / lossCount;
+                    winLoss.WinLossRatio = winLoss.AvgWin / -winLoss.AvgLoss;
+
+                    //  Math.Round((Double)pl.P_L, 2);
                 }
             }
             return source;
-        }
+        } 
         #endregion FillWinLossColumn
 
 

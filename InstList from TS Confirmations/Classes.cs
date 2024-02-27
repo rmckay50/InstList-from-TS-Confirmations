@@ -51,7 +51,7 @@ namespace WindowsFormsApp1
             public int? LossCount { get; set; }
             public int? ZeroCount { get; set; }
             public int? Count { get; set; }
-            public double? Win_Loss { get; set; }
+            public double? Win_LossPercent { get; set; }
             public double? AvgWin { get; set; }
             public double? AvgLoss { get; set; }
             public double? WinLossRatio { get; set; }
