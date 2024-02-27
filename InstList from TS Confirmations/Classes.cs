@@ -91,6 +91,7 @@ namespace WindowsFormsApp1
             public double? DailyPercentTotal { get; set; }
             public double? DailyDollarTotal { get; set; }
             public int? TotalTrades { get; set; }
+            public string Blank { get; set; }
             public double? Win { get; set; }
             public double? Loss { get; set; }
             public double? Zero { get; set; }
