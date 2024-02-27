@@ -32,6 +32,8 @@
  *  Adding code to Methods.TSApp to calculate Win/Loss ratio
  *  Try adding more variables to CSV (source.Csv is list that is modified by extensions)
  *      Added Win as decimal.  Others are double? and I think decimal caused a problem.
+ *  Problem when trying to add nullable int (int?) to nTDrawlLine in extension. Error: Need to assign a vale to nullable parameter.
+ *      Solved problem by add steps in 'FillWinLossColumn' that assigned null to all variables.  Solved problem and 0 was not displayed in view grid.
  */
 
 using LINQtoCSV;
