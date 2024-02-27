@@ -372,6 +372,7 @@ namespace WindowsFormsApp1
             source.FillWinLossColumn();
 
             #endregion Fill in Win/Loss Columns
+
             #region Fill in Daily Percent Column
 
             source.FillDailyPercentColumn();
@@ -412,7 +413,24 @@ namespace WindowsFormsApp1
                                             Percent = l.Percent,
                                             DailyPercentTotal = l.DailyPercentTotal,
                                             DailyDollarTotal = l.DailyDollarTotal,
-                                            TotalTrades = l.TotalTrades
+                                            TotalTrades = l.TotalTrades,
+                                            Blank = "",
+                                            Win = l.Win,
+                                            Loss = l.Loss,
+                                            Zero = l.Zero,
+                                            WinTot = l.WinTot,  
+                                            LossTot = l.LossTot,
+                                            WinCount = l.WinCount,
+                                            LossCount = l.LossCount,
+                                            ZeroCount = l.ZeroCount,
+                                            Count = l.Count,
+                                            Win_LossPercent = l.Win_LossPercent,
+                                            AvgWin = l.AvgWin,
+                                            AvgLoss = l.AvgLoss,
+                                            WinLossRatio = l.WinLossRatio,
+
+
+
                                         };
             columnsWithAttributes.ToList();
 

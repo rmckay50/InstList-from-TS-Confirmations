@@ -43,9 +43,22 @@ namespace WindowsFormsApp1
                             Percent = (double?)csv.PercentReturn,
                             DailyPercentTotal = (double?)csv.DailyPercentTotal,
                             DailyDollarTotal = (double?)csv.DailyDollarTotal,
-                            TotalTrades = (int?)csv.TotalTrades
+                            TotalTrades = (int?)csv.TotalTrades,
+                            Win = csv.Win,
+                            Loss = csv.Loss,
+                            Zero = (double?)csv.Zero,
+                            WinTot = csv.WinTot,
+                            LossTot = csv.LossTot,
+                            WinCount = csv.WinCount,
+                            LossCount = csv.LossCount,
+                            ZeroCount = csv.ZeroCount,
+                            Count = csv.Count,
+                            Win_LossPercent = csv.Win_LossPercent,
+                            AvgWin = csv.AvgWin,
+                            AvgLoss = csv.AvgLoss,
+                            WinLossRatio = csv.WinLossRatio
                         }
-                    );
+                    );;;;
                 }
                 catch ( Exception ex)
                 {
@@ -575,7 +588,7 @@ namespace WindowsFormsApp1
                             pl.P_L = (double)pl.Exit - (double)pl.Entry;
 
                             //  Multiply PL by qty to get correct value
-                            pl.P_L = (double)pl.Qty * winLoss.;
+                            pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
                         }
                         catch
                         {
@@ -668,26 +681,59 @@ namespace WindowsFormsApp1
             double? lossTotal = 0;
             int? lossCount = 0;
             int? zeroCount = 0;
+            double? a = 0;
 
-
+            //  Need to assign values to all fields to keep compiler from  complaning about need an assignment for nullable variable 
             foreach (var winLoss in source.Csv)
             {
                 if (winLoss.P_L > 0)
                 {
                     winLoss.Win = winLoss.P_L;
                     winTotal += winLoss.P_L;
+                    winLoss.Zero = winLoss.Zero;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;   
+                    winLoss.Count = null;
+                    winLoss.Win_LossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
                     winCount += 1;
                 }
                 else if (winLoss.P_L < 0)
                 {  
                     winLoss.Loss = winLoss.P_L;
                     lossTotal += winLoss.P_L;
+                    winLoss.Zero = winLoss.Zero;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;
+                    winLoss.Count = null;
+                    winLoss.Win_LossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
                     lossCount += 1;
 
                 }
                 else if (winLoss.P_L == 0)
                 {
                     winLoss.Zero = 0;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;
+                    winLoss.Count = null;
+                    winLoss.Win_LossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
                     zeroCount += 1;
                 }
                 lineCount++;
@@ -701,11 +747,14 @@ namespace WindowsFormsApp1
                     winLoss.LossCount = lossCount;
                     winLoss.ZeroCount = zeroCount;
                     winLoss.Count = winCount + lossCount + zeroCount;
-                    winLoss.Win_LossPercent = (double?)Math.Round((Double)(winCount / (winCount + lossCount)));
-                    //var x = (double?)Math.Round((Double)winLoss.Win_LossPercent);
-                    winLoss.AvgWin = winTotal / winCount;
-                    winLoss.AvgLoss = lossTotal / lossCount;
-                    winLoss.WinLossRatio = winLoss.AvgWin / -winLoss.AvgLoss;
+                    a = (double)winCount / (winCount + lossCount);
+                    a = Math.Round((double)a, 4);
+                    winLoss.Win_LossPercent = a * 100;
+                    //var x = (double?)Math.Round((Double)(winLoss.Win_LossPercent),2);
+
+                    winLoss.AvgWin = Math.Round((Double)(winTotal / winCount),2);
+                    winLoss.AvgLoss = Math.Round((Double)(lossTotal / lossCount),2);
+                    winLoss.WinLossRatio = Math.Round((Double)(winLoss.AvgWin / -winLoss.AvgLoss),2);
 
                     //  Math.Round((Double)pl.P_L, 2);
                 }
