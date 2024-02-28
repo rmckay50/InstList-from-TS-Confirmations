@@ -5,6 +5,9 @@ using System.Linq;
 using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
 using static WindowsFormsApp1.Variables;
+using static WindowsFormsApp1.Program;
+
+//  WindowsFormsApp1
 using System.Globalization;
 
 
@@ -397,8 +400,13 @@ namespace InstList_from_TS_Confirmations
                     exitTradeType = "Bought";
                 }
 
-                //  Need to make two lines for each line in NT report
-                instList.Add(
+                //  Skip line if Name (subs[1]) not equal to "NQ MAR24"
+                //  Bonds price format is 109'250 which causes problems with conversion to double
+                //  This needs to changed to symbol desired ie. TSLA, NQ MAR24
+                if (subs[1] == "TSLA")
+                {
+                    //  Need to make two lines for each line in NT report
+                    instList.Add(
                     new Ret
                     {
                         Account = 1,
@@ -422,7 +430,7 @@ namespace InstList_from_TS_Confirmations
                         HumanTime = dtExit.ToString("HH:mm:ss MM/dd/yyyy"),
                         Long_Short = exitTradeType,
                     });
-
+                }
             }
             return instList;
         }

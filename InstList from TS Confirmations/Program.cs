@@ -28,6 +28,11 @@
  *      call extension instList.
  *  In Ryzen - 2\WPFDemo.Read All Lines WinForms an instList can be created from subs[] -> instList = new List<Ret>()
  *  
+ *  2024 02 22
+ *      When trade is a bond the price will cause an error - 'Wrong format'
+ *      Short term fix is to exclude lines in 'Add' in Methods.NTExport to exclude any contract that is not NQ Mar24. Ln 402
+ *      Bond price format causes a with parse - Price = (double?)Decimal.Parse(subs[6]),
+ *
  * 2024 02 26
  *  Adding code to Methods.TSApp to calculate Win/Loss ratio
  *  Try adding more variables to CSV (source.Csv is list that is modified by extensions)
@@ -430,9 +435,6 @@ namespace WindowsFormsApp1
                                             AvgWin = l.AvgWin,
                                             AvgLoss = l.AvgLoss,
                                             WinLossRatio = l.WinLossRatio,
-
-
-
                                         };
             columnsWithAttributes.ToList();
 

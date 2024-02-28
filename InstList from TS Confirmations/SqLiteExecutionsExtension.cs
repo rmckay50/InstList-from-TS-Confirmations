@@ -58,7 +58,7 @@ namespace WindowsFormsApp1
                             AvgLoss = csv.AvgLoss,
                             WinLossRatio = csv.WinLossRatio
                         }
-                    );;;;
+                    );
                 }
                 catch ( Exception ex)
                 {
@@ -750,11 +750,38 @@ namespace WindowsFormsApp1
                     a = (double)winCount / (winCount + lossCount);
                     a = Math.Round((double)a, 4);
                     winLoss.Win_LossPercent = a * 100;
-                    //var x = (double?)Math.Round((Double)(winLoss.Win_LossPercent),2);
+                    
+                    //  Consider no wins
+                    if (winLoss.WinCount != 0)
+                    {
+                        winLoss.AvgWin = Math.Round((Double)(winTotal / winCount), 2);
+                    }
+                    else
+                    {
+                        winLoss.AvgWin = 0;
+                    }
 
-                    winLoss.AvgWin = Math.Round((Double)(winTotal / winCount),2);
-                    winLoss.AvgLoss = Math.Round((Double)(lossTotal / lossCount),2);
-                    winLoss.WinLossRatio = Math.Round((Double)(winLoss.AvgWin / -winLoss.AvgLoss),2);
+                    //  Consider no losses
+                    if (winLoss.LossCount != 0)
+                    {
+                        winLoss.AvgLoss = Math.Round((Double)(lossTotal / lossCount), 2);
+                    }
+                    else
+                    {
+                        winLoss.AvgLoss = 0;
+                    }
+                    
+                    //  Consider no Losses
+                    if ( winLoss.AvgLoss != 0)
+                    {
+                        winLoss.WinLossRatio = Math.Round((Double)(winLoss.AvgWin / -winLoss.AvgLoss), 2);
+                    }
+                    else
+                    {
+                        winLoss.WinLossRatio = 100;
+                    }
+                    //winLoss.AvgLoss = Math.Round((Double)(lossTotal / lossCount),2);
+                    //winLoss.WinLossRatio = Math.Round((Double)(winLoss.AvgWin / -winLoss.AvgLoss),2);
 
                     //  Math.Round((Double)pl.P_L, 2);
                 }

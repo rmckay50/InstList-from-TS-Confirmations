@@ -44,8 +44,8 @@ namespace WindowsFormsApp1
             public int? TotalTrades { get; set; }
             public double? Win { get; set; } 
             public double? Loss { get; set; }
-            public double? Zero {  get; set; }
-            public double? WinTot {  get; set; } = null;
+            public double? Zero { get; set; }
+            public double? WinTot { get; set; } = null;
             public double? LossTot { get; set; }
             public int? WinCount { get; set; }
             public int? LossCount { get; set; }
