@@ -5,9 +5,6 @@ using System.Linq;
 using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
 using static WindowsFormsApp1.Variables;
-using static WindowsFormsApp1.Program;
-
-//  WindowsFormsApp1
 using System.Globalization;
 
 

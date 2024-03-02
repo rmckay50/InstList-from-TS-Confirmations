@@ -790,7 +790,6 @@ namespace WindowsFormsApp1
         } 
         #endregion FillWinLossColumn
 
-
         #region GetActiveEntry - Finds applicable entry in Trades 
         //	On first pass ActiveEntry numbers have been set in Main()
         //	Get starting entry price row and values

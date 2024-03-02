@@ -21,46 +21,57 @@ namespace WindowsFormsApp1
             public int Qty { get; set; }
 
         }
-        public class CSV
-        {
-            //public int EntryId { get; set; }
-            public int EntryId { get; set; }                                                                //	class CSV
-            public string Name { get; set; }
-            public int FilledBy { get; set; }                                                               //	class CSV
-            public long? RemainingExits { get; set; }                                                         //	class CSV
-            public long? StartTimeTicks { get; set; }
-            public string StartTime { get; set; }
-            public double? Entry { get; set; }                                                               //	class CSV
-            public long? EndTimeTicks { get; set; }
-            public string EndTime { get; set; }
-            public double? Exit { get; set; }                                                                //	class CSV
-            public string Long_Short { get; set; }
-            public double P_L { get; set; }
-            public long? Qty { get; set; }                                                                    //	class CSV
-            public double? P_LDividedByQty { get; set; }
-            public double? PercentReturn { get; set; }
-            public double? DailyPercentTotal { get; set; }
-            public double? DailyDollarTotal { get; set; }
-            public int? TotalTrades { get; set; }
-            public double? Win { get; set; } 
-            public double? Loss { get; set; }
-            public double? Zero { get; set; }
-            public double? WinTot { get; set; } = null;
-            public double? LossTot { get; set; }
-            public int? WinCount { get; set; }
-            public int? LossCount { get; set; }
-            public int? ZeroCount { get; set; }
-            public int? Count { get; set; }
-            public double? Win_LossPercent { get; set; }
-            public double? AvgWin { get; set; }
-            public double? AvgLoss { get; set; }
-            public double? WinLossRatio { get; set; }
+    public class CSV
+    {
+        //public int EntryId { get; set; }
+        public int EntryId { get; set; } 
+        public string Name { get; set; }
+        public int FilledBy { get; set; }
+        public long? RemainingExits { get; set; } 
+        public long? StartTimeTicks { get; set; }
+        public string StartTime { get; set; }
+        public double? Entry { get; set; }  
+        public long? EndTimeTicks { get; set; }
+        public string EndTime { get; set; }
+        public double? Exit { get; set; } 
+        public string Long_Short { get; set; }
+        public double P_L { get; set; }
+        public long? Qty { get; set; } 
+        public double? P_LDividedByQty { get; set; }
+        public double? PercentReturn { get; set; }
+        public double? DailyPercentTotal { get; set; }
+        public double? DailyDollarTotal { get; set; }
+        public int? TotalTrades { get; set; }
+        public double? Win { get; set; }
+        public double? Loss { get; set; }
+        public double? Zero { get; set; }
+        public double? WinTot { get; set; }
+        public double? LossTot { get; set; }
+        public int? WinCount { get; set; }
+        public int? LossCount { get; set; }
+        public int? ZeroCount { get; set; }
+        public int? Count { get; set; }
+        public double? WinLossPercent { get; set; }
+        public double? AvgWin { get; set; }
+        public double? AvgLoss { get; set; }
+        public double? WinLossRatio { get; set; }
+        public string PBlank { get; set; }
+        public double? PwinTot { get; set; }
+        public double? PlossTot { get; set; }
+        public int? PwinCount { get; set; }
+        public int? PlossCount { get; set; }
+        public int? PzeroCount { get; set; }
+        public int? Pcount { get; set; }
+        public double? PwinLossPercent { get; set; }
+        public double? PavgWin { get; set; }
+        public double? PavgLoss { get; set; }
+        public double? PwinLossRatio { get; set; }
 
-            public IEnumerator GetEnumerator()                                                              //	class CSV
-            {
-                return (IEnumerator)this;                                                                       //	class CSV
-            }
+        public IEnumerator GetEnumerator() 
+        {
+            return (IEnumerator)this;
         }
+    }
         public class LinesJoined
         {
             //	Concatenate even lines to prior odd
