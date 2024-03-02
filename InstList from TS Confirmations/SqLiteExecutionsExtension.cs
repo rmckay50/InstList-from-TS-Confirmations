@@ -680,6 +680,357 @@ namespace WindowsFormsApp1
         }
         #endregion FillPercentColumn
 
+        #region FillDailyWinLossColumn
+        //  Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
+        public static Source FillDailyWinLossColumn(this Source source)
+        {
+            #region Local variables
+            //  Keep track of position in .Csv list
+            //  At end fill in total values
+            double? avgWin = 0;
+            double? avgLoss = 0;
+            double? lossTotal = 0;
+            int? lossCount = 0;
+            int? winCount = 0;
+            double? winLossPercent = 0;
+            double? winLossRatio = 0;
+            double? winTotal = 0;
+            int? zeroCount = 0;
+
+            //  get date ("MM/dd/yyyy") portion of end date
+            //  compare on each pass with starting date
+            //  when date changes (string compare) enter new total into DailyTotal column
+            var startingDate = source.Csv[0].EndTime.Substring(11);
+
+            //  use to get trade end date to be used for comparison
+            var currentTradeDate = "";
+
+            //  use as register to total trade P/L values
+            //  initialize with first value because starting poing for foreach is line 2
+            double runningTotal = (double)source.Csv[0].PercentReturn;
+
+            //  need to keep track of line number in list
+            int iD = -1;
+            #endregion Local variables
+
+            //  Need to assign values to all fields to keep compiler from complaning about need an assignment for nullable variable 
+            foreach (var winLoss in source.Csv)
+            {
+                //  Keep track of line in list
+                iD++;
+                //  get date of trade ("/MM/dd/yyy")
+                currentTradeDate = winLoss.EndTime.Substring(11);
+
+                //  has date changed - value less than zero is change
+                //  Date doesn't change - fill sourve.Csv values
+                //  Date changes - jump to else if and 
+                if (currentTradeDate.CompareTo(startingDate) != 0)
+                {
+                    //  Fill in summary region for days trades
+                    source.Csv[iD - 1].WinTot = winTotal;
+                    source.Csv[iD - 1].LossTot = lossTotal;
+                    source.Csv[iD - 1].WinCount = winCount;
+                    source.Csv[iD - 1].LossCount = lossCount;
+                    source.Csv[iD - 1].ZeroCount = zeroCount;
+                    source.Csv[iD - 1].Count = winCount + lossCount + zeroCount;
+                    winLossPercent = (double)winCount / (winCount + lossCount);
+                    winLossPercent = Math.Round((double)winLossPercent, 4);
+                    source.Csv[iD - 1].WinLossPercent = winLossPercent * 100;
+
+                    //  Calculate average win
+                    //  Consider no wins
+                    if (winCount != 0)
+                    {
+                        winLoss.AvgWin = null;
+                        avgWin = Math.Round((Double)(winTotal / winCount), 2);
+                        source.Csv[iD - 1].AvgWin = avgWin;
+                    }
+                    else
+                    {
+                        winLoss.AvgWin = null;
+                        avgWin = 0;
+                        source.Csv[iD - 1].AvgWin = avgWin;
+                    }
+
+                    //  Calculate average loss
+                    //  Consider no losses
+                    if (lossCount != 0)
+                    {
+                        winLoss.AvgLoss = null;
+                        avgLoss = Math.Round((Double)(lossTotal / lossCount), 2);
+                        source.Csv[iD - 1].AvgLoss = avgLoss;
+                    }
+                    else
+                    {
+                        winLoss.AvgLoss = null;
+                        avgLoss = 0;
+                        source.Csv[iD - 1].AvgWin = avgLoss;
+                    }
+
+                    //  Calculate Win/Loss ratio
+                    //  Consider no Losses
+                    if (avgLoss != 0)
+                    {
+                        winLoss.WinLossRatio = null;
+                        winLossRatio = Math.Round((Double)(avgWin / -avgLoss), 2);
+                        source.Csv[iD - 1].WinLossRatio = winLossRatio;
+                    }
+                    else
+                    {
+                        winLoss.WinLossRatio = null;
+                        winLossRatio = 100;
+                        source.Csv[iD - 1].WinLossRatio = winLossRatio;
+                    }
+
+                    //  Zero registers
+                    winTotal = 0;
+                    winCount = 0;
+                    lossTotal = 0;
+                    lossCount = 0;
+                    zeroCount = 0;
+                    winLossPercent = 0;
+
+                    //  Replace starting date with new date
+                    startingDate = currentTradeDate;
+                }
+
+                //  winLoss.xxx is actual slot in .Csv file 
+                //  need to fill in the row above the date change (source.Csv[iD-1].xxx)
+                //      and null the slots until the next date change
+                //  date has changed    
+                if (winLoss.P_L > 0)
+                {
+                    winLoss.Win = winLoss.P_L;
+                    winTotal += winLoss.P_L;
+                    winLoss.Zero = winLoss.Zero;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;
+                    winLoss.Count = null;
+                    winLoss.WinLossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
+                    winCount += 1;
+                }
+                else if (winLoss.P_L < 0)
+                {
+                    winLoss.Loss = winLoss.P_L;
+                    lossTotal += winLoss.P_L;
+                    winLoss.Zero = winLoss.Zero;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;
+                    winLoss.Count = null;
+                    winLoss.WinLossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
+                    lossCount += 1;
+
+                }
+                else if (winLoss.P_L == 0)
+                {
+                    winLoss.Zero = 0;
+                    winLoss.WinTot = null;
+                    winLoss.LossTot = null;
+                    winLoss.WinCount = null;
+                    winLoss.LossCount = null;
+                    winLoss.ZeroCount = null;
+                    winLoss.Count = null;
+                    winLoss.WinLossPercent = null;
+                    winLoss.AvgWin = null;
+                    winLoss.AvgLoss = null;
+                    winLoss.WinLossRatio = null;
+                    zeroCount += 1;
+                }
+
+                //  if at end of list - enter last total
+                if (iD + 1 == source.Csv.Count)
+                {
+                    //source.Csv[iD - 1].WinTot = winTotal;
+                    source.Csv[iD].WinTot = winTotal;
+                    source.Csv[iD].LossTot = lossTotal;
+                    source.Csv[iD].WinCount = winCount;
+                    source.Csv[iD].LossCount = lossCount;
+                    source.Csv[iD].ZeroCount = zeroCount;
+                    source.Csv[iD].Count = winCount + lossCount + zeroCount;
+                    winLossPercent = (double)winCount / (winCount + lossCount);
+                    winLossPercent = Math.Round((double)winLossPercent, 4);
+                    source.Csv[iD].WinLossPercent = winLossPercent * 100;
+
+                    //  Consider no wins
+                    if (winCount != 0)
+                    {
+                        winLoss.AvgWin = null;
+                        avgWin = Math.Round((Double)(winTotal / winCount), 2);
+                        source.Csv[iD].AvgWin = avgWin;
+                    }
+                    else
+                    {
+                        winLoss.AvgWin = null;
+                        avgWin = 0;
+                        source.Csv[iD].AvgWin = avgWin;
+                    }
+
+                    //  Consider no losses
+                    if (lossCount != 0)
+                    {
+                        winLoss.AvgLoss = null;
+                        avgLoss = Math.Round((Double)(lossTotal / lossCount), 2);
+                        source.Csv[iD].AvgLoss = avgLoss;
+                    }
+                    else
+                    {
+                        winLoss.AvgLoss = null;
+                        avgLoss = 0;
+                        source.Csv[iD].AvgWin = avgLoss;
+                    }
+
+                    //  Consider no Losses
+                    if (avgLoss != 0)
+                    {
+                        winLoss.WinLossRatio = null;
+                        winLossRatio = Math.Round((Double)(avgWin / -avgLoss), 2);
+                        source.Csv[iD].WinLossRatio = winLossRatio;
+                    }
+                    else
+                    {
+                        winLoss.WinLossRatio = null;
+                        winLossRatio = 100;
+                        source.Csv[iD].WinLossRatio = winLossRatio;
+                    }
+
+                }
+
+            }
+            return source;
+        }
+        #endregion FillWinLossColumn
+
+        #region FillWinLossSummary
+        public static Source FillWinLossSummary(this Source source)
+        {
+            #region Variables
+
+            //  Keep track of position in .Csv list
+            //  At end fill in total values
+            double? pAvgWin = 0;
+            double? pAvgLoss = 0;
+            double? pLossTot = 0;
+            int? pLossCount = 0;
+            int? pWinCount = 0;
+            double? pWinLossPercent = 0;
+            double? pWinLossRatio = 0;
+            double? pWinTot = 0;
+            int? pZeroCount = 0;
+            int? pCount = 0;
+
+            //  need to keep track of line number in list
+            int iD = 0;
+
+            #endregion Variables
+
+            #region Sum wins/Losses
+
+            foreach (var winLoss in source.Csv)
+            {
+                //  Keep track of line in list
+                iD++;
+
+                //  Need to check for null because null will not add/subtract
+                //  Sum wins
+                if (winLoss.Win != null)
+                {
+                    pWinTot += winLoss.Win;
+                }
+                //  Sum losses
+                if (winLoss.Loss != null)
+                {
+                    pLossTot += winLoss.Loss;
+                }
+                //  Sum win count
+                if (winLoss.WinCount != null)
+                {
+                    pWinCount += winLoss.WinCount;
+                }
+                //  Sum loss count
+                if (winLoss.LossCount != null)
+                {
+                    pLossCount += winLoss.LossCount;
+                }
+                //  Sum zero count
+                if (winLoss.ZeroCount != null)
+                {
+                    pZeroCount += winLoss.ZeroCount;
+                }
+                //  Sum total count
+                if (winLoss.Count != null)
+                {
+                    pCount += winLoss.Count;
+                }
+            }
+
+            //  Fill in course.Csv slots with calculated values
+            source.Csv[iD - 1].PwinTot = pWinTot;
+            source.Csv[iD - 1].PlossTot = pLossTot;
+            source.Csv[iD - 1].PwinCount = pWinCount;
+            source.Csv[iD - 1].PwinCount = pWinCount;
+            source.Csv[iD - 1].PlossCount = pLossCount;
+            source.Csv[iD - 1].PzeroCount = pZeroCount;
+            source.Csv[iD - 1].Pcount = pCount;
+            pWinLossPercent = (double)pWinCount / (pWinCount + pLossCount);
+            pWinLossPercent = Math.Round((double)pWinLossPercent, 4);
+            source.Csv[iD - 1].PwinLossPercent = pWinLossPercent;
+
+            //  Calculate average win
+            //  Consider no wins
+            if (pWinCount != 0)
+            {
+                pAvgWin = Math.Round((Double)(pWinTot / pWinCount), 2);
+                source.Csv[iD - 1].PavgWin = pAvgWin;
+            }
+            else
+            {
+                pAvgWin = 0;
+                source.Csv[iD - 1].PavgWin = pAvgWin;
+            }
+
+            //  Calculate average loss
+            //  Consider no losses
+            if (pLossCount != 0)
+            {
+                pAvgLoss = Math.Round((Double)(pLossTot / pLossCount), 2);
+                source.Csv[iD - 1].PavgLoss = pAvgLoss;
+            }
+            else
+            {
+                pAvgLoss = 0;
+                source.Csv[iD - 1].PavgLoss = pAvgLoss;
+            }
+
+            //  Calculate Win/Loss ratio
+            //  Consider no Losses
+            if (pAvgLoss != 0)
+            {
+                pWinLossRatio = Math.Round((Double)(pAvgWin / -pAvgLoss), 2);
+                source.Csv[iD - 1].PwinLossRatio = pWinLossRatio;
+            }
+            else
+            {
+                pWinLossRatio = 100;
+                source.Csv[iD - 1].PwinLossRatio = pWinLossRatio;
+            }
+            #endregion Sum wins/Losses
+
+            return source;
+        }
+        #endregion FillWinLossSummary
+
         #region FillWinLossColumn
         //  Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
         public static Source FillWinLossColumn(this Source source)
