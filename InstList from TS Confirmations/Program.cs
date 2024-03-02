@@ -376,9 +376,20 @@ namespace WindowsFormsApp1
 
             #region Fill in Win/Loss Columns
             //  Copy P/L numbers into Win, Loss, or Zero columns
-            source.FillWinLossColumn();
+            source.FillDailyWinLossColumn();
 
             #endregion Fill in Win/Loss Columns
+
+            #region FillWinLossSummary
+            //  Fill page summary in far right columns
+            source.FillWinLossSummary();
+            #endregion FillWinLossSummary
+
+
+            #region Fill in Daily Percent Column
+
+            source.FillDailyPercentColumn();
+            #endregion Fill in Daily Percent Column
 
             #region Fill in Daily Percent Column
 
