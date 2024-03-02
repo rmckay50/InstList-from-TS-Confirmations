@@ -53,10 +53,21 @@ namespace WindowsFormsApp1
                             LossCount = csv.LossCount,
                             ZeroCount = csv.ZeroCount,
                             Count = csv.Count,
-                            Win_LossPercent = csv.Win_LossPercent,
+                            WinLossPercent = csv.WinLossPercent,
                             AvgWin = csv.AvgWin,
                             AvgLoss = csv.AvgLoss,
-                            WinLossRatio = csv.WinLossRatio
+                            WinLossRatio = csv.WinLossRatio,
+                            PBlank = csv.PBlank,
+                            PwinTot = csv.PwinTot,
+                            PlossTot = csv.PlossTot,
+                            PwinCount = csv.PwinCount,
+                            PlossCount = csv.PlossCount,
+                            PzeroCount = csv.PzeroCount,
+                            Pcount = csv.Pcount,
+                            PwinLossPercent = csv.PwinLossPercent,
+                            PavgWin = csv.PavgWin,
+                            PavgLoss = csv.PavgLoss,
+                            PwinLossRatio = csv.PwinLossRatio
                         }
                     );
                 }

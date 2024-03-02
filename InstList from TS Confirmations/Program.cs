@@ -431,10 +431,21 @@ namespace WindowsFormsApp1
                                             LossCount = l.LossCount,
                                             ZeroCount = l.ZeroCount,
                                             Count = l.Count,
-                                            Win_LossPercent = l.Win_LossPercent,
+                                            WinLossPercent = l.WinLossPercent,
                                             AvgWin = l.AvgWin,
                                             AvgLoss = l.AvgLoss,
                                             WinLossRatio = l.WinLossRatio,
+                                            PBlank = l.PBlank,
+                                            PwinTot = l.PwinTot,
+                                            PlossTot = l.PlossTot,
+                                            PwinCount = l.PwinCount,
+                                            PlossCount = l.PlossCount,
+                                            PzeroCount = l.PzeroCount,
+                                            Pcount = l.Pcount,
+                                            PwinLossPercent = l.PwinLossPercent,
+                                            PavgWin = l.PavgWin,
+                                            PavgLoss = l.PavgLoss,
+                                            PwinLossRatio = l.PwinLossRatio
                                         };
             columnsWithAttributes.ToList();
 
