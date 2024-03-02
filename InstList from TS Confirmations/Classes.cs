@@ -106,17 +106,27 @@ namespace WindowsFormsApp1
             public double? Win { get; set; }
             public double? Loss { get; set; }
             public double? Zero { get; set; }
-            public double? WinTot { get; set; } = null;
+            public double? WinTot { get; set; }
             public double? LossTot { get; set; }
             public int? WinCount { get; set; }
             public int? LossCount { get; set; }
             public int? ZeroCount { get; set; }
             public int? Count { get; set; }
-            public double? Win_LossPercent { get; set; }
+            public double? WinLossPercent { get; set; }
             public double? AvgWin { get; set; }
             public double? AvgLoss { get; set; }
             public double? WinLossRatio { get; set; }
-
+            public string PBlank { get; set; }
+            public double? PwinTot { get; set; }
+            public double? PlossTot { get; set; }
+            public int? PwinCount { get; set; }
+            public int? PlossCount { get; set; }
+            public int? PzeroCount { get; set; }
+            public int? Pcount { get; set; }
+            public double? PwinLossPercent { get; set; }
+            public double? PavgWin { get; set; }
+            public double? PavgLoss { get; set; }
+            public double? PwinLossRatio { get; set; }
 
             public NTDrawLine() { }
 
@@ -141,10 +151,9 @@ namespace WindowsFormsApp1
                 DailyDollarTotal = dailyTotal;
                 TotalTrades = totalTrades;
             }
-
-            public IEnumerator GetEnumerator()                                                              //	class CSV
+            public IEnumerator GetEnumerator()
             {
-                return (IEnumerator)this;                                                                       //	class CSV
+                return (IEnumerator)this;
             }
 
         }
@@ -205,13 +214,35 @@ namespace WindowsFormsApp1
             [CsvColumn(FieldIndex = 27)]
             public int? Count { get; set; }
             [CsvColumn(FieldIndex = 28)]
-            public double? Win_LossPercent { get; set; }
+            public double? WinLossPercent { get; set; }
             [CsvColumn(FieldIndex = 29)]
             public double? AvgWin { get; set; }
             [CsvColumn(FieldIndex = 30)]
             public double? AvgLoss { get; set; }
             [CsvColumn(FieldIndex = 31)]
             public double? WinLossRatio { get; set; }
+            [CsvColumn(FieldIndex = 32)]
+            public string PBlank { get; set; }
+            [CsvColumn(FieldIndex = 33)]
+            public double? PwinTot { get; set; }
+            [CsvColumn(FieldIndex = 34)]
+            public double? PlossTot { get; set; }
+            [CsvColumn(FieldIndex = 35)]
+            public int? PwinCount { get; set; }
+            [CsvColumn(FieldIndex = 36)]
+            public int? PlossCount { get; set; }
+            [CsvColumn(FieldIndex = 37)]
+            public int? PzeroCount { get; set; }
+            [CsvColumn(FieldIndex = 38)]
+            public int? Pcount { get; set; }
+            [CsvColumn(FieldIndex = 39)]
+            public double? PwinLossPercent { get; set; }
+            [CsvColumn(FieldIndex = 40)]
+            public double? PavgWin { get; set; }
+            [CsvColumn(FieldIndex = 41)]
+            public double? PavgLoss { get; set; }
+            [CsvColumn(FieldIndex = 42)]
+            public double? PwinLossRatio { get; set; }
 
             public IEnumerator GetEnumerator()
             {
