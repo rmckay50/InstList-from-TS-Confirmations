@@ -23,7 +23,6 @@ namespace WindowsFormsApp1
         }
     public class CSV
     {
-        //public int EntryId { get; set; }
         public int EntryId { get; set; } 
         public string Name { get; set; }
         public int FilledBy { get; set; }
