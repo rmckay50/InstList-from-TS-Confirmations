@@ -471,11 +471,11 @@ namespace WindowsFormsApp1
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 04 Apr\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 02 Feb\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 04 Apr\Results\";
             }
 
             cc.Write

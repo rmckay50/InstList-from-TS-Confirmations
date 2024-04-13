@@ -100,27 +100,58 @@ namespace InstList_from_TS_Confirmations
                 DateTime dt;
                 foreach (var f in fullReport)
                 {
+                    //  NVDA and TSLA have different number of words per line
+                    //  NVDA had 20 and TSLA has 21
 
                     subs = f.LinePlusLine.Split(' ');
-                    dt = DateTime.Parse(subs[0] + " " + subs[16]);
-                    //  Convert to MST from EST
-                    dt = dt.AddMinutes(-120);
-                    timeInTicks = dt.Ticks;
-                    //  Get time only for entry into list
-                    timeOnly = dt.ToString("HH:mm:ss");
 
-                    splitFullReport.Add(new Confirmation
+                    if (subs[6] == "TSLA")
+                    { 
+                        dt = DateTime.Parse(subs[0] + " " + subs[16]);
+                        //  Convert to MST from EST
+                        dt = dt.AddMinutes(-120);
+                        timeInTicks = dt.Ticks;
+                        //  Get time only for entry into list
+                        timeOnly = dt.ToString("HH:mm:ss");
+
+                        splitFullReport.Add(new Confirmation
+                        {
+                            ID = iD,
+                            Long_Short = subs[2],
+                            Symbol = subs[6],
+                            TradeDate = subs[0],
+                            TradeTime = timeOnly,
+                            TimeTicks = timeInTicks,
+                            DTTradeTime = dt,
+                            Price = Math.Round(Convert.ToDouble(subs[8]), 2),
+                            Qty = Int32.Parse(subs[7])
+                        });
+                    }
+
+                    if (subs[5] == "NVDA")
                     {
-                        ID = iD,
-                        Long_Short = subs[2],
-                        Symbol = subs[6],
-                        TradeDate = subs[0],
-                        TradeTime = timeOnly,
-                        TimeTicks = timeInTicks,
-                        DTTradeTime = dt,
-                        Price = Math.Round(Convert.ToDouble(subs[8]), 2),
-                        Qty = Int32.Parse(subs[7])
-                    });
+                        dt = DateTime.Parse(subs[0] + " " + subs[15]);
+                        //  Convert to MST from EST
+                        dt = dt.AddMinutes(-120);
+                        timeInTicks = dt.Ticks;
+                        //  Get time only for entry into list
+                        timeOnly = dt.ToString("HH:mm:ss");
+
+                        splitFullReport.Add(new Confirmation
+                        {
+                            ID = iD,
+                            Long_Short = subs[2],
+                            Symbol = subs[5],
+                            TradeDate = subs[0],
+                            TradeTime = timeOnly,
+                            TimeTicks = timeInTicks,
+                            DTTradeTime = dt,
+                            Price = Math.Round(Convert.ToDouble(subs[7]), 2),
+                            Qty = Int32.Parse(subs[6])
+                        });
+                    }
+
+
                     iD++;
                 }
                 splitFullReport.ToList();
