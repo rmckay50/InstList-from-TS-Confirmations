@@ -57,6 +57,7 @@ namespace WindowsFormsApp1
         public string PBlank { get; set; }
         public double? PwinTot { get; set; }
         public double? PlossTot { get; set; }
+        public double? Ptotal { get; set; }
         public int? PwinCount { get; set; }
         public int? PlossCount { get; set; }
         public int? PzeroCount { get; set; }
@@ -118,6 +119,7 @@ namespace WindowsFormsApp1
             public string PBlank { get; set; }
             public double? PwinTot { get; set; }
             public double? PlossTot { get; set; }
+            public double? Ptotal { get; set; }
             public int? PwinCount { get; set; }
             public int? PlossCount { get; set; }
             public int? PzeroCount { get; set; }
@@ -227,20 +229,22 @@ namespace WindowsFormsApp1
             [CsvColumn(FieldIndex = 34)]
             public double? PlossTot { get; set; }
             [CsvColumn(FieldIndex = 35)]
-            public int? PwinCount { get; set; }
+            public double? Ptotal { get; set; }
             [CsvColumn(FieldIndex = 36)]
-            public int? PlossCount { get; set; }
+            public int? PwinCount { get; set; }
             [CsvColumn(FieldIndex = 37)]
-            public int? PzeroCount { get; set; }
+            public int? PlossCount { get; set; }
             [CsvColumn(FieldIndex = 38)]
-            public int? Pcount { get; set; }
+            public int? PzeroCount { get; set; }
             [CsvColumn(FieldIndex = 39)]
-            public double? PwinLossPercent { get; set; }
+            public int? Pcount { get; set; }
             [CsvColumn(FieldIndex = 40)]
-            public double? PavgWin { get; set; }
+            public double? PwinLossPercent { get; set; }
             [CsvColumn(FieldIndex = 41)]
-            public double? PavgLoss { get; set; }
+            public double? PavgWin { get; set; }
             [CsvColumn(FieldIndex = 42)]
+            public double? PavgLoss { get; set; }
+            [CsvColumn(FieldIndex = 43)]
             public double? PwinLossRatio { get; set; }
 
             public IEnumerator GetEnumerator()
@@ -290,23 +294,26 @@ namespace WindowsFormsApp1
         }
         public class Source
         {
-            public int ActiveEntryId { get; set; }                                                          //	class source
-            public long? ActiveEntryRemaining { get; set; }                                                   //	class source
-            public double? ActiveEntryPrice { get; set; }                                                    //	class source
+            //  ID of the trade that is being processed - Set in 'GetActiveEntry'
+            public int ActiveEntryId { get; set; }
+            //  Number of entries not filled - Set in 'GetActiveEntry'
+            public long? ActiveEntryRemaining { get; set; }
+            //  Price of entries being filled - Set in 'GetActiveEntry'
+            public double? ActiveEntryPrice { get; set; }
             public bool IsReversal { get; set; }
             public int Margin { get; set; }
             public string InstrumentType { get; set; }
             public string Name { get; set; }
-            public long PositionAfterReverse { get; set; }                                                   //	class source
-            public long RowOfReverse { get; set; }                                                           //	class source
-            public long Position { get; set; }                                                               //	class source
-            public double? StartingExitPrice { get; set; }                                                   //	class source
-            public int rowInTrades { get; set; }                                                            //	class source
-            public int RowInTrades { get; set; }                                                            //	class source
-            public long? ExitQty { get; set; }                                                                //	class source
-            public long? Remaining { get; set; }                                                              //	class source
-            public List<Trade> Trades { get; set; }                                                         //	class source
-            public List<CSV> Csv { get; set; }                                                              //	class source
+            public long PositionAfterReverse { get; set; }
+            public long RowOfReverse { get; set; }
+            public long Position { get; set; }
+            public double? StartingExitPrice { get; set; }
+            public int rowInTrades { get; set; }
+            public int RowInTrades { get; set; }
+            public long? ExitQty { get; set; }
+            public long? Remaining { get; set; }
+            public List<Trade> Trades { get; set; }
+            public List<CSV> Csv { get; set; }
             public List<NTDrawLine> NTDrawLine { get; set; }
 
         }

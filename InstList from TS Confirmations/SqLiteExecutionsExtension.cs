@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using static WindowsFormsApp1.Classes;
 using MoreLinq;
-//using NinjaTrader.NinjaScript;
-
 
 namespace WindowsFormsApp1
 {
@@ -60,6 +58,7 @@ namespace WindowsFormsApp1
                             PBlank = csv.PBlank,
                             PwinTot = csv.PwinTot,
                             PlossTot = csv.PlossTot,
+                            Ptotal = csv.Ptotal,
                             PwinCount = csv.PwinCount,
                             PlossCount = csv.PlossCount,
                             PzeroCount = csv.PzeroCount,
@@ -90,7 +89,7 @@ namespace WindowsFormsApp1
 
         #region Fill
         // 	Extenstion to fill Exit info
-        //	Called from 'Check for normal exit (Entry == false - Exit == true)'
+        //	Called from 'Check for normal exit (Entry == false - Exit == true)' and reverses (involves an exit)
         //	Finds entry and exit prices
         //	All source.ActiveEntry... vars are found in 'UpdateActiveEntry' - allows Fill() and PartialFill() to use same code
         public static Source Fill(this Source source)
@@ -122,37 +121,37 @@ namespace WindowsFormsApp1
                 source.RowInTrades = source.rowInTrades;
                 source.GetActiveEntry();
 
-                //	Number of exits that have not been matched
-                source.Remaining = source.Trades[source.RowInTrades].Qty;                                       //	Fill			
+            //	Number of exits that have not been matched
+            source.Remaining = source.Trades[source.RowInTrades].Qty;
 
-                //	Save exit price - it is used for all entry matches
-                source.StartingExitPrice = source.Trades[source.RowInTrades].Price;                             //	Fill
+            //	Save exit price - it is used for all entry matches
+            source.StartingExitPrice = source.Trades[source.RowInTrades].Price;
 
-                while (source.Remaining > 0)                                                                        //	Fill
-                {
+            while (source.Remaining > 0)
+            {
 
-                    source.UpdateActiveEntry();                                                             //	Fill
-                    source.MatchAndAddToCsv();                                                              //	Fill
+                source.UpdateActiveEntry();
+                source.MatchAndAddToCsv();
 
-                    //	Break on source.IsReversal = true;
-                    //	Only need one pass
+                //	Break on source.IsReversal = true;
+                //	Only need one pass
 
-                    if (source.IsReversal == true)
+                if (source.IsReversal == true)
                     {
                         source.IsReversal = false;
                         return source;
                     }
-                    //	 Fill
+                //	 Fill
 
-                    //	Back up through trades to match all fills
-                    //	rowInTades keeps track of the row in Trades as each line is processed
-                    //	while source.RowInTrades is used to back up through Trades list to find matched entries
-                    source.RowInTrades--;                                                                       //	Fill
-                }
-                //Console.WriteLine("\nFill() Returned to " + memberName + "() at line " + LineNumber + " / " + LN());
-
-                return source;                                                                                  //	Fill
+                //	Back up through trades to match all fills
+                //	rowInTades keeps track of the row in Trades as each line is processed
+                //	while source.RowInTrades is used to back up through Trades list to find matched entries
+                source.RowInTrades--;
             }
+            //Console.WriteLine("\nFill() Returned to " + memberName + "() at line " + LineNumber + " / " + LN());
+
+            return source;
+        }
         #endregion Fill        
 
         #region FillDailyPercentColumn
@@ -234,6 +233,7 @@ namespace WindowsFormsApp1
 
             return source;
         }
+
 
         #endregion FillDailyPercentColumn
 
@@ -389,7 +389,6 @@ namespace WindowsFormsApp1
             //   zero accumulator
             //foreach (var c in source)
             foreach (var c in sourceOrderBy)
-
             {
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
@@ -460,7 +459,7 @@ namespace WindowsFormsApp1
         public static Source FillLongShortColumnInTradesList(this Source source)
         {
             //	Fill() Called by Main () at line 449 / 522
-            //Console.WriteLine("\nFillLongShortColumnInTradesList() Called by " + memberName + " () at line " + LineNumber + " / " + LN());
+            //  Console.WriteLine("\nFillLongShortColumnInTradesList() Called by " + memberName + " () at line " + LineNumber + " / " + LN());
             //	Order is set to top entry being the last trade
             //	Position value will be zero
             //	foreach through list and compare previous position to current position
@@ -633,7 +632,6 @@ namespace WindowsFormsApp1
         #endregion Fill in workingTrades P/L column using Source
 
         #region FillPercentColumn
-
         public static Source FillPercentColumn (this Source source)
         {
 
@@ -657,7 +655,7 @@ namespace WindowsFormsApp1
                         //  Return is P/L divided by margin in points
                         percent.PercentReturn = Math.Round((double)((percent.P_LDividedByQty / marginToPoints) * 100), 1);
                     }
-                    if ( source.Name == "ZN")
+                    if (source.Name == "ZN")
                     {
                         //  Futures use margin
                         //  Convert dollars to NQ points
@@ -739,7 +737,7 @@ namespace WindowsFormsApp1
 
                     //  Calculate average win
                     //  Consider no wins
-                    if (winCount != 0)
+                    if ( winCount != 0 )
                     {
                         winLoss.AvgWin = null;
                         avgWin = Math.Round((Double)(winTotal / winCount), 2);
@@ -888,7 +886,7 @@ namespace WindowsFormsApp1
                     {
                         winLoss.AvgLoss = null;
                         avgLoss = 0;
-                        source.Csv[iD].AvgWin = avgLoss;
+                        source.Csv[iD].AvgLoss = avgLoss;
                     }
 
                     //  Consider no Losses
@@ -921,14 +919,15 @@ namespace WindowsFormsApp1
             //  At end fill in total values
             double? pAvgWin = 0;
             double? pAvgLoss = 0;
+            int? pCount = 0;
             double? pLossTot = 0;
             int? pLossCount = 0;
-            int? pWinCount = 0;
+            double? pTotal = 0;
             double? pWinLossPercent = 0;
             double? pWinLossRatio = 0;
+            int? pWinCount = 0;
             double? pWinTot = 0;
             int? pZeroCount = 0;
-            int? pCount = 0;
 
             //  need to keep track of line number in list
             int iD = 0;
@@ -954,7 +953,7 @@ namespace WindowsFormsApp1
                     pLossTot += winLoss.Loss;
                 }
                 //  Sum win count
-                if (winLoss.WinCount != null)
+                if ( winLoss.WinCount != null )
                 {
                     pWinCount += winLoss.WinCount;
                 }
@@ -978,6 +977,7 @@ namespace WindowsFormsApp1
             //  Fill in course.Csv slots with calculated values
             source.Csv[iD - 1].PwinTot = pWinTot;
             source.Csv[iD - 1].PlossTot = pLossTot;
+            source.Csv[iD - 1].Ptotal = Math.Round((double)(pWinTot + pLossTot), 2);
             source.Csv[iD - 1].PwinCount = pWinCount;
             source.Csv[iD - 1].PwinCount = pWinCount;
             source.Csv[iD - 1].PlossCount = pLossCount;
@@ -1038,9 +1038,6 @@ namespace WindowsFormsApp1
         //	Record starting Id
         public static Source GetActiveEntry(this Source source)                                           //	GetActiveEntry
         {
-            //Console.WriteLine("\nGetActiveEntry() Called by " + memberName + " () at line " + LineNumber + " / " + LN());
-            //if (source.ActiveEntryRemaining == 0)
-            //{
             var s = source.Trades[0].Id;
             //	start is first row above exit row
             //  will throw exception if trade start is proir to selected date in indidator setup
@@ -1049,18 +1046,14 @@ namespace WindowsFormsApp1
             {
 
                 int filler = 0;
+                //  Find entry that has not been filled
+                //  May be a number of unmatched entries above.
+                //  Use first found for LIFO
                 if (source.Trades[i].IsEntry == true && source.Trades[i].Matched == false)
                 {
-                    source.ActiveEntryId = source.Trades[i].Id;                                         //	GetActiveEntry
-                    source.ActiveEntryPrice = source.Trades[i].Price;                                   //	GetActiveEntry	
-                    source.ActiveEntryRemaining = source.Trades[i].Qty;                                   //	GetActiveEntry	
-                                                                                                          //	2022 09 18  Problems here - on first pass from Main() source.ActiveEntryRemaining has been set to t.Qty
-                                                                                                          //	Line above has been added but will probably not work on subsequent passes!
-                                                                                                          //if (source.ActiveEntryRemaining == 0)
-                                                                                                          //{
-                                                                                                          //	source.ActiveEntryRemaining = source.Trades[i].Qty;                                 //	GetActiveEntry
-                                                                                                          //}
-
+                    source.ActiveEntryId = source.Trades[i].Id;
+                    source.ActiveEntryPrice = source.Trades[i].Price;
+                    source.ActiveEntryRemaining = Math.Abs((long)source.Trades[i].Position);
                     break;
                     //return source;
                 }
