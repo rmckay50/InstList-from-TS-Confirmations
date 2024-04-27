@@ -20,7 +20,7 @@ namespace InstList_from_TS_Confirmations
             List<Ret> instList = new List<Ret>();
             if (fileSource == FileSource.TSWebsite)
             {
-                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 02 Feb\Downloads";
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 04 Apr\Downloads";
                 title = "Select Confirmation From Website.csv";
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
@@ -71,6 +71,18 @@ namespace InstList_from_TS_Confirmations
                 //  If modulus division is 0 save line
                 //  If modulus division is 1 concat lines
                 //  First pass creates full Bought/Sold line and second pass results in 'Bought...Sold...'
+                //
+                // 2024 04 27 
+                //  Symbol description can have from 2 to 4 words in description
+                //  '04/15/2024 04/17/2024 Bought NVIDIA CORP NVDA 1 ',
+                //  '04/11/2024 04/15/2024 Sold TESLA MTRS INC TSLA 1', 
+                //  '04/22/2024 04/24/2024 Sold ADVANCED MICRO DEVICES INC AMD 6 '
+                //
+                //  Solution:
+                //      Since qty is substring following symbol, search for first sub returning True for
+                //      subs[count].All(char.IsDigit) - using System.Ling;
+                //      First sub[] that is 'IsDigit' will Qty.
+                //      Back up one sub[] for symbol
                 int lineCount = 0;
                 foreach (var l in linesToKeep)
                 {
