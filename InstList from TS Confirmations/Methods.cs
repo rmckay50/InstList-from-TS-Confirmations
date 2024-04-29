@@ -107,6 +107,8 @@ namespace InstList_from_TS_Confirmations
                 List<Confirmation> splitFullReport = new List<Confirmation>();
                 string[] subs;
                 int iD = 0;
+                int count = 0;
+                string symbol = ""; 
                 string timeOnly;
                 long timeInTicks;
                 DateTime dt;
@@ -115,53 +117,92 @@ namespace InstList_from_TS_Confirmations
                     //  NVDA and TSLA have different number of words per line
                     //  NVDA had 20 and TSLA has 21
 
+                    //  count to 0
+                    count = 0;
+
+                    //  Split fullReport string into words
                     subs = f.LinePlusLine.Split(' ');
 
-                    if (subs[6] == "TSLA")
+                    //  Step through subs until first digit is found - value is qty of shares
+                    while (!subs[count].All(char.IsDigit))
                     { 
-                        dt = DateTime.Parse(subs[0] + " " + subs[16]);
-                        //  Convert to MST from EST
-                        dt = dt.AddMinutes(-120);
-                        timeInTicks = dt.Ticks;
-                        //  Get time only for entry into list
-                        timeOnly = dt.ToString("HH:mm:ss");
-
-                        splitFullReport.Add(new Confirmation
-                        {
-                            ID = iD,
-                            Long_Short = subs[2],
-                            Symbol = subs[6],
-                            TradeDate = subs[0],
-                            TradeTime = timeOnly,
-                            TimeTicks = timeInTicks,
-                            DTTradeTime = dt,
-                            Price = Math.Round(Convert.ToDouble(subs[8]), 2),
-                            Qty = Int32.Parse(subs[7])
-                        });
+                        count++; 
                     }
 
-                    if (subs[5] == "NVDA")
+                    //  subs[count] is Qty
+                    //  subs[count - 1] is Symbol
+                    //  subs[count + 9] is datetime (dt)
+                    //  subs[count + 1] is Price
+                    //count--;
+                    //symbol = subs[count];
+
+                    //  Use count and count++ for Symbol and Qty to created new Confirmation
+
+                    dt = DateTime.Parse(subs[0] + " " + subs[count + 9]);
+                    //  Convert to MST from EST
+                    dt = dt.AddMinutes(-120);
+                    timeInTicks = dt.Ticks;
+                    //  Get time only for entry into list
+                    timeOnly = dt.ToString("HH:mm:ss");
+
+                    splitFullReport.Add(new Confirmation
                     {
-                        dt = DateTime.Parse(subs[0] + " " + subs[15]);
-                        //  Convert to MST from EST
-                        dt = dt.AddMinutes(-120);
-                        timeInTicks = dt.Ticks;
-                        //  Get time only for entry into list
-                        timeOnly = dt.ToString("HH:mm:ss");
+                        ID = iD,
+                        Long_Short = subs[2],
+                        Symbol = subs[count - 1],
+                        TradeDate = subs[0],
+                        TradeTime = timeOnly,
+                        TimeTicks = timeInTicks,
+                        DTTradeTime = dt,
+                        Price = Math.Round(Convert.ToDouble(subs[count + 1]), 2),
+                        Qty = Int32.Parse(subs[count])
+                    });
 
-                        splitFullReport.Add(new Confirmation
-                        {
-                            ID = iD,
-                            Long_Short = subs[2],
-                            Symbol = subs[5],
-                            TradeDate = subs[0],
-                            TradeTime = timeOnly,
-                            TimeTicks = timeInTicks,
-                            DTTradeTime = dt,
-                            Price = Math.Round(Convert.ToDouble(subs[7]), 2),
-                            Qty = Int32.Parse(subs[6])
-                        });
-                    }
+                    //if (subs[6] == "TSLA")
+                    //{ 
+                    //    dt = DateTime.Parse(subs[0] + " " + subs[16]);
+                    //    //  Convert to MST from EST
+                    //    dt = dt.AddMinutes(-120);
+                    //    timeInTicks = dt.Ticks;
+                    //    //  Get time only for entry into list
+                    //    timeOnly = dt.ToString("HH:mm:ss");
+
+                    //    splitFullReport.Add(new Confirmation
+                    //    {
+                    //        ID = iD,
+                    //        Long_Short = subs[2],
+                    //        Symbol = subs[6],
+                    //        TradeDate = subs[0],
+                    //        TradeTime = timeOnly,
+                    //        TimeTicks = timeInTicks,
+                    //        DTTradeTime = dt,
+                    //        Price = Math.Round(Convert.ToDouble(subs[8]), 2),
+                    //        Qty = Int32.Parse(subs[7])
+                    //    });
+                    //}
+
+                    //if (subs[5] == "NVDA")
+                    //{
+                    //    dt = DateTime.Parse(subs[0] + " " + subs[15]);
+                    //    //  Convert to MST from EST
+                    //    dt = dt.AddMinutes(-120);
+                    //    timeInTicks = dt.Ticks;
+                    //    //  Get time only for entry into list
+                    //    timeOnly = dt.ToString("HH:mm:ss");
+
+                    //    splitFullReport.Add(new Confirmation
+                    //    {
+                    //        ID = iD,
+                    //        Long_Short = subs[2],
+                    //        Symbol = subs[5],
+                    //        TradeDate = subs[0],
+                    //        TradeTime = timeOnly,
+                    //        TimeTicks = timeInTicks,
+                    //        DTTradeTime = dt,
+                    //        Price = Math.Round(Convert.ToDouble(subs[7]), 2),
+                    //        Qty = Int32.Parse(subs[6])
+                    //    });
+                    //}
 
 
                     iD++;

@@ -385,6 +385,10 @@ namespace WindowsFormsApp1
             public decimal Cum_NetProfit { get; set; }
         }
         #endregion Classes 
-
+        public class NameCount
+        { 
+        public string Name { get; set; } 
+        public int Count { get; set;} 
+        }
     }
 }

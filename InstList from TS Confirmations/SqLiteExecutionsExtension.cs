@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using static WindowsFormsApp1.Classes;
 using MoreLinq;
+using static WindowsFormsApp1.Enums;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace WindowsFormsApp1
 {
@@ -458,6 +460,7 @@ namespace WindowsFormsApp1
 
         public static Source FillLongShortColumnInTradesList(this Source source)
         {
+            //  Source.Trades is file being changed
             //	Fill() Called by Main () at line 449 / 522
             //  Console.WriteLine("\nFillLongShortColumnInTradesList() Called by " + memberName + " () at line " + LineNumber + " / " + LN());
             //	Order is set to top entry being the last trade
@@ -680,9 +683,16 @@ namespace WindowsFormsApp1
 
         #region FillDailyWinLossColumn
         //  Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
+        //  Changes source.Csv 
+        //  Fills in last line with sums from CSV.Win and CSV.Loss columns
+        //  This needs to be changed for multiple stocks from TS website
+
         public static Source FillDailyWinLossColumn(this Source source)
         {
             #region Local variables
+            //  Uses sourse.Csv
+            //  File has Id, FilledBy, StartTimeTicks, StartTime, Entry, Endtime.Ticks, Exit, Long_Short, P_L, Qty, P_LDivdedByQty, PercentReturn filled in
+            //  This extension fills in Win, Loss WinTot, LossTot WinCount, LossCount, ZeroCount, Count, WinlossPercent, AvgWin, AvgLoss, WinLossRatio
             //  Keep track of position in .Csv list
             //  At end fill in total values
             double? avgWin = 0;
@@ -694,6 +704,7 @@ namespace WindowsFormsApp1
             double? winLossRatio = 0;
             double? winTotal = 0;
             int? zeroCount = 0;
+            //List<CSV> groupName = null;
 
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
@@ -711,6 +722,45 @@ namespace WindowsFormsApp1
             int iD = -1;
             #endregion Local variables
 
+            #region Use Linq to Fill In Values
+            List<NameCount> nc = new List<NameCount>();
+            List<CSV> workingCsv = new List<CSV>();
+            //Variables.fileSource
+            if (Variables.fileSource == FileSource.TSWebsite)
+            {
+
+                //  Make copy of source.Csv
+                foreach (var v in source.Csv)
+                {
+                    workingCsv.Add(v);
+                }
+
+                var workingCsvOrdered = workingCsv.OrderBy (i => i.Name).ThenBy (i => i.StartTimeTicks);
+                
+
+                var groupName = workingCsv.GroupBy(i =>  i.Name)
+                    .Select(j => new 
+                    {
+                        Name = j.Key,
+                        Count = j.Count()
+                    })
+                    .OrderBy(i => i.Name).ToList();
+
+                //  Need to copy groupName into another List<T> because it is local to the if statement
+               foreach( var v in groupName)
+                {
+                    nc.Add(new NameCount() { Name = v.Name, Count = v.Count });
+                }
+            }
+            #endregion Use Linq to Fill In Values
+            foreach (var v in  nc)
+            {
+                var n = v.Name;
+                var c = v.Count;
+            }
+            var x = nc.Count();
+            //nc[0].Name
+            //var g = groupName
             //  Need to assign values to all fields to keep compiler from complaning about need an assignment for nullable variable 
             foreach (var winLoss in source.Csv)
             {
@@ -850,7 +900,13 @@ namespace WindowsFormsApp1
                 //  if at end of list - enter last total
                 if (iD + 1 == source.Csv.Count)
                 {
-                    //source.Csv[iD - 1].WinTot = winTotal;
+                    //  If file is from TS website and has multiple symbols
+                    //      place summary on line below last entry (ID++)
+                    if (Variables.fileSource == FileSource.TSWebsite && nc.Count() > 1)
+                    {
+                        iD++;
+                    }
+                        //source.Csv[iD - 1].WinTot = winTotal;
                     source.Csv[iD].WinTot = winTotal;
                     source.Csv[iD].LossTot = lossTotal;
                     source.Csv[iD].WinCount = winCount;
