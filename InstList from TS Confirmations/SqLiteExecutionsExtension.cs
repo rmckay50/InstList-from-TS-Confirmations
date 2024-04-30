@@ -722,43 +722,43 @@ namespace WindowsFormsApp1
             int iD = -1;
             #endregion Local variables
 
-            #region Use Linq to Fill In Values
-            List<NameCount> nc = new List<NameCount>();
-            List<CSV> workingCsv = new List<CSV>();
+            //#region Use Linq to Fill In Values
+            //List<NameCount> nc = new List<NameCount>();
+            //List<CSV> workingCsv = new List<CSV>();
             //Variables.fileSource
-            if (Variables.fileSource == FileSource.TSWebsite)
-            {
+            //if (Variables.fileSource == FileSource.TSWebsite)
+            //{
 
-                //  Make copy of source.Csv
-                foreach (var v in source.Csv)
-                {
-                    workingCsv.Add(v);
-                }
+            //    //  Make copy of source.Csv
+            //    foreach (var v in source.Csv)
+            //    {
+            //        workingCsv.Add(v);
+            //    }
 
-                var workingCsvOrdered = workingCsv.OrderBy (i => i.Name).ThenBy (i => i.StartTimeTicks);
+            //    var workingCsvOrdered = workingCsv.OrderBy (i => i.Name).ThenBy (i => i.StartTimeTicks);
                 
 
-                var groupName = workingCsv.GroupBy(i =>  i.Name)
-                    .Select(j => new 
-                    {
-                        Name = j.Key,
-                        Count = j.Count()
-                    })
-                    .OrderBy(i => i.Name).ToList();
+            //    var groupName = workingCsv.GroupBy(i =>  i.Name)
+            //        .Select(j => new 
+            //        {
+            //            Name = j.Key,
+            //            Count = j.Count()
+            //        })
+            //        .OrderBy(i => i.Name).ToList();
 
-                //  Need to copy groupName into another List<T> because it is local to the if statement
-               foreach( var v in groupName)
-                {
-                    nc.Add(new NameCount() { Name = v.Name, Count = v.Count });
-                }
-            }
-            #endregion Use Linq to Fill In Values
-            foreach (var v in  nc)
-            {
-                var n = v.Name;
-                var c = v.Count;
-            }
-            var x = nc.Count();
+            //    //  Need to copy groupName into another List<T> because it is local to the if statement
+            //   foreach( var v in groupName)
+            //    {
+            //        nc.Add(new NameCount() { Name = v.Name, Count = v.Count });
+            //    }
+            //}
+            //#endregion Use Linq to Fill In Values
+            //foreach (var v in  nc)
+            //{
+            //    var n = v.Name;
+            //    var c = v.Count;
+            //}
+            //var x = nc.Count();
             //nc[0].Name
             //var g = groupName
             //  Need to assign values to all fields to keep compiler from complaning about need an assignment for nullable variable 
@@ -902,10 +902,10 @@ namespace WindowsFormsApp1
                 {
                     //  If file is from TS website and has multiple symbols
                     //      place summary on line below last entry (ID++)
-                    if (Variables.fileSource == FileSource.TSWebsite && nc.Count() > 1)
-                    {
-                        iD++;
-                    }
+                    //if (Variables.fileSource == FileSource.TSWebsite && nc.Count() > 1)
+                    //{
+                    //    iD++;
+                    //}
                         //source.Csv[iD - 1].WinTot = winTotal;
                     source.Csv[iD].WinTot = winTotal;
                     source.Csv[iD].LossTot = lossTotal;

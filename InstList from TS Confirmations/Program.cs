@@ -385,7 +385,6 @@ namespace WindowsFormsApp1
             source.FillWinLossSummary();
             #endregion FillWinLossSummary
 
-
             #region Fill in Daily Percent Column
 
             source.FillDailyPercentColumn();
