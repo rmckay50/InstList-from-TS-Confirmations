@@ -691,8 +691,10 @@ namespace WindowsFormsApp1
         {
             #region Local variables
             //  Uses sourse.Csv
-            //  File has Id, FilledBy, StartTimeTicks, StartTime, Entry, Endtime.Ticks, Exit, Long_Short, P_L, Qty, P_LDivdedByQty, PercentReturn filled in
-            //  This extension fills in Win, Loss WinTot, LossTot WinCount, LossCount, ZeroCount, Count, WinlossPercent, AvgWin, AvgLoss, WinLossRatio
+            //  File has Id, FilledBy, StartTimeTicks, StartTime, Entry, Endtime.Ticks,
+            //      Exit, Long_Short, P_L, Qty, P_LDivdedByQty, PercentReturn filled in
+            //  This extension fills in Win, Loss WinTot, LossTot WinCount, LossCount, ZeroCount, Count,
+            //      WinlossPercent, AvgWin, AvgLoss, WinLossRatio
             //  Keep track of position in .Csv list
             //  At end fill in total values
             double? avgWin = 0;
@@ -715,52 +717,58 @@ namespace WindowsFormsApp1
             var currentTradeDate = "";
 
             //  use as register to total trade P/L values
-            //  initialize with first value because starting poing for foreach is line 2
+            //  initialize with first value because starting point for foreach is line 2
             double runningTotal = (double)source.Csv[0].PercentReturn;
 
             //  need to keep track of line number in list
             int iD = -1;
             #endregion Local variables
 
-            //#region Use Linq to Fill In Values
-            //List<NameCount> nc = new List<NameCount>();
-            //List<CSV> workingCsv = new List<CSV>();
-            //Variables.fileSource
-            //if (Variables.fileSource == FileSource.TSWebsite)
-            //{
+            #region Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
+            //  GroupBy list is created in an if() statement and contenets need to be copied to a 
+            //      non-local list 'nameCount' List<NameCount> which is a class with Name and Count of names
+            //      Located in 'WindowsFormsApp1.Classes.NameCount'
+            List<NameCount> nameCount = new List<NameCount>();
 
-            //    //  Make copy of source.Csv
-            //    foreach (var v in source.Csv)
-            //    {
-            //        workingCsv.Add(v);
-            //    }
+            //  Make a copy of source.Csv to work with
+            List<CSV> workingCsv = new List<CSV>();
 
-            //    var workingCsvOrdered = workingCsv.OrderBy (i => i.Name).ThenBy (i => i.StartTimeTicks);
-                
+            //  Make copy of source.Csv
+            if (Variables.fileSource == FileSource.TSWebsite)
+            {
+                //  Make copy of source.Csv
+                foreach (var v in source.Csv)
+                {
+                    workingCsv.Add(v);
+                }
 
-            //    var groupName = workingCsv.GroupBy(i =>  i.Name)
-            //        .Select(j => new 
-            //        {
-            //            Name = j.Key,
-            //            Count = j.Count()
-            //        })
-            //        .OrderBy(i => i.Name).ToList();
+                //  Order workingCsv by symbol Name
+                var workingCsvOrdered = workingCsv.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
 
-            //    //  Need to copy groupName into another List<T> because it is local to the if statement
-            //   foreach( var v in groupName)
-            //    {
-            //        nc.Add(new NameCount() { Name = v.Name, Count = v.Count });
-            //    }
-            //}
-            //#endregion Use Linq to Fill In Values
-            //foreach (var v in  nc)
+                //  create list with Name, Count (number of trades/symbol)
+                var groupName = workingCsv.GroupBy(i => i.Name)
+                    .Select(j => new
+                    {
+                        Name = j.Key,
+                        Count = j.Count()
+                    })
+                    .OrderBy(i => i.Name).ToList();
+
+                //  Need to copy groupName into another List<T> because it is local to the if statement
+                foreach (var v in groupName)
+                {
+                    nameCount.Add(new NameCount() { Name = v.Name, Count = v.Count });
+                }
+            }
+            #endregion Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
+            //foreach (var v in  nameCount)
             //{
             //    var n = v.Name;
             //    var c = v.Count;
             //}
-            //var x = nc.Count();
-            //nc[0].Name
-            //var g = groupName
+            //  Number of rows in nameCount is found with nameCount.Count()
+            //var x = nameCount.Count();
+
             //  Need to assign values to all fields to keep compiler from complaning about need an assignment for nullable variable 
             foreach (var winLoss in source.Csv)
             {
@@ -902,7 +910,7 @@ namespace WindowsFormsApp1
                 {
                     //  If file is from TS website and has multiple symbols
                     //      place summary on line below last entry (ID++)
-                    //if (Variables.fileSource == FileSource.TSWebsite && nc.Count() > 1)
+                    //if (Variables.fileSource == FileSource.TSWebsite && nameCount.Count() > 1)
                     //{
                     //    iD++;
                     //}
