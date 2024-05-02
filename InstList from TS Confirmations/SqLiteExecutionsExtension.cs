@@ -728,7 +728,7 @@ namespace WindowsFormsApp1
             //  GroupBy list is created in an if() statement and contenets need to be copied to a 
             //      non-local list 'nameCount' List<NameCount> which is a class with Name and Count of names
             //      Located in 'WindowsFormsApp1.Classes.NameCount'
-            List<NameCount> nameCount = new List<NameCount>();
+            List<nameCountP_L> nameCountP_L = new List<nameCountP_L>();
 
             //  Make a copy of source.Csv to work with
             List<CSV> workingCsv = new List<CSV>();
@@ -750,14 +750,15 @@ namespace WindowsFormsApp1
                     .Select(j => new
                     {
                         Name = j.Key,
-                        Count = j.Count()
+                        Count = j.Count(),
+                        P_LSum = j.Sum(i => i.P_L)
                     })
                     .OrderBy(i => i.Name).ToList();
 
                 //  Need to copy groupName into another List<T> because it is local to the if statement
                 foreach (var v in groupName)
                 {
-                    nameCount.Add(new NameCount() { Name = v.Name, Count = v.Count });
+                    nameCountP_L.Add(new nameCountP_L() { Name = v.Name, Count = v.Count, P_LSum = v.P_LSum });
                 }
             }
             #endregion Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
@@ -970,6 +971,15 @@ namespace WindowsFormsApp1
                 }
 
             }
+            //  create list with Name, Count (number of trades/symbol)
+            //groupName = workingCsv.GroupBy(i => i.Name)
+            //    .Select(j => new
+            //    {
+            //        Name = j.Key,
+            //        Count = j.Count()
+            //    })
+            //    .OrderBy(i => i.Name).ToList();
+
             return source;
         }
         #endregion FillWinLossColumn
