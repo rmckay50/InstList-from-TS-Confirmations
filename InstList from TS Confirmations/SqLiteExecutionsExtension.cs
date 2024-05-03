@@ -724,59 +724,8 @@ namespace WindowsFormsApp1
             int iD = -1;
             #endregion Local variables
 
-            #region Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
-            //  GroupBy list is created in an if() statement and contenets need to be copied to a 
-            //      non-local list 'nameCount' List<NameCount> which is a class with Name and Count of names
-            //      Located in 'WindowsFormsApp1.Classes.NameCount'
-            List<nameCountP_L> nameCountP_L = new List<nameCountP_L>();
-
-            //  Make a copy of source.Csv to work with
-            List<CSV> workingCsv = new List<CSV>();
-
-            //  Make copy of source.Csv
-            if (Variables.fileSource == FileSource.TSWebsite)
-            {
-                //  Make copy of source.Csv
-                foreach (var v in source.Csv)
-                {
-                    workingCsv.Add(v);
-                }
-
-                //  Order workingCsv by symbol Name
-                var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
-                    .Select(e => new
-                    {
-                        Name = e.Key,
-                        WinTotal = e.Sum(k => k.Win),
-                    })
-                    .OrderBy(i => i.Name)
-                    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
-
-                //  create list with Name, Count (number of trades/symbol)
-                var groupName = workingCsv.GroupBy(i => i.Name)
-                    .Select(j => new
-                    {
-                        Name = j.Key,
-                        Count = j.Count(),
-                        P_LSum = j.Sum(i => i.P_L)
-                    })
-                    .OrderBy(i => i.Name).ToList();
-
-                //  Need to copy groupName into another List<T> because it is local to the if statement
-                //foreach (var v in groupName)
-                //{
-                //    nameCountP_L.Add(new nameCountP_L() { Name = v.Name, Count = v.Count, P_LSum = v.P_LSum });
-                //}
-            }
-            #endregion Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
-            //foreach (var v in  nameCount)
-            //{
-            //    var n = v.Name;
-            //    var c = v.Count;
-            //}
-            //  Number of rows in nameCount is found with nameCount.Count()
-            //var x = nameCount.Count();
-
+            //  Order list.  If not done now the summary line may no be on last line
+            source.Csv = source.Csv.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks).ToList();
             //  Need to assign values to all fields to keep compiler from complaning about need an assignment for nullable variable 
             foreach (var winLoss in source.Csv)
             {
@@ -986,6 +935,68 @@ namespace WindowsFormsApp1
             //        Count = j.Count()
             //    })
             //    .OrderBy(i => i.Name).ToList();
+
+            #region Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
+            //  GroupBy list is created in an if() statement and contenets need to be copied to a 
+            //      non-local list 'nameCount' List<NameCount> which is a class with Name and Count of names
+            //      Located in 'WindowsFormsApp1.Classes.NameCount'
+            List<nameCountP_L> nameCountP_L = new List<nameCountP_L>();
+
+            //  Make a copy of source.Csv to work with
+            List<CSV> workingCsv = new List<CSV>();
+
+            //  Make copy of source.Csv
+            if (Variables.fileSource == FileSource.TSWebsite)
+            {
+                //  Make copy of source.Csv. source.Csv no has Win / Loss in columns and day summary at bottom
+                foreach (var v in source.Csv)
+                {
+                    workingCsv.Add(v);
+                }
+                workingCsv = workingCsv.OrderBy(I => I.Name).ThenBy (i => i.StartTimeTicks).ToList();
+                //  Order workingCsv by symbol Name and fill in Win / Loss totals and calculated results
+                var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
+                    .Select(e => new
+                    {
+                        Name = e.Key,
+                        WinTotal = e.Sum(k => k.Win),
+                        LossTotal = e.Sum(k => k.Loss),
+                        WinCount = (decimal?)e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                        LossCount = (decimal?)e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                        TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                        WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                        AvgWin = e.Sum(k => k.Win) / e.Where(p => p.Win != 0).Select(p => p.Win).Count(),
+                        AvgLoss = e.Sum(k => k.Loss) / e.Where(p => p.Loss != 0).Select(p => p.Loss).Count(),
+                    })
+                    .OrderBy(i => i.Name)
+                    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
+
+                //  create list with Name, Count (number of trades/symbol)
+                var groupName = workingCsv.GroupBy(i => i.Name)
+                    .Select(j => new
+                    {
+                        Name = j.Key,
+                        Count = j.Count(),
+                        P_LSum = j.Sum(i => i.P_L)
+                    })
+                    .OrderBy(i => i.Name).ToList();
+
+                //  Need to copy groupName into another List<T> because it is local to the if statement
+                //foreach (var v in groupName)
+                //{
+                //    nameCountP_L.Add(new nameCountP_L() { Name = v.Name, Count = v.Count, P_LSum = v.P_LSum });
+                //}
+            }
+            #endregion Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
+            //foreach (var v in  nameCount)
+            //{
+            //    var n = v.Name;
+            //    var c = v.Count;
+            //}
+            //  Number of rows in nameCount is found with nameCount.Count()
+            //var x = nameCount.Count();
+
 
             return source;
         }
