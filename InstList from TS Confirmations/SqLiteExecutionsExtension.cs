@@ -182,6 +182,7 @@ namespace WindowsFormsApp1
             //   zero accumulator
             foreach (var c in source.Csv)
             {
+                if
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
 
@@ -706,7 +707,8 @@ namespace WindowsFormsApp1
             double? winLossRatio = 0;
             double? winTotal = 0;
             int? zeroCount = 0;
-            //List<CSV> groupName = null;
+
+            List<CSV> lastRow = new List<CSV>();
 
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
@@ -955,23 +957,118 @@ namespace WindowsFormsApp1
                 }
                 workingCsv = workingCsv.OrderBy(I => I.Name).ThenBy (i => i.StartTimeTicks).ToList();
                 //  Order workingCsv by symbol Name and fill in Win / Loss totals and calculated results
-                var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
-                    .Select(e => new
-                    {
-                        Name = e.Key,
-                        WinTotal = e.Sum(k => k.Win),
-                        LossTotal = e.Sum(k => k.Loss),
-                        WinCount = (decimal?)e.Where(p => p.Win != null).Select(p => p.Win).Count(),
-                        LossCount = (decimal?)e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                        TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                        WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
-                            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
-                        AvgWin = e.Sum(k => k.Win) / e.Where(p => p.Win != 0).Select(p => p.Win).Count(),
-                        AvgLoss = e.Sum(k => k.Loss) / e.Where(p => p.Loss != 0).Select(p => p.Loss).Count(),
-                    })
-                    .OrderBy(i => i.Name)
-                    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
+                //var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
+                //    .Select(e => new
+                //    {
+                //        Name = e.Key,
+                //        WinTotal = e.Sum(k => k.Win),
+                //        LossTotal = e.Sum(k => k.Loss),
+                //        WinCount = (decimal?)e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                //        LossCount = (decimal?)e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                //        TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                //        WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                //            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                //        AvgWin = e.Sum(k => k.Win) / e.Where(p => p.Win != 0).Select(p => p.Win).Count(),
+                //        AvgLoss = e.Sum(k => k.Loss) / e.Where(p => p.Loss != 0).Select(p => p.Loss).Count(),
+                //    })
+                //    .OrderBy(i => i.Name)
+                //    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
+                List<MultipleSymbols> multipleSymbols = workingCsv.GroupBy(i => i.Name)
+                .Select(e =>
+                new MultipleSymbols
+                {
+                    Name = e.Key,
+                    WinTotal = (decimal?)e.Sum(k => k.Win),
+                    LossTotal = (decimal?)e.Sum(k => k.Loss),
+                    WinCount = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                    LossCount = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                    / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                })
+                .OrderBy(e => e.Name)
+                .ToList();
 
+                //  Caculate win / loss count and win / loss ration
+                foreach (var x in multipleSymbols)
+                {
+                    if (x.WinCount != 0)
+                    {
+                        x.AvgWin = x.WinTotal / x.WinCount;
+                    }
+                    else if (x.WinCount == 0)
+                    {
+                        x.AvgWin = 0;
+                    }
+
+
+                    if (x.LossCount != 0)
+                    {
+                        x.AvgLoss = x.LossTotal / x.LossCount;
+                    }
+                    else if (x.LossCount == 0)
+                    {
+                        x.AvgLoss = 0;
+                    }
+
+                    //if ( x.WinCount)
+
+                    if (x.AvgLoss != 0)
+                    {
+                        x.WinLossRatio = x.AvgWin / -x.AvgLoss;
+                    }
+                    else if (x.AvgLoss == 0)
+                    {
+                        x.WinLossRatio = 100;
+                    }
+                }
+
+                // Check how many symbols.  If more than one need to fill in summary for each different symbol
+                // Step through lists from bottom to get result on last line of symbols
+
+                var numberOfSymbols = multipleSymbols.Count();
+                if (numberOfSymbols > 1)
+                {
+                    var rows = workingCsv.Count() - 1;
+                    lastRow.Add(
+                        new CSV
+                        {
+                            WinTot = workingCsv[rows].WinTot,
+                            LossTot = workingCsv[rows].LossTot,
+                            WinCount = workingCsv[rows].WinCount,
+                            LossCount = workingCsv[rows].LossCount,
+                            ZeroCount = workingCsv[rows].ZeroCount,
+                            Count = workingCsv[rows].Count,
+                            WinLossPercent = workingCsv[rows].WinLossPercent,
+                            AvgWin = workingCsv[rows].AvgWin,
+                            AvgLoss = workingCsv[rows].AvgLoss,
+                            WinLossRatio = workingCsv[rows].WinLossRatio,
+                        });
+                    multipleSymbols.Reverse();
+                    foreach ( var x in multipleSymbols)
+                    {
+                        foreach ( var y in Enumerable.Reverse(workingCsv))
+                        {
+                            if (x.Name == y.Name)
+                            { 
+                                y.WinTot = (double?)x.WinTotal;
+                                y.LossTot = (double?)x.LossTotal;
+                                y.WinCount = x.WinCount;
+                                y.LossCount = x.LossCount;
+                                y.ZeroCount = x.ZeroCount;
+                                y.Count = x.TotalCount;
+                                y.WinLossPercent = (double?)x.WinLossPercent;
+                                y.AvgWin = (double?)x.AvgWin;
+                                y.AvgLoss = (double?)x.AvgLoss;
+                                y.WinLossRatio = (double?)x.WinLossRatio;
+                                break;
+                            }
+                        }
+
+                    }
+                    workingCsv.Add(lastRow[0]);
+                    source.Csv = workingCsv;
+                }
                 //  create list with Name, Count (number of trades/symbol)
                 var groupName = workingCsv.GroupBy(i => i.Name)
                     .Select(j => new

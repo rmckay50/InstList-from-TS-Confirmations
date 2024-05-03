@@ -43,6 +43,11 @@
  *  2024 05 02
  *      Updated extension 'FillDailyWinLossColumn' to use Linq to calculate daily summary results for each symbol.
  *      Need to add that info to '2024 04 26  Confirmation Results.csv'
+ *      
+ *  2024 05 03
+ *      Need to reverse list without changing list
+ *      https://stackoverflow.com/questions/19102021/how-to-reverse-a-generic-list-without-changing-the-same-list
+ *      'foreach (var t1 in Enumerable.Reverse(t.List))'
  */
 
 using LINQtoCSV;

@@ -89,6 +89,7 @@ namespace WindowsFormsApp1
             public decimal? LossTotal { get; set; }
             public int? WinCount { get; set; }
             public int? LossCount { get; set; }
+            public int? ZeroCount { get; set; }
             public int? TotalCount { get; set; }
             public decimal? WinLossPercent { get; set; }
             public decimal? AvgWin { get; set; }
