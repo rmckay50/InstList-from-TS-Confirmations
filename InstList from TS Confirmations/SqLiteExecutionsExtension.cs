@@ -743,7 +743,14 @@ namespace WindowsFormsApp1
                 }
 
                 //  Order workingCsv by symbol Name
-                var workingCsvOrdered = workingCsv.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
+                var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
+                    .Select(e => new
+                    {
+                        Name = e.Key,
+                        WinTotal = e.Sum(k => k.Win),
+                    })
+                    .OrderBy(i => i.Name)
+                    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
 
                 //  create list with Name, Count (number of trades/symbol)
                 var groupName = workingCsv.GroupBy(i => i.Name)
@@ -756,10 +763,10 @@ namespace WindowsFormsApp1
                     .OrderBy(i => i.Name).ToList();
 
                 //  Need to copy groupName into another List<T> because it is local to the if statement
-                foreach (var v in groupName)
-                {
-                    nameCountP_L.Add(new nameCountP_L() { Name = v.Name, Count = v.Count, P_LSum = v.P_LSum });
-                }
+                //foreach (var v in groupName)
+                //{
+                //    nameCountP_L.Add(new nameCountP_L() { Name = v.Name, Count = v.Count, P_LSum = v.P_LSum });
+                //}
             }
             #endregion Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
             //foreach (var v in  nameCount)

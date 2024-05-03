@@ -82,6 +82,20 @@ namespace WindowsFormsApp1
                 LinePlusLine = linePlusLine;
             }
         }
+        public class MultipleSymbols
+        {
+            public string Name { get; set; }
+            public decimal? WinTotal { get; set; }
+            public decimal? LossTotal { get; set; }
+            public int? WinCount { get; set; }
+            public int? LossCount { get; set; }
+            public int? TotalCount { get; set; }
+            public decimal? WinLossPercent { get; set; }
+            public decimal? AvgWin { get; set; }
+            public decimal? AvgLoss { get; set; }
+            public decimal? WinLossRatio { get; set; }
+
+        }
         public class nameCountP_L
         { 
         public string Name { get; set; } 
@@ -390,6 +404,7 @@ namespace WindowsFormsApp1
             public decimal P_L { get; set; }
             public decimal Cum_NetProfit { get; set; }
         }
+
         #endregion Classes 
     }
 }
