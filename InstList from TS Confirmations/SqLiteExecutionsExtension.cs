@@ -203,6 +203,8 @@ namespace WindowsFormsApp1
             //   zero accumulator
             foreach (var c in source.Csv)
             {
+                //  Last line will be mostly null for multiple symbols
+                //  Check for null and go to last section for data entry code
                 if (c.EndTime == null)
                 {
                     break;
@@ -249,14 +251,14 @@ namespace WindowsFormsApp1
             }
 
                 //  if ID  == list.count - at end of list - enter last total
-                if (iD == source.Csv.Count)
-                {
+                //if (iD == source.Csv.Count)
+                //{
                     source.Csv[iD - 1].DailyPercentTotal = runningTotal;
 
                     //  enter number of trades in TotalTrades
                     source.Csv[iD - 1].TotalTrades = TotalTrades;
 
-                }
+                //}
 
             return source;
         }
@@ -291,6 +293,14 @@ namespace WindowsFormsApp1
             //   zero accumulator
             foreach (var c in source.Csv)
             {
+
+                //  Last line will be mostly null for multiple symbols
+                //  Check for null and go to last section for data entry code
+                if (c.EndTime == null)
+                {
+                    break;
+                }
+
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
 
@@ -330,17 +340,17 @@ namespace WindowsFormsApp1
 
                 //  update line ID
                 iD++;
+            }
 
                 //  if ID  == list.count - at end of list - enter last total
-                if (iD == source.Csv.Count)
-                {
+                //if (iD == source.Csv.Count)
+                //{
                     source.Csv[iD - 1].DailyDollarTotal = runningTotal;
 
                     //  enter number of trades in TotalTrades
                     source.Csv[iD - 1].TotalTrades = TotalTrades;
 
-                }
-            }
+                //}
 
             return source;
         }

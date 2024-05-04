@@ -401,10 +401,10 @@ namespace WindowsFormsApp1
             source.FillDailyPercentColumn();
             #endregion Fill in Daily Percent Column
 
-            #region Fill in Daily Percent Column
+            //#region Fill in Daily Percent Column
 
-            source.FillDailyPercentColumn();
-            #endregion Fill in Daily Percent Column
+            //source.FillDailyPercentColumn();
+            //#endregion Fill in Daily Percent Column
 
             #region Fill in Daily Total Column
 
