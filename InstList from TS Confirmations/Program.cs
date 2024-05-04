@@ -384,11 +384,12 @@ namespace WindowsFormsApp1
             source.FillPercentColumn();
             #endregion Fill in Percent Column
 
-            //#region Fill in Win/Loss Columns
-            ////  Copy P/L numbers into Win, Loss, or Zero columns
-            //source.FillDailyWinLossColumn();
+            #region Fill in Win/Loss Columns
 
-            //#endregion Fill in Win/Loss Columns
+            //  Copy P/L numbers into Win, Loss, or Zero columns
+            source.FillDailyWinLossColumn();
+
+            #endregion Fill in Win/Loss Columns
 
             #region FillWinLossSummary
             //  Fill page summary in far right columns
@@ -405,18 +406,12 @@ namespace WindowsFormsApp1
             source.FillDailyPercentColumn();
             #endregion Fill in Daily Percent Column
 
-            #region Fill in Win/Loss Columns
-            //  Copy P/L numbers into Win, Loss, or Zero columns
-            source.FillDailyWinLossColumn();
-
-            #endregion Fill in Win/Loss Columns
             #region Fill in Daily Total Column
 
             //	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
             source.FillDailyTotalColumn();
 
             #endregion Fill in Daily Total Column
-
 
             #region Create NTDrawLine list for use in saving to file and later in NT
 

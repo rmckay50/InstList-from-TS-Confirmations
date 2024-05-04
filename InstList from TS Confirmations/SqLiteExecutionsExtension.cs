@@ -243,6 +243,7 @@ namespace WindowsFormsApp1
 
                 //  update line ID
                 iD++;
+            }
 
                 //  if ID  == list.count - at end of list - enter last total
                 if (iD == source.Csv.Count)
@@ -253,7 +254,6 @@ namespace WindowsFormsApp1
                     source.Csv[iD - 1].TotalTrades = TotalTrades;
 
                 }
-            }
 
             return source;
         }
