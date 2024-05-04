@@ -4,6 +4,8 @@ using System.Linq;
 using static WindowsFormsApp1.Classes;
 using MoreLinq;
 using static WindowsFormsApp1.Enums;
+using static WindowsFormsApp1.Variables;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace WindowsFormsApp1
@@ -22,6 +24,11 @@ namespace WindowsFormsApp1
             {
                 try
                 {
+                    //  Last row may be only days summary
+                    if (csv.StartTime == null)
+                    {
+                        goto LastRow;
+                    }
                     var t = DateTime.Parse(csv.StartTime).Ticks;
 
                     nTDrawLine.Add(
@@ -77,6 +84,20 @@ namespace WindowsFormsApp1
                     Console.WriteLine( ex );
                 }
             }
+            LastRow:
+                nTDrawLine.Add(new NTDrawLine
+                {
+                    WinTot = lastRow[0].WinTot,
+                    LossTot = lastRow[0].LossTot,
+                    WinCount = lastRow[0].WinCount,
+                    LossCount = lastRow[0].LossCount,
+                    ZeroCount = lastRow[0].ZeroCount,
+                    Count = lastRow[0].Count,
+                    WinLossPercent = lastRow[0].WinLossPercent,
+                    AvgWin = lastRow[0].AvgWin,
+                    AvgLoss = lastRow[0].AvgLoss,
+                    WinLossRatio = lastRow[0].WinLossRatio
+                });
             int nTDrawLineId = 0;
             foreach (var e in nTDrawLine)
             {
@@ -182,7 +203,7 @@ namespace WindowsFormsApp1
             //   zero accumulator
             foreach (var c in source.Csv)
             {
-                if
+                //if
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
 
@@ -708,7 +729,7 @@ namespace WindowsFormsApp1
             double? winTotal = 0;
             int? zeroCount = 0;
 
-            List<CSV> lastRow = new List<CSV>();
+            
 
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
@@ -1004,7 +1025,7 @@ namespace WindowsFormsApp1
 
                     if (x.LossCount != 0)
                     {
-                        x.AvgLoss = x.LossTotal / x.LossCount;
+                        x.AvgLoss = (decimal?)Math.Round((double)(x.LossTotal / x.LossCount), 2);
                     }
                     else if (x.LossCount == 0)
                     {
@@ -1030,7 +1051,7 @@ namespace WindowsFormsApp1
                 if (numberOfSymbols > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    lastRow.Add(
+                    Variables.lastRow.Add(
                         new CSV
                         {
                             WinTot = workingCsv[rows].WinTot,
@@ -1066,8 +1087,25 @@ namespace WindowsFormsApp1
                         }
 
                     }
-                    workingCsv.Add(lastRow[0]);
+                    workingCsv.ToList();
+                    //Variables.lastRow[0].
+                    var g = lastRow[0].LossTot;
+
                     source.Csv = workingCsv;
+                    source.Csv.Add(new CSV
+                    {
+                        WinTot = lastRow[0].WinTot,
+                        LossTot = lastRow[0].LossTot,
+                        WinCount = lastRow[0].WinCount,
+                        LossCount = lastRow[0].LossCount,
+                        ZeroCount = lastRow[0].ZeroCount,
+                        Count = lastRow[0].Count,
+                        WinLossPercent = lastRow[0].WinLossPercent,
+                        AvgWin = lastRow[0].AvgWin,
+                        AvgLoss = lastRow[0].AvgLoss,
+                        WinLossRatio = lastRow[0].WinLossRatio,
+
+                    });
                 }
                 //  create list with Name, Count (number of trades/symbol)
                 var groupName = workingCsv.GroupBy(i => i.Name)
