@@ -77,7 +77,7 @@
  *          Changes source.Csv 
  *          Fills in last line with sums from CSV.Win and CSV.Loss columns
  *          If multiple symbols each different symbols has summary values calculated
- *          Creates lastRowInList list - summary figures that will be overwritten
+ *          Creates lastRow list - summary figures that will be overwritten
  *          
  *       public static Source FillWinLossSummary(this Source source)
  *          Fills in far right columns for page summary
@@ -125,7 +125,8 @@ namespace WindowsFormsApp1
         public static string fileSelectedName = "";
         public static int lineCount = 0;
         public static List<Ret> instList = new List<Ret>();
-        public static List<CSV> lastRowInList = new List<CSV>();
+        public static List<CSV> lastRow = new List<CSV>();
+        public static List<MultipleSymbols> multipleSymbols = new List<MultipleSymbols>();
     }
     public static class Program
     {

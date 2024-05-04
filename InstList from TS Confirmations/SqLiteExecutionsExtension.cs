@@ -85,20 +85,36 @@ namespace WindowsFormsApp1
                 }
             }
         LastRowOfList:
-            var x = Variables.lastRowInList[0].Ptotal;
+
+            if (multipleSymbols.Count() > 1)
+            {
+
+                var x = Variables.lastRow[0].Ptotal;
                 nTDrawLine.Add(new NTDrawLine
                 {
-                    WinTot = lastRowInList[0].WinTot,
-                    LossTot = lastRowInList[0].LossTot,
-                    WinCount = lastRowInList[0].WinCount,
-                    LossCount = lastRowInList[0].LossCount,
-                    ZeroCount = lastRowInList[0].ZeroCount,
-                    Count = lastRowInList[0].Count,
-                    WinLossPercent = lastRowInList[0].WinLossPercent,
-                    AvgWin = lastRowInList[0].AvgWin,
-                    AvgLoss = lastRowInList[0].AvgLoss,
-                    WinLossRatio = lastRowInList[0].WinLossRatio
+                    WinTot = lastRow[0].WinTot,
+                    LossTot = lastRow[0].LossTot,
+                    WinCount = lastRow[0].WinCount,
+                    LossCount = lastRow[0].LossCount,
+                    ZeroCount = lastRow[0].ZeroCount,
+                    Count = lastRow[0].Count,
+                    WinLossPercent = lastRow[0].WinLossPercent,
+                    AvgWin = lastRow[0].AvgWin,
+                    AvgLoss = lastRow[0].AvgLoss,
+                    WinLossRatio = lastRow[0].WinLossRatio,
+                    PwinTot = lastRow[0].WinTot,
+                    PlossTot = lastRow[0].LossTot,
+                    Ptotal = lastRow[0].Ptotal,
+                    PwinCount = lastRow[0].LossCount,
+                    PlossCount = lastRow[0].LossCount,
+                    PzeroCount = lastRow[0].ZeroCount,
+                    Pcount = lastRow[0].Count,
+                    PwinLossPercent = lastRow[0].WinLossPercent,
+                    PavgWin = lastRow[0].AvgWin,
+                    PavgLoss = lastRow[0].AvgLoss,
+                    PwinLossRatio = lastRow[0].WinLossRatio,
                 });
+            }
             int nTDrawLineId = 0;
             foreach (var e in nTDrawLine)
             {
@@ -712,7 +728,7 @@ namespace WindowsFormsApp1
         //  Changes source.Csv 
         //  Fills in last line with sums from CSV.Win and CSV.Loss columns
         //  If multiple symbols each different symbols has summary values calculated
-        //  Creates lastRowInList list - summary figures that will be overwritten
+        //  Creates lastRow list - summary figures that will be overwritten
 
         public static Source FillDailyWinLossColumn(this Source source)
         {
@@ -997,7 +1013,7 @@ namespace WindowsFormsApp1
                 //    })
                 //    .OrderBy(i => i.Name)
                 //    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
-                List<MultipleSymbols> multipleSymbols = workingCsv.GroupBy(i => i.Name)
+                multipleSymbols = workingCsv.GroupBy(i => i.Name)
                 .Select(e =>
                 new MultipleSymbols
                 {
@@ -1049,12 +1065,10 @@ namespace WindowsFormsApp1
 
                 // Check how many symbols.  If more than one need to fill in summary for each different symbol
                 // Step through lists from bottom to get result on last line of symbols
-                var newCsv = Variables.lastRowInList;
-                var numberOfSymbols = multipleSymbols.Count();
-                if (numberOfSymbols > 1)
+                if (multipleSymbols.Count() > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    lastRowInList.Add(
+                    lastRow.Add(
                         new CSV
                         {
                             WinTot = workingCsv[rows].WinTot,
@@ -1069,7 +1083,6 @@ namespace WindowsFormsApp1
                             WinLossRatio = workingCsv[rows].WinLossRatio,
                         });
 
-                    la
                     //PwinTot = workingCsv[rows].PwinTot,
                     //PlossTot = workingCsv[rows].PlossTot,
                     //Ptotal = workingCsv[rows].Ptotal,
@@ -1106,22 +1119,20 @@ namespace WindowsFormsApp1
 
                     }
                     workingCsv.ToList();
-                    //Variables.lastRowInList[0].
-                    var g = lastRowInList[0].LossTot;
 
                     source.Csv = workingCsv;
                     source.Csv.Add(new CSV
                     {
-                        WinTot = lastRowInList[0].WinTot,
-                        LossTot = lastRowInList[0].LossTot,
-                        WinCount = lastRowInList[0].WinCount,
-                        LossCount = lastRowInList[0].LossCount,
-                        ZeroCount = lastRowInList[0].ZeroCount,
-                        Count = lastRowInList[0].Count,
-                        WinLossPercent = lastRowInList[0].WinLossPercent,
-                        AvgWin = lastRowInList[0].AvgWin,
-                        AvgLoss = lastRowInList[0].AvgLoss,
-                        WinLossRatio = lastRowInList[0].WinLossRatio,
+                        WinTot = lastRow[0].WinTot,
+                        LossTot = lastRow[0].LossTot,
+                        WinCount = lastRow[0].WinCount,
+                        LossCount = lastRow[0].LossCount,
+                        ZeroCount = lastRow[0].ZeroCount,
+                        Count = lastRow[0].Count,
+                        WinLossPercent = lastRow[0].WinLossPercent,
+                        AvgWin = lastRow[0].AvgWin,
+                        AvgLoss = lastRow[0].AvgLoss,
+                        WinLossRatio = lastRow[0].WinLossRatio,
 
                     });
                 }
@@ -1274,6 +1285,26 @@ namespace WindowsFormsApp1
             }
             #endregion Sum wins/Losses
 
+            //  Fill in remaining columns in Variables.lastRow
+            //  If more than one symbol in trades data
+
+            if (multipleSymbols.Count() > 1)
+            {
+
+                var rows = source.Csv.Count() - 1;
+
+                lastRow[0].PwinTot = source.Csv[rows].PwinTot;
+                lastRow[0].PlossTot = source.Csv[rows].PlossTot;
+                lastRow[0].Ptotal = source.Csv[rows].Ptotal;
+                lastRow[0].PwinCount = source.Csv[rows].PwinCount;
+                lastRow[0].PlossCount = source.Csv[rows].PlossCount;
+                lastRow[0].PzeroCount = source.Csv[rows].PzeroCount;
+                lastRow[0].Pcount = source.Csv[rows].Pcount;
+                lastRow[0].PwinLossPercent = source.Csv[rows].PwinLossPercent;
+                lastRow[0].PavgWin = source.Csv[rows].PavgWin;
+                lastRow[0].PavgLoss = source.Csv[rows].PavgLoss;
+                lastRow[0].PwinLossRatio = source.Csv[rows].PwinLossRatio;
+            }
             return source;
         }
         #endregion FillWinLossSummary
