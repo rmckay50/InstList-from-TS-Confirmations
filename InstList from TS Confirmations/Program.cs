@@ -329,7 +329,9 @@ namespace WindowsFormsApp1
             }
             //	Top row is now first trade in selected list - Position != 0
             trades.Reverse();
-            workingTrades = trades.ToList();
+            //workingTrades = trades.ToList();
+            workingTrades = trades.OrderBy(j => j.Name).ThenBy(j => j.Time).ToList();
+
             trades.Clear();
 
             #endregion Create List<Trade> workingTrades
@@ -469,6 +471,7 @@ namespace WindowsFormsApp1
             #region Use LINQtoCSV on combined list to write - Not adjusted for LIFO
             //  foreach through source.NTDrawLine to create list with correct order for cc.write
             //  uses 'NTDrawLineForLINQtoCSV' which has column attributes
+            var x = source.NTDrawLine[0].WinLossRatio;
             var columnsWithAttributes = from l in source.NTDrawLine
                                         select new NTDrawLineForLINQtoCSV
                                         {
@@ -517,6 +520,7 @@ namespace WindowsFormsApp1
                                         };
             columnsWithAttributes.ToList();
 
+            
             //  write to csvNTDrawline if not in Playback mode
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
@@ -528,11 +532,11 @@ namespace WindowsFormsApp1
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 04 Apr\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 05 May\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 04 Apr\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 05 May\Results\";
             }
 
             cc.Write
