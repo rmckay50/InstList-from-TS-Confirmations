@@ -203,7 +203,10 @@ namespace WindowsFormsApp1
             //   zero accumulator
             foreach (var c in source.Csv)
             {
-                //if
+                if (c.EndTime == null)
+                {
+                    break;
+                }
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
 
