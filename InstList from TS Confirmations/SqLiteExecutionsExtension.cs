@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
                     //  Last row may be only days summary
                     if (csv.StartTime == null)
                     {
-                        goto LastRow;
+                        goto LastRowOfList;
                     }
                     var t = DateTime.Parse(csv.StartTime).Ticks;
 
@@ -84,20 +84,20 @@ namespace WindowsFormsApp1
                     Console.WriteLine( ex );
                 }
             }
-        LastRow:
-            var x = Variables.lastRow[0].Ptotal;
+        LastRowOfList:
+            var x = Variables.lastRowInList[0].Ptotal;
                 nTDrawLine.Add(new NTDrawLine
                 {
-                    WinTot = lastRow[0].WinTot,
-                    LossTot = lastRow[0].LossTot,
-                    WinCount = lastRow[0].WinCount,
-                    LossCount = lastRow[0].LossCount,
-                    ZeroCount = lastRow[0].ZeroCount,
-                    Count = lastRow[0].Count,
-                    WinLossPercent = lastRow[0].WinLossPercent,
-                    AvgWin = lastRow[0].AvgWin,
-                    AvgLoss = lastRow[0].AvgLoss,
-                    WinLossRatio = lastRow[0].WinLossRatio
+                    WinTot = lastRowInList[0].WinTot,
+                    LossTot = lastRowInList[0].LossTot,
+                    WinCount = lastRowInList[0].WinCount,
+                    LossCount = lastRowInList[0].LossCount,
+                    ZeroCount = lastRowInList[0].ZeroCount,
+                    Count = lastRowInList[0].Count,
+                    WinLossPercent = lastRowInList[0].WinLossPercent,
+                    AvgWin = lastRowInList[0].AvgWin,
+                    AvgLoss = lastRowInList[0].AvgLoss,
+                    WinLossRatio = lastRowInList[0].WinLossRatio
                 });
             int nTDrawLineId = 0;
             foreach (var e in nTDrawLine)
@@ -182,6 +182,7 @@ namespace WindowsFormsApp1
 
         public static Source FillDailyPercentColumn(this Source source)
         {
+            //  Fills in DailyPercentColumn only
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
@@ -271,7 +272,7 @@ namespace WindowsFormsApp1
         //  for source
         public static Source FillDailyTotalColumn(this Source source)
         {
-
+            //  Fills in DailyDollarTotal and TotalTrades only
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
@@ -342,16 +343,10 @@ namespace WindowsFormsApp1
                 //  update line ID
                 iD++;
             }
-
-                //  if ID  == list.count - at end of list - enter last total
-                //if (iD == source.Csv.Count)
-                //{
                     source.Csv[iD - 1].DailyDollarTotal = runningTotal;
 
                     //  enter number of trades in TotalTrades
                     source.Csv[iD - 1].TotalTrades = TotalTrades;
-
-                //}
 
             return source;
         }
@@ -610,16 +605,12 @@ namespace WindowsFormsApp1
 
             }
 
-
-
-            //Console.WriteLine("\nFill() Returned to " + memberName + "() at line " + LineNumber + " / " + LN());
-
             return source;                                                                                  //	Fill
         }
         #endregion FillLongShortColumnInTradesList
 
         #region Fill in workingTrades P/L column using Source
-
+        //  Fills in P/L column
         public static Source FillProfitLossColumnInTradesList(this Source source)
         {
             foreach (var pl in source.Csv)
@@ -671,9 +662,9 @@ namespace WindowsFormsApp1
         #endregion Fill in workingTrades P/L column using Source
 
         #region FillPercentColumn
+        //  Fills in PercentReturn column
         public static Source FillPercentColumn (this Source source)
         {
-
             //  assign divisor using margin requirement or 4 for stocks  
             double? divisor = null;
             foreach (var percent in source.Csv)
@@ -710,7 +701,6 @@ namespace WindowsFormsApp1
                         //  Stocks use 4 to 1 leverage
                         var entryDividedByFour = (double)percent.Entry / 4;
                         percent.PercentReturn = Math.Round((double)((percent.P_LDividedByQty / entryDividedByFour) * 100), 2);
-
                 }
             }
             return source;
@@ -721,7 +711,8 @@ namespace WindowsFormsApp1
         //  Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
         //  Changes source.Csv 
         //  Fills in last line with sums from CSV.Win and CSV.Loss columns
-        //  This needs to be changed for multiple stocks from TS website
+        //  If multiple symbols each different symbols has summary values calculated
+        //  Creates lastRowInList list - summary figures that will be overwritten
 
         public static Source FillDailyWinLossColumn(this Source source)
         {
@@ -741,9 +732,7 @@ namespace WindowsFormsApp1
             double? winLossPercent = 0;
             double? winLossRatio = 0;
             double? winTotal = 0;
-            int? zeroCount = 0;
-
-            
+            int? zeroCount = 0;            
 
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
@@ -1060,12 +1049,12 @@ namespace WindowsFormsApp1
 
                 // Check how many symbols.  If more than one need to fill in summary for each different symbol
                 // Step through lists from bottom to get result on last line of symbols
-
+                var newCsv = Variables.lastRowInList;
                 var numberOfSymbols = multipleSymbols.Count();
                 if (numberOfSymbols > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    lastRow.Add(
+                    lastRowInList.Add(
                         new CSV
                         {
                             WinTot = workingCsv[rows].WinTot,
@@ -1079,6 +1068,21 @@ namespace WindowsFormsApp1
                             AvgLoss = workingCsv[rows].AvgLoss,
                             WinLossRatio = workingCsv[rows].WinLossRatio,
                         });
+
+                    la
+                    //PwinTot = workingCsv[rows].PwinTot,
+                    //PlossTot = workingCsv[rows].PlossTot,
+                    //Ptotal = workingCsv[rows].Ptotal,
+                    //PwinCount = workingCsv[rows].PwinCount,
+                    //PlossCount = workingCsv[rows].PlossCount,
+                    //PzeroCount = workingCsv[rows].PzeroCount,
+                    //Pcount = workingCsv[rows].Pcount,
+                    //PwinLossPercent = workingCsv[rows].PwinLossPercent,
+                    //PavgWin = workingCsv[rows].PavgWin,
+                    //PavgLoss = workingCsv[rows].PavgLoss,
+                    //PwinLossRatio = workingCsv[rows].PwinLossRatio,
+
+
                     multipleSymbols.Reverse();
                     foreach ( var x in multipleSymbols)
                     {
@@ -1102,22 +1106,22 @@ namespace WindowsFormsApp1
 
                     }
                     workingCsv.ToList();
-                    //Variables.lastRow[0].
-                    var g = lastRow[0].LossTot;
+                    //Variables.lastRowInList[0].
+                    var g = lastRowInList[0].LossTot;
 
                     source.Csv = workingCsv;
                     source.Csv.Add(new CSV
                     {
-                        WinTot = lastRow[0].WinTot,
-                        LossTot = lastRow[0].LossTot,
-                        WinCount = lastRow[0].WinCount,
-                        LossCount = lastRow[0].LossCount,
-                        ZeroCount = lastRow[0].ZeroCount,
-                        Count = lastRow[0].Count,
-                        WinLossPercent = lastRow[0].WinLossPercent,
-                        AvgWin = lastRow[0].AvgWin,
-                        AvgLoss = lastRow[0].AvgLoss,
-                        WinLossRatio = lastRow[0].WinLossRatio,
+                        WinTot = lastRowInList[0].WinTot,
+                        LossTot = lastRowInList[0].LossTot,
+                        WinCount = lastRowInList[0].WinCount,
+                        LossCount = lastRowInList[0].LossCount,
+                        ZeroCount = lastRowInList[0].ZeroCount,
+                        Count = lastRowInList[0].Count,
+                        WinLossPercent = lastRowInList[0].WinLossPercent,
+                        AvgWin = lastRowInList[0].AvgWin,
+                        AvgLoss = lastRowInList[0].AvgLoss,
+                        WinLossRatio = lastRowInList[0].WinLossRatio,
 
                     });
                 }
@@ -1152,7 +1156,7 @@ namespace WindowsFormsApp1
         #endregion FillWinLossColumn
 
         #region FillWinLossSummary
-        //  Fills in far right colums for page summary
+        //  Fills in far right columns for page summary
         //  Will compile stats for multiple days if available
         public static Source FillWinLossSummary(this Source source)
         {
@@ -1483,12 +1487,5 @@ namespace WindowsFormsApp1
         }
         #endregion UpdateActiveEntry
 
-        //public static void Print(this Dummy dummy)
-        //{
-        //    //        Console.WriteLine("Hello from Extension");
-        //    NinjaTrader.Code.Output.Reset(PrintTo.OutputTab1);
-        //    NinjaTrader.Code.Output.Process("Hello from Printer", PrintTo.OutputTab1);
-
-        //}
     }
 }

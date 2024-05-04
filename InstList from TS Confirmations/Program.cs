@@ -48,6 +48,57 @@
  *      Need to reverse list without changing list
  *      https://stackoverflow.com/questions/19102021/how-to-reverse-a-generic-list-without-changing-the-same-list
  *      'foreach (var t1 in Enumerable.Reverse(t.List))'
+ *      
+ * 2024 05 04  
+ *  Extensions:
+ *       public static List<NTDrawLine> CreateNTDrawline(this Source source)
+ *          Creates 'nTDrawLine' which is used to fill output file
+ *          
+ *       public static Source Fill(this Source source)
+ *          Enters data into source.Csv file
+ *          
+ *       public static Source FillDailyPercentColumn(this Source source)
+ *          Fills in DailyPercentColumn only
+ *          
+ *       public static Source FillDailyTotalColumn(this Source source)
+ *          Fills in DailyDollarTotal and TotalTrades only
+ *          
+ *       public static Source FillLongShortColumnInTradesList(this Source source)
+ *          Determines whether entry is a long or short position and fills in Long_Short column for entries
+ *          
+ *       public static Source FillProfitLossColumnInTradesList(this Source source)
+ *          Fills in P/L column
+ *          
+ *       public static Source FillPercentColumn (this Source source)
+ *          Fills in PercentReturn column
+ *          
+ *       public static Source FillDailyWinLossColumn(this Source source)
+ *          Extract P/L from source.Csv.P_L and place in Win/Loss/Zero columns
+ *          Changes source.Csv 
+ *          Fills in last line with sums from CSV.Win and CSV.Loss columns
+ *          If multiple symbols each different symbols has summary values calculated
+ *          Creates lastRowInList list - summary figures that will be overwritten
+ *          
+ *       public static Source FillWinLossSummary(this Source source)
+ *          Fills in far right columns for page summary
+ *          Will compile stats for multiple days if available
+ *          
+ *       public static Source GetActiveEntry(this Source source)  
+ *          On first pass ActiveEntry numbers have been set in Main()
+ *          Get starting entry price row and values
+ *          Start at first entry above exit and search for row that has entry = true and matched = false
+ *          Record starting Id
+ *          
+ *       public static Source MatchAndAddToCsv(this Source source)  
+ *          Called from Fill
+ *          Sets Matched to true for Exit and Entry in source.Trades
+ *          Adds row to csv
+ *          csv will not be in correct order to sort before exit
+ *          
+ *       public static Source UpdateActiveEntry(this Source source)
+ *          Subtracts qty of exits from first entry that is not filled
+ *          To get next open entry after source.ActiveEntryRemaining == 0 work down from top to find first .Matched == false
+ *          All exits will be matched
  */
 
 using LINQtoCSV;
@@ -74,7 +125,7 @@ namespace WindowsFormsApp1
         public static string fileSelectedName = "";
         public static int lineCount = 0;
         public static List<Ret> instList = new List<Ret>();
-        public static List<CSV> lastRow = new List<CSV>();
+        public static List<CSV> lastRowInList = new List<CSV>();
     }
     public static class Program
     {
