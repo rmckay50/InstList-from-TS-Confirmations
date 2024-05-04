@@ -84,7 +84,8 @@ namespace WindowsFormsApp1
                     Console.WriteLine( ex );
                 }
             }
-            LastRow:
+        LastRow:
+            var x = Variables.lastRow[0].Ptotal;
                 nTDrawLine.Add(new NTDrawLine
                 {
                     WinTot = lastRow[0].WinTot,
@@ -1064,7 +1065,7 @@ namespace WindowsFormsApp1
                 if (numberOfSymbols > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    Variables.lastRow.Add(
+                    lastRow.Add(
                         new CSV
                         {
                             WinTot = workingCsv[rows].WinTot,
@@ -1151,6 +1152,8 @@ namespace WindowsFormsApp1
         #endregion FillWinLossColumn
 
         #region FillWinLossSummary
+        //  Fills in far right colums for page summary
+        //  Will compile stats for multiple days if available
         public static Source FillWinLossSummary(this Source source)
         {
             #region Variables
