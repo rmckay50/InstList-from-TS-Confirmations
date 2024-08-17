@@ -99,7 +99,7 @@
  *          Subtracts qty of exits from first entry that is not filled
  *          To get next open entry after source.ActiveEntryRemaining == 0 work down from top to find first .Matched == false
  *          All exits will be matched
- */
+ */ 
 
 using LINQtoCSV;
 using System;
