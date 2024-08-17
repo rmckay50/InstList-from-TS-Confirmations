@@ -665,7 +665,7 @@ namespace WindowsFormsApp1
                             pl.P_L = (double)pl.Entry - (double)pl.Exit;
 
 							//  Multiply PL by qty to get correct value
-							pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
+							//pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
 							pl.P_L = (double)pl.Qty * (Double)pl.P_L;
 
 						}
