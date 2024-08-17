@@ -528,11 +528,11 @@ namespace WindowsFormsApp1
             cc.Write
             (
             columnsWithAttributes,
-            @"C:\Data\InstList.csv"
+            @"C:\Data\InstList.csv" 
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 05 May\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 08 Aug\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {

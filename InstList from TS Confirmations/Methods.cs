@@ -6,6 +6,7 @@ using static WindowsFormsApp1.Classes;
 using static WindowsFormsApp1.Enums;
 using static WindowsFormsApp1.Variables;
 using System.Globalization;
+using System.Windows.Forms;
 
 
 namespace InstList_from_TS_Confirmations
@@ -20,7 +21,7 @@ namespace InstList_from_TS_Confirmations
             List<Ret> instList = new List<Ret>();
             if (fileSource == FileSource.TSWebsite)
             {
-                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 05 May\Downloads";
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 08 Aug\Downloads";
                 title = "Select Confirmation From Website.csv";
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
@@ -41,11 +42,19 @@ namespace InstList_from_TS_Confirmations
                 //	Trim '.csv' from string
                 fileSelected = fileSelected.Replace("Confirmation From Website.csv", "");
 
-                //  Trim file path - keep name
-                //  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
-                fileSelectedName = fileSelected.Remove(0, 96);
-                fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
+				//  Trim file path - keep name
+				//  delete characters up to start of file name '\\RYZEN-1\TradeManagerAnalysis\'
+				try
+				{
+					fileSelectedName = fileSelected.Remove(0, 96);
+					//MessageBox.Show($"{fileSelectedName}");
+					fileSelectedName = fileSelectedName.Replace("Downloads", "Results"); //   2024 Jan\Downloads\2024 01 12
 
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex);
+				}
                 //	Create new file name 'xxx Modified.csv'
                 string filePathIDrive = fileSelected + " Modified.csv";
 

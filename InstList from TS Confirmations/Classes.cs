@@ -136,7 +136,7 @@ namespace WindowsFormsApp1
             public double? WinLossPercent { get; set; }
             public double? AvgWin { get; set; }
             public double? AvgLoss { get; set; }
-            public double WinLossRatio { get; set; }
+            public double? WinLossRatio { get; set; }
             public string PBlank { get; set; }
             public double? PwinTot { get; set; }
             public double? PlossTot { get; set; }
