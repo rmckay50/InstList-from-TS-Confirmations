@@ -163,8 +163,9 @@ namespace InstList_from_TS_Confirmations
                         TradeTime = timeOnly,
                         TimeTicks = timeInTicks,
                         DTTradeTime = dt,
-                        Price = Math.Round(Convert.ToDouble(subs[count + 1]), 2),
-                        Qty = Int32.Parse(subs[count])
+                        //Price = Math.Round(Convert.ToDouble(subs[count + 1]), 2),
+						Price = Convert.ToDouble(subs[count + 1]),
+						Qty = Int32.Parse(subs[count])
                     });
 
                     //if (subs[6] == "TSLA")

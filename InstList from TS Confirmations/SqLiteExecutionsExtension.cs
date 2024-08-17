@@ -644,9 +644,11 @@ namespace WindowsFormsApp1
                             pl.P_L = (double)pl.Exit - (double)pl.Entry;
 
                             //  Multiply PL by qty to get correct value
-                            pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2); 
-                        }
-                        catch
+                            //pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
+							pl.P_L = (double)pl.Qty * (Double)pl.P_L;
+
+						}
+						catch
                         {
                             //ln = LineNumber();
                             //ln.Dump("long catch block");
@@ -662,10 +664,12 @@ namespace WindowsFormsApp1
                         {
                             pl.P_L = (double)pl.Entry - (double)pl.Exit;
 
-                            //  Multiply PL by qty to get correct value
-                            pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
-                        }
-                        catch (Exception ex)
+							//  Multiply PL by qty to get correct value
+							pl.P_L = (double)pl.Qty * Math.Round((Double)pl.P_L, 2);
+							pl.P_L = (double)pl.Qty * (Double)pl.P_L;
+
+						}
+						catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
                         }
