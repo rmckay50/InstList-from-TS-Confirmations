@@ -196,7 +196,8 @@ namespace WindowsFormsApp1
             //	Need to know where trading starts
             lineCount = 0;
             int currentPosition = 0;
-            foreach (var bT in instList)
+			instList = instList.OrderBy(j => j.Name).ThenBy(j => j.Time).ToList();
+			foreach (var bT in instList)
             {
                 //	Check for first pass
                 if (lineCount == 0)
@@ -329,10 +330,10 @@ namespace WindowsFormsApp1
             }
             //	Top row is now first trade in selected list - Position != 0
             trades.Reverse();
-            //workingTrades = trades.ToList();
-            workingTrades = trades.OrderBy(j => j.Name).ThenBy(j => j.Time).ToList();
+			workingTrades = trades.ToList();
+			//workingTrades = trades.OrderBy(j => j.Name).ThenBy(j => j.Time).ToList();
 
-            trades.Clear();
+			trades.Clear();
 
             #endregion Create List<Trade> workingTrades
 
