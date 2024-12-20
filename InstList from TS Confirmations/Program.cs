@@ -533,7 +533,7 @@ namespace WindowsFormsApp1
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 08 Aug\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 10 Oct\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {
