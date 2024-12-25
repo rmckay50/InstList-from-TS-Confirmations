@@ -465,7 +465,7 @@ namespace WindowsFormsApp1
 
             #region Create NTDrawLine list for use in saving to file and later in NT
 
-            //source.NTDrawLine = source.CreateNTDrawline();
+            source.NTDrawLine = source.CreateNTDrawline();
 
             #endregion Create NTDrawLine list for use in saving to file and later in NT
 
