@@ -13,6 +13,80 @@ namespace WindowsFormsApp1
     public static class MySQLiteExtensions
     {
         #region Create NTDrawline for save to .csv
+        public static List<NTDrawLine> CreateNTDrawline(this Source source)
+        {
+            // NTDrawLine -> Id, EntryPrice, EntryTime(ticks), ExitPrice, ExitTime(ticks)
+            List<NTDrawLine> nTDrawLine = new List<NTDrawLine>();
+            // Counter for nTDrawLine lines
+
+            foreach (var csv in source.Csv)
+            {
+                try
+                {
+                    var t = DateTime.Parse(csv.StartTime).Ticks;
+
+                    nTDrawLine.Add(
+                        new NTDrawLine
+                        {
+                            Id = 0,
+                            Playback = false,
+                            Symbol = csv.Name,
+                            Long_Short = csv.Long_Short,
+                            StartTimeTicks = (long)csv.StartTimeTicks,
+                            StartTime = DateTime.Parse(csv.StartTime).ToString("HH:mm:ss  MM/dd/yyy"),
+                            StartY = (double)csv.Entry,
+                            EndTimeTicks = (long)csv.EndTimeTicks,
+                            EndTime = DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
+                            EndY = (double)csv.Exit,
+                            P_L = (double)csv.P_L,
+                            Qty = (int)csv.Qty,
+                            P_LDividedByQty = csv.P_LDividedByQty,
+                            Percent = (double?)csv.PercentReturn,
+                            DailyPercentTotal = (double?)csv.DailyPercentTotal,
+                            DailyDollarTotal = (double?)csv.DailyDollarTotal,
+                            TotalTrades = (int?)csv.TotalTrades,
+                            Win = csv.Win,
+                            Loss = csv.Loss,
+                            Zero = (double?)csv.Zero,
+                            WinTot = csv.WinTot,
+                            LossTot = csv.LossTot,
+                            WinCount = csv.WinCount,
+                            LossCount = csv.LossCount,
+                            ZeroCount = csv.ZeroCount,
+                            Count = csv.Count,
+                            WinLossPercent = csv.WinLossPercent,
+                            AvgWin = csv.AvgWin,
+                            AvgLoss = csv.AvgLoss,
+                            WinLossRatio = csv.WinLossRatio,
+                            PBlank = csv.PBlank,
+                            PwinTot = csv.PwinTot,
+                            PlossTot = csv.PlossTot,
+                            Ptotal = csv.Ptotal,
+                            PwinCount = csv.PwinCount,
+                            PlossCount = csv.PlossCount,
+                            PzeroCount = csv.PzeroCount,
+                            Pcount = csv.Pcount,
+                            PwinLossPercent = csv.PwinLossPercent,
+                            PavgWin = csv.PavgWin,
+                            PavgLoss = csv.PavgLoss,
+                            PwinLossRatio = csv.PwinLossRatio
+                        }
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+            int nTDrawLineId = 0;
+            foreach (var e in nTDrawLine)
+            {
+                e.Id = nTDrawLineId;
+                nTDrawLineId++;
+            }
+
+            return nTDrawLine;
+        }
 
 
         #endregion Create NTDrawline for save to .csv

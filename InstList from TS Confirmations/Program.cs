@@ -106,7 +106,10 @@
  *      Assuming that at some point I copied it and hit cut instead.
  *      Extension is intact in NinjaTrader.Custom.sln in Ryzen-2 and ZBook
  *      Creating new branch and adding the extension from NinjaTrader.Custom.sln
- */ 
+ *      Copied CreateNTDrawline() from NinjaTrader.Custom.AddOns.SqLiteExecutionsExtension to SqLiteExecutionsExtension
+ *	    Problem solved.
+ *	    
+ */
 
 using LINQtoCSV;
 using System;
@@ -540,7 +543,7 @@ namespace WindowsFormsApp1
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 10 Oct\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 11 Nov\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {
