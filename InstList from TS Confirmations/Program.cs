@@ -1,4 +1,4 @@
-﻿/*
+﻿/* 
  * Summary of code in different sections
  * 
  * 1 - 103      Read in data from '2024 01 08 Confirmation From Website.csv' (linesToKeep)
@@ -465,7 +465,7 @@ namespace WindowsFormsApp1
 
             #region Create NTDrawLine list for use in saving to file and later in NT
 
-            source.NTDrawLine = source.CreateNTDrawline();
+            //source.NTDrawLine = source.CreateNTDrawline();
 
             #endregion Create NTDrawLine list for use in saving to file and later in NT
 
