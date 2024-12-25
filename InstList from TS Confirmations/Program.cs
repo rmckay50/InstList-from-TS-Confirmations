@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*  
  * Summary of code in different sections
  * 
  * 1 - 103      Read in data from '2024 01 08 Confirmation From Website.csv' (linesToKeep)
@@ -99,6 +99,13 @@
  *          Subtracts qty of exits from first entry that is not filled
  *          To get next open entry after source.ActiveEntryRemaining == 0 work down from top to find first .Matched == false
  *          All exits will be matched
+ *          
+ *  2024 12 25
+ *      Error that Classes.Source does not contain a definition for 'CreateNTDrawline'
+ *      The extension is missing from #region sttements.
+ *      Assuming that at some point I copied it and hit cut instead.
+ *      Extension is intact in NinjaTrader.Custom.sln in Ryzen-2 and ZBook
+ *      Creating new branch and adding the extension from NinjaTrader.Custom.sln
  */ 
 
 using LINQtoCSV;
