@@ -84,18 +84,19 @@ namespace WindowsFormsApp1
         }
         public class MultipleSymbols
         {
-            public string Name { get; set; }
-            public decimal? WinTotal { get; set; }
-            public decimal? LossTotal { get; set; }
-            public decimal? P_L { get; set; }
-            public int? WinCount { get; set; }
-            public int? LossCount { get; set; }
-            public int? ZeroCount { get; set; }
-            public int? TotalCount { get; set; }
-            public decimal? WinLossPercent { get; set; }
-            public decimal? AvgWin { get; set; }
-            public decimal? AvgLoss { get; set; }
-            public decimal? WinLossRatio { get; set; }
+            public string       Name { get; set; }
+            public decimal?      DailyPercentTotal { get; set; }
+            public decimal?     WinTotal { get; set; }
+            public decimal?     LossTotal { get; set; }
+            public decimal?     DailyDollarTotal { get; set; }
+            public int?         WinCount { get; set; }
+            public int?         LossCount { get; set; }
+            public int?         ZeroCount { get; set; }
+            public int?         TotalCount { get; set; }
+            public decimal?     WinLossPercent { get; set; }
+            public decimal?     AvgWin { get; set; }
+            public decimal?     AvgLoss { get; set; }
+            public decimal?     WinLossRatio { get; set; }
 
         }
         public class nameCountP_L

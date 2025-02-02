@@ -823,8 +823,8 @@ namespace WindowsFormsApp1
                 //  date has changed    
                 if (winLoss.P_L > 0)
                 {
-                    winLoss.Win = winLoss.P_L;
-                    winTotal += winLoss.P_L;
+                    winLoss.Win = (double?)Math.Round((double)winLoss.P_L, 2);
+                    winTotal += (double?)Math.Round((double)winLoss.P_L, 2);
                     winLoss.Zero = winLoss.Zero;
                     winLoss.WinTot = null;
                     winLoss.LossTot = null;
@@ -840,8 +840,8 @@ namespace WindowsFormsApp1
                 }
                 else if (winLoss.P_L < 0)
                 {
-                    winLoss.Loss = winLoss.P_L;
-                    lossTotal += winLoss.P_L;
+                    winLoss.Loss = (double?)Math.Round((double)winLoss.P_L, 2);
+                    lossTotal += (double?)Math.Round((double)winLoss.P_L, 2);
                     winLoss.Zero = winLoss.Zero;
                     winLoss.WinTot = null;
                     winLoss.LossTot = null;
@@ -985,15 +985,16 @@ namespace WindowsFormsApp1
                 .Select(e =>
                 new MultipleSymbols
                 {
-                    Name            = e.Key,
-                    WinTotal        = (decimal?)e.Sum(k => k.Win),
-                    LossTotal       = (decimal?)e.Sum(k => k.Loss),
-                    P_L             = (decimal?)e.Sum(k => k.Win) + (decimal?)e.Sum(k => k.Loss),
-                    WinCount        = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
-                    LossCount       = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    TotalCount      = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    WinLossPercent  = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
-                                        / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                    Name                = e.Key,
+                    DailyPercentTotal   = (decimal?)Math.Round((double)e.Sum(k => k.PercentReturn), 2),
+                    WinTotal            = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2),
+                    LossTotal           = (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
+                    DailyDollarTotal    = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2) + (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
+                    WinCount            = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                    LossCount           = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    TotalCount          = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    WinLossPercent      = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                                            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
                 })
                 .OrderBy(e => e.Name)
                 .ToList();
@@ -1037,21 +1038,43 @@ namespace WindowsFormsApp1
                 if (multipleSymbols.Count() > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    lastRow.Add(
-                        new CSV
+                    //lastRow.Add(
+                    //    new CSV
+                    //    {
+                    //        DailyPercentTotal   = workingCsv[rows].DailyPercentTotal,
+                    //        DailyDollarTotal    = workingCsv[rows].DailyDollarTotal,
+                    //        WinTot = workingCsv[rows].WinTot,
+                    //        LossTot = workingCsv[rows].LossTot,
+                    //        WinCount = workingCsv[rows].WinCount,
+                    //        LossCount = workingCsv[rows].LossCount,
+                    //        ZeroCount = workingCsv[rows].ZeroCount,
+                    //        Count = workingCsv[rows].Count,
+                    //        WinLossPercent = workingCsv[rows].WinLossPercent,
+                    //        AvgWin = workingCsv[rows].AvgWin,
+                    //        AvgLoss = workingCsv[rows].AvgLoss,
+                    //        WinLossRatio = workingCsv[rows].WinLossRatio,
+                    //    });
+                    //  Calculate sums of P/L and percent columns int list - sums
+                    var sums = workingCsv
+                        .GroupBy(i => i.RemainingExits)
+                        .Select(i => new
                         {
-                            WinTot = workingCsv[rows].WinTot,
-                            LossTot = workingCsv[rows].LossTot,
-                            WinCount = workingCsv[rows].WinCount,
-                            LossCount = workingCsv[rows].LossCount,
-                            ZeroCount = workingCsv[rows].ZeroCount,
-                            Count = workingCsv[rows].Count,
-                            WinLossPercent = workingCsv[rows].WinLossPercent,
-                            AvgWin = workingCsv[rows].AvgWin,
-                            AvgLoss = workingCsv[rows].AvgLoss,
-                            WinLossRatio = workingCsv[rows].WinLossRatio,
-                        });
+                            DailyDollarTotal = Math.Round(i.Sum(j => j.P_L), 2 ),
+                            DailyPercentTotal = i.Sum(j => j.PercentReturn)
+                        })
+                        .ToList();
 
+                    //  fill in lastRow values
+                    lastRow.Add(
+                    new CSV
+                    {
+                        DailyPercentTotal = sums[0].DailyPercentTotal,
+                        DailyDollarTotal = sums[0].DailyDollarTotal,
+                        TotalTrades = (int?)(winCount + lossCount + zeroCount),
+                        Win = winTotal,
+                        Loss = lossTotal,
+
+                    });
                     //PwinTot = workingCsv[rows].PwinTot,
                     //PlossTot = workingCsv[rows].PlossTot,
                     //Ptotal = workingCsv[rows].Ptotal,
@@ -1072,16 +1095,21 @@ namespace WindowsFormsApp1
                         {
                             if (x.Name == y.Name)
                             { 
-                                y.WinTot = (double?)x.WinTotal;
-                                y.LossTot = (double?)x.LossTotal;
-                                y.WinCount = x.WinCount;
-                                y.LossCount = x.LossCount;
-                                y.ZeroCount = x.ZeroCount;
-                                y.Count = x.TotalCount;
-                                y.WinLossPercent = (double?)x.WinLossPercent;
-                                y.AvgWin = (double?)x.AvgWin;
-                                y.AvgLoss = (double?)x.AvgLoss;
-                                y.WinLossRatio = (double?)x.WinLossRatio;
+                                y.DailyPercentTotal = (double?)x.DailyPercentTotal;
+                                y.WinTot            = (double?)x.WinTotal;
+                                y.LossTot           = (double?)x.LossTotal;
+                                //y.DailyDollarTotal  = (double?)Math.Round((double)x.DailyDollarTotal, 2);
+                                y.DailyDollarTotal = (double)x.DailyDollarTotal;
+
+                                y.WinCount          = x.WinCount;
+                                y.LossCount         = x.LossCount;
+                                y.ZeroCount         = x.ZeroCount;
+                                y.TotalTrades       = x.LossCount + x.WinCount;
+                                y.Count             = x.TotalCount;
+                                y.WinLossPercent    = (double?)x.WinLossPercent;
+                                y.AvgWin            = (double?)x.AvgWin;
+                                y.AvgLoss           = (double?)x.AvgLoss;
+                                y.WinLossRatio      = (double?)x.WinLossRatio;
                                 break;
                             }
                         }
@@ -1090,18 +1118,23 @@ namespace WindowsFormsApp1
                     workingCsv.ToList();
 
                     source.Csv = workingCsv;
+
+                    //  Add new row to source.Csv (values in lastRow)
                     source.Csv.Add(new CSV
                     {
-                        WinTot = lastRow[0].WinTot,
-                        LossTot = lastRow[0].LossTot,
-                        WinCount = lastRow[0].WinCount,
-                        LossCount = lastRow[0].LossCount,
-                        ZeroCount = lastRow[0].ZeroCount,
-                        Count = lastRow[0].Count,
-                        WinLossPercent = lastRow[0].WinLossPercent,
-                        AvgWin = lastRow[0].AvgWin,
-                        AvgLoss = lastRow[0].AvgLoss,
-                        WinLossRatio = lastRow[0].WinLossRatio,
+                        DailyPercentTotal   = lastRow[0].DailyPercentTotal,
+                        DailyDollarTotal    = lastRow[0].DailyDollarTotal,
+                        TotalTrades         = lastRow[0].TotalTrades,
+                        WinTot              = lastRow[0].WinTot,
+                        LossTot             = lastRow[0].LossTot,
+                        WinCount            = lastRow[0].WinCount,
+                        LossCount           = lastRow[0].LossCount,
+                        ZeroCount           = lastRow[0].ZeroCount,
+                        Count               = lastRow[0].Count,
+                        WinLossPercent      = lastRow[0].WinLossPercent,
+                        AvgWin              = lastRow[0].AvgWin,
+                        AvgLoss             = lastRow[0].AvgLoss,
+                        WinLossRatio        = lastRow[0].WinLossRatio,
 
                     });
                 }
