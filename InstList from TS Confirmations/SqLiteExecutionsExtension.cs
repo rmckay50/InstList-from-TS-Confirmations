@@ -958,7 +958,7 @@ namespace WindowsFormsApp1
             //  Make copy of source.Csv
             if (Variables.fileSource == FileSource.TSWebsite)
             {
-                //  Make copy of source.Csv. source.Csv no has Win / Loss in columns and day summary at bottom
+                //  Make copy of source.Csv. source.Csv has no Win / Loss in columns and day summary at bottom
                 foreach (var v in source.Csv)
                 {
                     workingCsv.Add(v);
@@ -985,19 +985,20 @@ namespace WindowsFormsApp1
                 .Select(e =>
                 new MultipleSymbols
                 {
-                    Name = e.Key,
-                    WinTotal = (decimal?)e.Sum(k => k.Win),
-                    LossTotal = (decimal?)e.Sum(k => k.Loss),
-                    WinCount = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
-                    LossCount = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
-                    / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                    Name            = e.Key,
+                    WinTotal        = (decimal?)e.Sum(k => k.Win),
+                    LossTotal       = (decimal?)e.Sum(k => k.Loss),
+                    P_L             = (decimal?)e.Sum(k => k.Win) + (decimal?)e.Sum(k => k.Loss),
+                    WinCount        = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                    LossCount       = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    TotalCount      = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    WinLossPercent  = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                                        / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
                 })
                 .OrderBy(e => e.Name)
                 .ToList();
 
-                //  Caculate win / loss count and win / loss ration
+                //  Caculate win / loss count and win / loss ratio
                 foreach (var x in multipleSymbols)
                 {
                     if (x.WinCount != 0)
