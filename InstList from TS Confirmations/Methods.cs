@@ -21,7 +21,7 @@ namespace InstList_from_TS_Confirmations
             List<Ret> instList = new List<Ret>();
             if (fileSource == FileSource.TSWebsite)
             {
-                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 11 Nov\Downloads";
+                initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2025 01 Jan\Downloads";
                 title = "Select Confirmation From Website.csv";
                 System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 
@@ -411,7 +411,7 @@ namespace InstList_from_TS_Confirmations
         {
             List<Ret> instList = new List<Ret>();
 
-            initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 05 May\Exports";
+            initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\NinjaTrader Exports\2024 07 Jul\Exports";
             title = "Select Export from NinjaTrader";
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
 

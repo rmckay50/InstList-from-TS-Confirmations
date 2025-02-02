@@ -109,6 +109,31 @@
  *      Copied CreateNTDrawline() from NinjaTrader.Custom.AddOns.SqLiteExecutionsExtension to SqLiteExecutionsExtension
  *	    Problem solved.
  *	    
+ *  DOWNLOAD AND PROCESS DATA FROM TS WEBSITE:	
+		Download confirmations from TS Website into Downloads
+		Add correct month to C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2022 02 Feb
+		Add new subfolders Downloads and Results 
+		Set InstiList from TSConfirmations.sln to current task
+			Programs.cs Line 546 - Set correct yyyy mm MM 
+				filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 12 Dec\Results\";
+			Methods.cs Line 24 - Set correct yyyy mm MM
+				initialDirectory = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 12 Dec\Downloads";
+		Open .pdf downloads into browser
+		Copy trades into Notepad++ and save in C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 12 Dec\Downloads as .csv
+		Create .csv file from each confirmation '2024 12 24  Confirmation Results.csv'
+		Open Results files and copy differnt stock groups (split into stock groups by InstList from TS Confirmations) into stock master files in	
+			C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\CsvFiles
+ *      Add title line to file and sort by symbol/starttimeticks
+ *      Copy symbol groups to files in C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\CsvFiles
+ *      Save Monthly Master initially and the as Master Sorted
+ *      		To view stocks master file set indicator paramaters to:
+			Instrument Type
+				Stocks
+			Account
+				Sim101
+			Input File
+				NinjaTrader - defaults to 'C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite' from State.SetDefaults
+
  */
 
 using LINQtoCSV;
@@ -543,7 +568,7 @@ namespace WindowsFormsApp1
             );
             if (fileSource == FileSource.TSWebsite || fileSource == FileSource.TSApp)
             {
-                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2024 11 Nov\Results\";
+                filePath = @"C:\Users\Rod\AppData\Local\NinjaTrader\NinjaTrader Data\Data from Website\2025 01 Jan\Results\";
             }
             else if (fileSource == FileSource.NTExport)
             {
