@@ -100,23 +100,38 @@ namespace WindowsFormsApp1
             //  Add Id's to NnTDrawLine
             int nTDrawLineId = 0;
             int row = 0;
-            bool alreadyAdded = false;
+            bool notAdded = true;
             var currentSymbol = nTDrawLine[0].Symbol;
             List<NTDrawLine> newList = new List<NTDrawLine>();
             foreach (var e in nTDrawLine)
             {
+                //  compare symbol in play with newest line symbol
+                //  If the same add incremental Id
+                //  Add the line to newlist
+                //  INcrement Id number
                 if (currentSymbol == e.Symbol)
                 {
                     e.Id = nTDrawLineId;
                     newList.Add(e);
                     nTDrawLineId++;
+                    notAdded = true;
                 }
+                 
+                //  Compare previous symbol with current symbol
+                //  If not equal then Symbol has changed
+                //  Add a new blank line to newlist 
+                //  Set notAdded to false
+                //  Add current line to newlist
+                //  Set Id counter to 0 
+                //  Set Id to 0
+                //  update current symbol
+                //  Increment Id counter to 1
                 if (currentSymbol != e.Symbol && e.Symbol != null)
                 {
-                    if (!alreadyAdded)
+                    if (notAdded)
                     {
                         newList.Add(new NTDrawLine());
-                        alreadyAdded = false;
+                        notAdded = false;
                     }
                     
                     newList.Add(e);
@@ -125,9 +140,18 @@ namespace WindowsFormsApp1
                     currentSymbol = e.Symbol;
                     nTDrawLineId++;
                 }
+
+                //  If symbol is equal to null then at end of list
+                //  Add sums (P/L, Percentage, number of trades
+                //  Break out of If()
                 if ( e.Symbol == null)
                 {
-                    e.Playback = null;
+                    newList.Add(new NTDrawLine()
+                    {
+                        DailyPercentTotal = e.DailyPercentTotal,
+                        DailyDollarTotal = e.DailyPercentTotal,
+                        TotalTrades = e.TotalTrades
+                    });
                     break;
                 }
                 row++;
