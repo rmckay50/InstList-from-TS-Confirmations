@@ -23,66 +23,114 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    var t = DateTime.Parse(csv.StartTime).Ticks;
+                    //  Last line in sourve.Csv has only three values
+                    //  Check for Symbol == ""
+                    if (csv.Name != null)
+                    {
+                        var t = DateTime.Parse(csv.StartTime).Ticks;
 
-                    nTDrawLine.Add(
-                        new NTDrawLine
-                        {
-                            Id = 0,
-                            Playback = false,
-                            Symbol = csv.Name,
-                            Long_Short = csv.Long_Short,
-                            StartTimeTicks = (long)csv.StartTimeTicks,
-                            StartTime = DateTime.Parse(csv.StartTime).ToString("HH:mm:ss  MM/dd/yyy"),
-                            StartY = (double)csv.Entry,
-                            EndTimeTicks = (long)csv.EndTimeTicks,
-                            EndTime = DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
-                            EndY = (double)csv.Exit,
-                            P_L = (double)csv.P_L,
-                            Qty = (int)csv.Qty,
-                            P_LDividedByQty = csv.P_LDividedByQty,
-                            Percent = (double?)csv.PercentReturn,
-                            DailyPercentTotal = (double?)csv.DailyPercentTotal,
-                            DailyDollarTotal = (double?)csv.DailyDollarTotal,
-                            TotalTrades = (int?)csv.TotalTrades,
-                            Win = csv.Win,
-                            Loss = csv.Loss,
-                            Zero = (double?)csv.Zero,
-                            WinTot = csv.WinTot,
-                            LossTot = csv.LossTot,
-                            WinCount = csv.WinCount,
-                            LossCount = csv.LossCount,
-                            ZeroCount = csv.ZeroCount,
-                            Count = csv.Count,
-                            WinLossPercent = csv.WinLossPercent,
-                            AvgWin = csv.AvgWin,
-                            AvgLoss = csv.AvgLoss,
-                            WinLossRatio = csv.WinLossRatio,
-                            PBlank = csv.PBlank,
-                            PwinTot = csv.PwinTot,
-                            PlossTot = csv.PlossTot,
-                            Ptotal = csv.Ptotal,
-                            PwinCount = csv.PwinCount,
-                            PlossCount = csv.PlossCount,
-                            PzeroCount = csv.PzeroCount,
-                            Pcount = csv.Pcount,
-                            PwinLossPercent = csv.PwinLossPercent,
-                            PavgWin = csv.PavgWin,
-                            PavgLoss = csv.PavgLoss,
-                            PwinLossRatio = csv.PwinLossRatio
-                        }
-                    );
+                        nTDrawLine.Add(
+                            new NTDrawLine
+                            {
+                                Id = 0,
+                                Playback = false,
+                                Symbol = csv.Name,
+                                Long_Short = csv.Long_Short,
+                                StartTimeTicks = (long)csv.StartTimeTicks,
+                                StartTime = DateTime.Parse(csv.StartTime).ToString("HH:mm:ss  MM/dd/yyy"),
+                                StartY = (double)csv.Entry,
+                                EndTimeTicks = (long)csv.EndTimeTicks,
+                                EndTime = DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
+                                EndY = (double)csv.Exit,
+                                P_L = (double)csv.P_L,
+                                Qty = (int)csv.Qty,
+                                P_LDividedByQty = csv.P_LDividedByQty,
+                                Percent = (double?)csv.PercentReturn,
+                                DailyPercentTotal = (double?)csv.DailyPercentTotal,
+                                DailyDollarTotal = (double?)csv.DailyDollarTotal,
+                                TotalTrades = (int?)csv.TotalTrades,
+                                Win = csv.Win,
+                                Loss = csv.Loss,
+                                Zero = (double?)csv.Zero,
+                                WinTot = csv.WinTot,
+                                LossTot = csv.LossTot,
+                                WinCount = csv.WinCount,
+                                LossCount = csv.LossCount,
+                                ZeroCount = csv.ZeroCount,
+                                Count = csv.Count,
+                                WinLossPercent = csv.WinLossPercent,
+                                AvgWin = csv.AvgWin,
+                                AvgLoss = csv.AvgLoss,
+                                WinLossRatio = csv.WinLossRatio,
+                                PBlank = csv.PBlank,
+                                PwinTot = csv.PwinTot,
+                                PlossTot = csv.PlossTot,
+                                Ptotal = csv.Ptotal,
+                                PwinCount = csv.PwinCount,
+                                PlossCount = csv.PlossCount,
+                                PzeroCount = csv.PzeroCount,
+                                Pcount = csv.Pcount,
+                                PwinLossPercent = csv.PwinLossPercent,
+                                PavgWin = csv.PavgWin,
+                                PavgLoss = csv.PavgLoss,
+                                PwinLossRatio = csv.PwinLossRatio
+                            }
+                        );
+                    }
+                    else if (csv.Name == null)
+                    {
+                        var x = "Stop";
+                        nTDrawLine.Add(
+                            new NTDrawLine
+                            {
+                                DailyPercentTotal = (double?)csv.DailyPercentTotal,
+                                DailyDollarTotal = (double?)csv.DailyDollarTotal,
+                                TotalTrades = (int?)csv.TotalTrades,
+
+                            });
+                        break;
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
             }
+
+            //  Add Id's to NnTDrawLine
             int nTDrawLineId = 0;
+            int row = 0;
+            bool alreadyAdded = false;
+            var currentSymbol = nTDrawLine[0].Symbol;
+            List<NTDrawLine> newList = new List<NTDrawLine>();
             foreach (var e in nTDrawLine)
             {
-                e.Id = nTDrawLineId;
-                nTDrawLineId++;
+                if (currentSymbol == e.Symbol)
+                {
+                    e.Id = nTDrawLineId;
+                    newList.Add(e);
+                    nTDrawLineId++;
+                }
+                if (currentSymbol != e.Symbol && e.Symbol != null)
+                {
+                    if (!alreadyAdded)
+                    {
+                        newList.Add(new NTDrawLine());
+                        alreadyAdded = false;
+                    }
+                    
+                    newList.Add(e);
+                    nTDrawLineId = 0;
+                    e.Id = nTDrawLineId;
+                    currentSymbol = e.Symbol;
+                    nTDrawLineId++;
+                }
+                if ( e.Symbol == null)
+                {
+                    e.Playback = null;
+                    break;
+                }
+                row++;
             }
 
             return nTDrawLine;
@@ -347,7 +395,7 @@ namespace WindowsFormsApp1
 
             //  use as register to total trade P/L values
             //  initialize with first value because starting poing for foreach is line 2
-            double runningTotal = source[0].P_L;
+            double? runningTotal = source[0].P_L;
 
             //  use as register to count number of trades in the day
             int TotalTrades = 1;

@@ -108,18 +108,18 @@ namespace WindowsFormsApp1
         public class NTDrawLine
         {
             //DateTime startTime, double startY, DateTime endTime, double endY
-            public int Id { get; set; }
-            public bool Playback { get; set; }
+            public int? Id { get; set; }
+            public bool? Playback { get; set; }
             public string Symbol { get; set; }
             public string Long_Short { get; set; }
-            public long StartTimeTicks { get; set; }
+            public long? StartTimeTicks { get; set; }
             public string StartTime { get; set; }
-            public double StartY { get; set; }
-            public long EndTimeTicks { get; set; }
+            public double? StartY { get; set; }
+            public long? EndTimeTicks { get; set; }
             public string EndTime { get; set; }
-            public double EndY { get; set; }
-            public double P_L { get; set; }
-            public int Qty { get; set; }
+            public double? EndY { get; set; }
+            public double? P_L { get; set; }
+            public int? Qty { get; set; }
             public double? P_LDividedByQty { get; set; }
             public double? Percent { get; set; }
             public double? DailyPercentTotal { get; set; }
@@ -184,29 +184,29 @@ namespace WindowsFormsApp1
         public class NTDrawLineForLINQtoCSV
         {
             [CsvColumn(FieldIndex = 1)]
-            public int Id { get; set; }
+            public int? Id { get; set; }
             [CsvColumn(FieldIndex = 2)]
-            public bool Playback { get; set; }
+            public bool? Playback { get; set; }
             [CsvColumn(FieldIndex = 3)]
             public string Symbol { get; set; }
             [CsvColumn(FieldIndex = 4)]
             public string Long_Short { get; set; }
             [CsvColumn(FieldIndex = 5)]
-            public long StartTimeTicks { get; set; }
+            public long? StartTimeTicks { get; set; }
             [CsvColumn(FieldIndex = 6)]
             public string StartTime { get; set; }
             [CsvColumn(FieldIndex = 7)]
-            public double StartY { get; set; }
+            public double? StartY { get; set; }
             [CsvColumn(FieldIndex = 8)]
-            public long EndTimeTicks { get; set; }
+            public long? EndTimeTicks { get; set; }
             [CsvColumn(FieldIndex = 9)]
             public string EndTime { get; set; }
             [CsvColumn(FieldIndex = 10)]
-            public double EndY { get; set; }
+            public double? EndY { get; set; }
             [CsvColumn(FieldIndex = 11)]
-            public double P_L { get; set; }
+            public double? P_L { get; set; }
             [CsvColumn(FieldIndex = 12)]
-            public int Qty { get; set; }
+            public int? Qty { get; set; }
             [CsvColumn(FieldIndex = 13)]
             public double? P_LDividedByQty { get; set; }
             [CsvColumn(FieldIndex = 14)]
