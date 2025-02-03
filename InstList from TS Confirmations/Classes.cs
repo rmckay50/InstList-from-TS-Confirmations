@@ -23,9 +23,9 @@ namespace WindowsFormsApp1
         }
         public class CSV
         {
-            public int EntryId { get; set; } 
+            public int? EntryId { get; set; } 
             public string Name { get; set; }
-            public int FilledBy { get; set; }
+            public int? FilledBy { get; set; }
             public long? RemainingExits { get; set; } 
             public long? StartTimeTicks { get; set; }
             public string StartTime { get; set; }
@@ -34,7 +34,7 @@ namespace WindowsFormsApp1
             public string EndTime { get; set; }
             public double? Exit { get; set; } 
             public string Long_Short { get; set; }
-            public double P_L { get; set; }
+            public double? P_L { get; set; }
             public long? Qty { get; set; } 
             public double? P_LDividedByQty { get; set; }
             public double? PercentReturn { get; set; }

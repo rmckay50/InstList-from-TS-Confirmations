@@ -454,12 +454,12 @@ namespace WindowsFormsApp1
             {
                 //	fill in blank spaces from workingTrades with time and tick//
 
-                csv.Name = workingTrades[csv.EntryId].Name;
-                csv.StartTimeTicks = workingTrades[csv.EntryId].Time;
-                csv.StartTime = workingTrades[csv.EntryId].HumanTime;
-                csv.EndTimeTicks = workingTrades[csv.FilledBy].Time;
-                csv.EndTime = workingTrades[csv.FilledBy].HumanTime;
-                csv.Long_Short = workingTrades[csv.EntryId].Long_Short;
+                csv.Name = workingTrades[(int)csv.EntryId].Name;
+                csv.StartTimeTicks = workingTrades[(int)csv.EntryId].Time;
+                csv.StartTime = workingTrades[(int)csv.EntryId].HumanTime;
+                csv.EndTimeTicks = workingTrades[(int)csv.FilledBy].Time;
+                csv.EndTime = workingTrades[(int)csv.FilledBy].HumanTime;
+                csv.Long_Short = workingTrades[(int)csv.EntryId].Long_Short;
             }
 
             #endregion foreach through .csv and add StarTimeTicks StartTime ExitTimeTicks ExitTime
@@ -488,13 +488,13 @@ namespace WindowsFormsApp1
 
             #region Fill in Daily Percent Column
 
-            source.FillDailyPercentColumn();
+            //source.FillDailyPercentColumn();
             #endregion Fill in Daily Percent Column
 
             #region Fill in Daily Total Column
 
             //	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
-            source.FillDailyTotalColumn();
+            //source.FillDailyTotalColumn();
 
             #endregion Fill in Daily Total Column
 

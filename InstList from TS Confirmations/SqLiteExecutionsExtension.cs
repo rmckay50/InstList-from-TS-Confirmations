@@ -149,7 +149,7 @@ namespace WindowsFormsApp1
                     newList.Add(new NTDrawLine()
                     {
                         DailyPercentTotal = e.DailyPercentTotal,
-                        DailyDollarTotal = e.DailyPercentTotal,
+                        DailyDollarTotal = e.DailyDollarTotal,
                         TotalTrades = e.TotalTrades
                     });
                     break;
@@ -157,7 +157,7 @@ namespace WindowsFormsApp1
                 row++;
             }
 
-            return nTDrawLine;
+            return newList;
         }
 
 
@@ -335,7 +335,7 @@ namespace WindowsFormsApp1
 
             //  use as register to total trade P/L values
             //  initialize with first value because starting poing for foreach is line 2
-            double runningTotal = source.Csv[0].P_L;
+            double? runningTotal = source.Csv[0].P_L;
 
             //  use as register to count number of trades in the day
             int TotalTrades = 1;
@@ -429,8 +429,6 @@ namespace WindowsFormsApp1
 
             // remove duplicates
             var sourceDistinct = source.DistinctBy(c => c.StartTimeTicks);
-
-
 
             //returnedClassPlayBackTrades = from l in returnedClass
             //                              where l.Playback == true
@@ -1131,7 +1129,7 @@ namespace WindowsFormsApp1
                         .GroupBy(i => i.RemainingExits)
                         .Select(i => new
                         {
-                            DailyDollarTotal = Math.Round(i.Sum(j => j.P_L), 2 ),
+                            DailyDollarTotal = Math.Round((double)i.Sum(j => j.P_L), 2 ),
                             DailyPercentTotal = i.Sum(j => j.PercentReturn)
                         })
                         .ToList();
