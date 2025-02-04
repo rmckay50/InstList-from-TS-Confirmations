@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
                 try
                 {
                     //  Last line in sourve.Csv has only three values
-                    //  Check for Symbol == ""
+                    //  Check for Symbol == null
                     if (csv.Name != null)
                     {
                         var t = DateTime.Parse(csv.StartTime).Ticks;
@@ -77,9 +77,9 @@ namespace WindowsFormsApp1
                             }
                         );
                     }
+                    //  Add last line to nTDrawLine - contains days sums
                     else if (csv.Name == null)
                     {
-                        var x = "Stop";
                         nTDrawLine.Add(
                             new NTDrawLine
                             {
@@ -98,70 +98,6 @@ namespace WindowsFormsApp1
             }
             nTDrawLine = nTDrawLine.CreateNewList();
 
-            #region Moved into CreateNewList
-            /*
-            //  Add Id's to NnTDrawLine
-            int nTDrawLineId = 0;
-            int row = 0;
-            bool notAdded = true;
-            var currentSymbol = nTDrawLine[0].Symbol;
-            List<NTDrawLine> newList = new List<NTDrawLine>();
-            foreach (var e in nTDrawLine)
-            {
-                //  compare symbol in play with newest line symbol
-                //  If the same add incremental Id
-                //  Add the line to newlist
-                //  INcrement Id number
-                if (currentSymbol == e.Symbol)
-                {
-                    e.Id = nTDrawLineId;
-                    newList.Add(e);
-                    nTDrawLineId++;
-                    notAdded = true;
-                }
-                 
-                //  Compare previous symbol with current symbol
-                //  If not equal then Symbol has changed
-                //  Add a new blank line to newlist 
-                //  Set notAdded to false
-                //  Add current line to newlist
-                //  Set Id counter to 0 
-                //  Set Id to 0
-                //  update current symbol
-                //  Increment Id counter to 1
-                if (currentSymbol != e.Symbol && e.Symbol != null)
-                {
-                    if (notAdded)
-                    {
-                        newList.Add(new NTDrawLine());
-                        notAdded = false;
-                    }
-                    
-                    newList.Add(e);
-                    nTDrawLineId = 0;
-                    e.Id = nTDrawLineId;
-                    currentSymbol = e.Symbol;
-                    nTDrawLineId++;
-                }
-
-                //  If symbol is equal to null then at end of list
-                //  Add sums (P/L, Percentage, number of trades
-                //  Break out of If()
-                if ( e.Symbol == null)
-                {
-                    newList.Add(new NTDrawLine()
-                    {
-                        DailyPercentTotal = e.DailyPercentTotal,
-                        DailyDollarTotal = e.DailyDollarTotal,
-                        TotalTrades = e.TotalTrades
-                    });
-                    break;
-                }
-                row++;
-            }
-            */
-            #endregion Moved into CreateNewList
-
             return nTDrawLine;
         }
         #endregion Create NTDrawline for save to .csv
@@ -173,11 +109,26 @@ namespace WindowsFormsApp1
             //  Add Id's to NnTDrawLine
             int nTDrawLineId = 0;
             int row = 0;
-            bool notAdded = true;
+            //bool notAdded = true;
             var currentSymbol = nTDrawLine[0].Symbol;
-            List<NTDrawLine> newList = new List<NTDrawLine>();
+            double? dailyPercentTotal = 0;
+            double? dailyDollarTotal = 0;
+            int? totalTrades = 0;
+
+
+            List<NTDrawLine> newList = new List<NTDrawLine>(); 
             foreach (var e in nTDrawLine)
             {
+                row++;
+                //  Record DailyPercentTotal, DailyDollarTotal, and TotalTrades if at last line of list
+                //  Will be added to last row in list
+                if ( row == nTDrawLine.Count())
+                {
+                    dailyPercentTotal   = e.DailyPercentTotal;
+                    dailyDollarTotal    = e.DailyDollarTotal;
+                    totalTrades         = e.TotalTrades;
+                }
+
                 //  compare symbol in play with newest line symbol
                 //  If the same add incremental Id
                 //  Add the line to newlist
@@ -187,7 +138,7 @@ namespace WindowsFormsApp1
                     e.Id = nTDrawLineId;
                     newList.Add(e);
                     nTDrawLineId++;
-                    notAdded = true;
+                    //notAdded = true;
                 }
                 //  Compare previous symbol with current symbol
                 //  If not equal then Symbol has changed
@@ -203,7 +154,7 @@ namespace WindowsFormsApp1
                     //if (notAdded)
                     //{
                         newList.Add(new NTDrawLine());
-                        notAdded = false;
+                        //notAdded = false;
                     //}
 
                     newList.Add(e);
@@ -212,25 +163,20 @@ namespace WindowsFormsApp1
                     currentSymbol = e.Symbol;
                     nTDrawLineId++;
                 }
-                //  If symbol is equal to null then at end of list
-                //  Add sums (P/L, Percentage, number of trades
-                //  Break out of If()
-                if (e.Symbol == null)
-                {
+            }
+                //  Insert last line values
                     newList.Add(new NTDrawLine()
                     {
-                        DailyPercentTotal = e.DailyPercentTotal,
-                        DailyDollarTotal = e.DailyDollarTotal,
-                        TotalTrades = e.TotalTrades
+                        DailyPercentTotal   = dailyPercentTotal,
+                        DailyDollarTotal    = dailyDollarTotal,
+                        TotalTrades         = totalTrades
                     });
-                    break;
-                }
-                row++;
-            }
+                    //break;
+                //}
+                //row++;
             return newList;
         }
         #endregion Create NewList - nTDrawLine with blank rows
-
 
         #region Fill
         // 	Extenstion to fill Exit info
@@ -300,7 +246,6 @@ namespace WindowsFormsApp1
         #endregion Fill        
 
         #region FillDailyPercentColumn
-
         public static Source FillDailyPercentColumn(this Source source)
         {
             //  Fills in DailyPercentColumn only
@@ -385,8 +330,6 @@ namespace WindowsFormsApp1
 
             return source;
         }
-
-
         #endregion FillDailyPercentColumn
 
         #region FillDailyTotalColumn
@@ -1076,14 +1019,6 @@ namespace WindowsFormsApp1
                 }
 
             }
-            //  create list with Name, Count (number of trades/symbol)
-            //groupName = workingCsv.GroupBy(i => i.Name)
-            //    .Select(j => new
-            //    {
-            //        Name = j.Key,
-            //        Count = j.Count()
-            //    })
-            //    .OrderBy(i => i.Name).ToList();
 
             #region Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
             //  GroupBy list is created in an if() statement and contenets need to be copied to a 
@@ -1102,24 +1037,11 @@ namespace WindowsFormsApp1
                 {
                     workingCsv.Add(v);
                 }
+
+                //  Sort list by Name and Ticks
                 workingCsv = workingCsv.OrderBy(I => I.Name).ThenBy (i => i.StartTimeTicks).ToList();
-                //  Order workingCsv by symbol Name and fill in Win / Loss totals and calculated results
-                //var workingCsvOrdered = workingCsv.GroupBy(p => p.Name)
-                //    .Select(e => new
-                //    {
-                //        Name = e.Key,
-                //        WinTotal = e.Sum(k => k.Win),
-                //        LossTotal = e.Sum(k => k.Loss),
-                //        WinCount = (decimal?)e.Where(p => p.Win != null).Select(p => p.Win).Count(),
-                //        LossCount = (decimal?)e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                //        TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                //        WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
-                //            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
-                //        AvgWin = e.Sum(k => k.Win) / e.Where(p => p.Win != 0).Select(p => p.Win).Count(),
-                //        AvgLoss = e.Sum(k => k.Loss) / e.Where(p => p.Loss != 0).Select(p => p.Loss).Count(),
-                //    })
-                //    .OrderBy(i => i.Name)
-                //    .ToList(); //.OrderBy(i => i.Name).ThenBy(i => i.StartTimeTicks);
+
+                //  Creat list with 1 entry for each symbol
                 multipleSymbols = workingCsv.GroupBy(i => i.Name)
                 .Select(e =>
                 new MultipleSymbols
@@ -1177,22 +1099,6 @@ namespace WindowsFormsApp1
                 if (multipleSymbols.Count() > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    //lastRow.Add(
-                    //    new CSV
-                    //    {
-                    //        DailyPercentTotal   = workingCsv[rows].DailyPercentTotal,
-                    //        DailyDollarTotal    = workingCsv[rows].DailyDollarTotal,
-                    //        WinTot = workingCsv[rows].WinTot,
-                    //        LossTot = workingCsv[rows].LossTot,
-                    //        WinCount = workingCsv[rows].WinCount,
-                    //        LossCount = workingCsv[rows].LossCount,
-                    //        ZeroCount = workingCsv[rows].ZeroCount,
-                    //        Count = workingCsv[rows].Count,
-                    //        WinLossPercent = workingCsv[rows].WinLossPercent,
-                    //        AvgWin = workingCsv[rows].AvgWin,
-                    //        AvgLoss = workingCsv[rows].AvgLoss,
-                    //        WinLossRatio = workingCsv[rows].WinLossRatio,
-                    //    });
                     //  Calculate sums of P/L and percent columns int list - sums
                     var sums = workingCsv
                         .GroupBy(i => i.RemainingExits)
@@ -1214,17 +1120,6 @@ namespace WindowsFormsApp1
                         Loss = lossTotal,
 
                     });
-                    //PwinTot = workingCsv[rows].PwinTot,
-                    //PlossTot = workingCsv[rows].PlossTot,
-                    //Ptotal = workingCsv[rows].Ptotal,
-                    //PwinCount = workingCsv[rows].PwinCount,
-                    //PlossCount = workingCsv[rows].PlossCount,
-                    //PzeroCount = workingCsv[rows].PzeroCount,
-                    //Pcount = workingCsv[rows].Pcount,
-                    //PwinLossPercent = workingCsv[rows].PwinLossPercent,
-                    //PavgWin = workingCsv[rows].PavgWin,
-                    //PavgLoss = workingCsv[rows].PavgLoss,
-                    //PwinLossRatio = workingCsv[rows].PwinLossRatio,
 
 
                     multipleSymbols.Reverse();
