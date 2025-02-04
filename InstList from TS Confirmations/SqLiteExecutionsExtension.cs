@@ -96,7 +96,10 @@ namespace WindowsFormsApp1
                     Console.WriteLine(ex);
                 }
             }
+            nTDrawLine = nTDrawLine.CreateNewList();
 
+            #region Moved into CreateNewList
+            /*
             //  Add Id's to NnTDrawLine
             int nTDrawLineId = 0;
             int row = 0;
@@ -156,12 +159,78 @@ namespace WindowsFormsApp1
                 }
                 row++;
             }
+            */
+            #endregion Moved into CreateNewList
 
+            return nTDrawLine;
+        }
+        #endregion Create NTDrawline for save to .csv
+
+        #region Create NewList - nTDrawLine with blank rows
+        //  Add Ids and blank lines to source.
+        public static List<NTDrawLine> CreateNewList(this List<NTDrawLine> nTDrawLine)
+        {
+            //  Add Id's to NnTDrawLine
+            int nTDrawLineId = 0;
+            int row = 0;
+            bool notAdded = true;
+            var currentSymbol = nTDrawLine[0].Symbol;
+            List<NTDrawLine> newList = new List<NTDrawLine>();
+            foreach (var e in nTDrawLine)
+            {
+                //  compare symbol in play with newest line symbol
+                //  If the same add incremental Id
+                //  Add the line to newlist
+                //  INcrement Id number
+                if (currentSymbol == e.Symbol)
+                {
+                    e.Id = nTDrawLineId;
+                    newList.Add(e);
+                    nTDrawLineId++;
+                    notAdded = true;
+                }
+                //  Compare previous symbol with current symbol
+                //  If not equal then Symbol has changed
+                //  Add a new blank line to newlist 
+                //  Set notAdded to false
+                //  Add current line to newlist
+                //  Set Id counter to 0 
+                //  Set Id to 0
+                //  update current symbol
+                //  Increment Id counter to 1
+                if (currentSymbol != e.Symbol && e.Symbol != null)
+                {
+                    //if (notAdded)
+                    //{
+                        newList.Add(new NTDrawLine());
+                        notAdded = false;
+                    //}
+
+                    newList.Add(e);
+                    nTDrawLineId = 0;
+                    e.Id = nTDrawLineId;
+                    currentSymbol = e.Symbol;
+                    nTDrawLineId++;
+                }
+                //  If symbol is equal to null then at end of list
+                //  Add sums (P/L, Percentage, number of trades
+                //  Break out of If()
+                if (e.Symbol == null)
+                {
+                    newList.Add(new NTDrawLine()
+                    {
+                        DailyPercentTotal = e.DailyPercentTotal,
+                        DailyDollarTotal = e.DailyDollarTotal,
+                        TotalTrades = e.TotalTrades
+                    });
+                    break;
+                }
+                row++;
+            }
             return newList;
         }
+        #endregion Create NewList - nTDrawLine with blank rows
 
-
-        #endregion Create NTDrawline for save to .csv
 
         #region Fill
         // 	Extenstion to fill Exit info
