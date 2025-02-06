@@ -586,8 +586,14 @@ namespace WindowsFormsApp1
             #endregion Use LINQtoCSV on combined list to write - Not adjusted for LIFO
 
             #region Add results to months master list
+            if ( fileSource == FileSource.TSWebsite )
+            {
 
-            #endregion Add results to months master list 
+
+            }
+
+
+            #endregion Add results to months master list
         }
     }
 }

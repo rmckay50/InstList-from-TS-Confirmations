@@ -420,7 +420,6 @@ namespace WindowsFormsApp1
             (this List<NTDrawLine> source)
 
         {
-
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
@@ -535,7 +534,6 @@ namespace WindowsFormsApp1
 
                 }
             }
-
 
             return sourceOrderBy;
         }
@@ -784,10 +782,11 @@ namespace WindowsFormsApp1
         {
             #region Local variables
             //  Uses sourse.Csv
-            //  File has Id, FilledBy, StartTimeTicks, StartTime, Entry, Endtime.Ticks,
-            //      Exit, Long_Short, P_L, Qty, P_LDivdedByQty, PercentReturn filled in
-            //  This extension fills in Win, Loss WinTot, LossTot WinCount, LossCount, ZeroCount, Count,
-            //      WinlossPercent, AvgWin, AvgLoss, WinLossRatio
+            //  File has Id, Name, FilledBy, RemainingExits, StartTimeTicks, StartTime, Entry, EndtimeTicks,
+            //      EndTime, Long_Short, P_L, Qty, P_LDivdedByQty, PercentReturn filled in
+            //  This extension fills in DailyPercentTotal, DailyDollarTotla, TotalTrades, Win, Loss, Zero,
+            //      WinTot, LossTot, WinCount, LossCount, ZeroCount, Count,
+            //      WinlossPercent, AvgWin, AvgLoss, WinLossRatio and Totals for DailyPercentTotal, DailyDollarTotal, and Total Trades
             //  Keep track of position in .Csv list
             //  At end fill in total values
             double? avgWin = 0;
@@ -1020,6 +1019,13 @@ namespace WindowsFormsApp1
 
             }
 
+            //  At this point the days totals (WinTot - WinLossRatio) are filled in on last line of table (no line has been added)
+            //  Columns above are blank
+            //      WinTot ------ WinLossRatio
+            //          -           -
+            //          -           -
+            //        47.75       0.72
+
             #region Use Linq to Fill In Values - Find Number of Symbols and Trades for Each Symbol
             //  GroupBy list is created in an if() statement and contenets need to be copied to a 
             //      non-local list 'nameCount' List<NameCount> which is a class with Name and Count of names
@@ -1030,6 +1036,7 @@ namespace WindowsFormsApp1
             List<CSV> workingCsv = new List<CSV>();
 
             //  Make copy of source.Csv
+            //      Variables.fileSource == FileSource.TSWebsite will be true because this is only used for TS downloads 
             if (Variables.fileSource == FileSource.TSWebsite)
             {
                 //  Make copy of source.Csv. source.Csv has no Win / Loss in columns and day summary at bottom
@@ -1041,7 +1048,8 @@ namespace WindowsFormsApp1
                 //  Sort list by Name and Ticks
                 workingCsv = workingCsv.OrderBy(I => I.Name).ThenBy (i => i.StartTimeTicks).ToList();
 
-                //  Creat list with 1 entry for each symbol
+                //  Creat list with 1 entry for each symbol in workingCsv
+                //  If there was 1 AMD trade and 4 TSLA trades multiple symbols would contain 2 lines
                 multipleSymbols = workingCsv.GroupBy(i => i.Name)
                 .Select(e =>
                 new MultipleSymbols
@@ -1060,7 +1068,8 @@ namespace WindowsFormsApp1
                 .OrderBy(e => e.Name)
                 .ToList();
 
-                //  Caculate win / loss count and win / loss ratio
+                //  Caculate win / loss count and win / loss ratio for each symbol in multipleSymbols
+                //      and fill in value in multipleSymbols
                 foreach (var x in multipleSymbols)
                 {
                     if (x.WinCount != 0)
@@ -1099,7 +1108,7 @@ namespace WindowsFormsApp1
                 if (multipleSymbols.Count() > 1)
                 {
                     var rows = workingCsv.Count() - 1;
-                    //  Calculate sums of P/L and percent columns int list - sums
+                    //  Calculate sums of P/L and percent columns in workingCsv -> sums
                     var sums = workingCsv
                         .GroupBy(i => i.RemainingExits)
                         .Select(i => new
@@ -1109,7 +1118,9 @@ namespace WindowsFormsApp1
                         })
                         .ToList();
 
-                    //  fill in lastRow values
+                    //  fill in lastRow values - DailyPercentTotal, DailyDollarTotal, TotalTrades, Win, and Loss
+                    //  lastRow is added to the source.Csv list to display totals for all the symbols
+                    //  Looks like this is not done if there is only one symbol
                     lastRow.Add(
                     new CSV
                     {
@@ -1121,7 +1132,10 @@ namespace WindowsFormsApp1
 
                     });
 
-
+                    //  multipleSymbols now contains daily sums for all MultipleSymbols fields
+                    //  Use multipleSymbols values to fill in daily totals in workingCsv
+                    //  All values are copied into workingCsv and transferred to source.Csv
+                    //  Daily totals for DailyPercentTotal, DailyDollarTotal, and TotalTrades are added in a new line (lastRow)
                     multipleSymbols.Reverse();
                     foreach ( var x in multipleSymbols)
                     {
@@ -1173,6 +1187,7 @@ namespace WindowsFormsApp1
                     });
                 }
                 //  create list with Name, Count (number of trades/symbol)
+                //
                 var groupName = workingCsv.GroupBy(i => i.Name)
                     .Select(j => new
                     {
@@ -1197,7 +1212,8 @@ namespace WindowsFormsApp1
             //  Number of rows in nameCount is found with nameCount.Count()
             //var x = nameCount.Count();
 
-
+            //  source.Csv has all columns to PBlank filled in and an extra row added
+            //  source.Csv is not correct for day with one symbol
             return source;
         }
         #endregion FillWinLossColumn
