@@ -1050,27 +1050,27 @@ namespace WindowsFormsApp1
 
                 //  Creat list with 1 entry for each symbol in workingCsv
                 //  If there was 1 AMD trade and 4 TSLA trades multiple symbols would contain 2 lines
-                multipleSymbols = workingCsv.GroupBy(i => i.Name)
-                .Select(e =>
-                new MultipleSymbols
+                var multipleSymbolsNew = workingCsv.GroupBy(i => i.Name)
+                .Select(e => 
+                new MultipleSymbols()
                 {
-                    Name                = e.Key,
-                    DailyPercentTotal   = (decimal?)Math.Round((double)e.Sum(k => k.PercentReturn), 2),
-                    WinTotal            = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2),
-                    LossTotal           = (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
-                    DailyDollarTotal    = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2) + (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
-                    WinCount            = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
-                    LossCount           = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    TotalCount          = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
-                    WinLossPercent      = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
-                                            / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
+                    Name = e.Key,
+                    DailyPercentTotal = (decimal?)Math.Round((double)e.Sum(k => k.PercentReturn), 2),
+                    WinTotal = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2),
+                    LossTotal = (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
+                    DailyDollarTotal = (decimal?)Math.Round((double)e.Sum(k => k.Win), 2) + (decimal?)Math.Round((double)e.Sum(k => k.Loss), 2),
+                    WinCount = e.Where(p => p.Win != null).Select(p => p.Win).Count(),
+                    LossCount = e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    TotalCount = e.Where(p => p.Win != null).Select(p => p.Win).Count() + e.Where(p => p.Loss != null).Select(p => p.Loss).Count(),
+                    WinLossPercent = (decimal)e.Where(p => p.Win != null).Select(p => p.Win).Count()
+                                                / (e.Where(p => p.Loss != null).Select(p => p.Loss).Count() + e.Where(p => p.Win != null).Select(p => p.Win).Count()),
                 })
-                .OrderBy(e => e.Name)
+                //.OrderBy(e => e.Name)
                 .ToList();
 
                 //  Caculate win / loss count and win / loss ratio for each symbol in multipleSymbols
                 //      and fill in value in multipleSymbols
-                foreach (var x in multipleSymbols)
+                foreach (var x in multipleSymbolsNew)
                 {
                     if (x.WinCount != 0)
                     {
@@ -1105,9 +1105,11 @@ namespace WindowsFormsApp1
 
                 // Check how many symbols.  If more than one need to fill in summary for each different symbol
                 // Step through lists from bottom to get result on last line of symbols
-                if (multipleSymbols.Count() > 1)
+                if (multipleSymbolsNew.Count() > 1)
+                //if (multipleSymbolsNew.Count() == 1)
+
                 {
-                    var rows = workingCsv.Count() - 1;
+                        var rows = workingCsv.Count() - 1;
                     //  Calculate sums of P/L and percent columns in workingCsv -> sums
                     var sums = workingCsv
                         .GroupBy(i => i.RemainingExits)
@@ -1136,8 +1138,8 @@ namespace WindowsFormsApp1
                     //  Use multipleSymbols values to fill in daily totals in workingCsv
                     //  All values are copied into workingCsv and transferred to source.Csv
                     //  Daily totals for DailyPercentTotal, DailyDollarTotal, and TotalTrades are added in a new line (lastRow)
-                    multipleSymbols.Reverse();
-                    foreach ( var x in multipleSymbols)
+                    multipleSymbolsNew.Reverse();
+                    foreach ( var x in multipleSymbolsNew)
                     {
                         foreach ( var y in Enumerable.Reverse(workingCsv))
                         {
