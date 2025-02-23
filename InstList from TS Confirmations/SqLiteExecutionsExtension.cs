@@ -252,7 +252,7 @@ namespace WindowsFormsApp1
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
-            var startingDate = source.Csv[0].EndTime.Substring(11);
+            var startingDate = source.Csv[0].EndTime.Substring(9);
 
             //  use to get trade end date to be used for comparison
             var currentTradeDate = "";
@@ -278,7 +278,7 @@ namespace WindowsFormsApp1
                     break;
                 }
                 //  get date of trade ("/MM/dd/yyy")
-                currentTradeDate = c.EndTime.Substring(11);
+                currentTradeDate = c.EndTime.Substring(9);
 
                 //  has date changed - value less than zero is change
                 if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
@@ -340,7 +340,7 @@ namespace WindowsFormsApp1
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
-            var startingDate = source.Csv[0].EndTime.Substring(11);
+            var startingDate = source.Csv[0].EndTime.Substring(9);
 
             //  use to get trade end date to be used for comparison
             var currentTradeDate = "";
@@ -368,7 +368,7 @@ namespace WindowsFormsApp1
                 }
 
                 //  get date of trade ("/MM/dd/yyy")
-                currentTradeDate = c.EndTime.Substring(11);
+                currentTradeDate = c.EndTime.Substring(9);
 
                 //  has date changed - value less than zero is change
                 if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
@@ -423,7 +423,7 @@ namespace WindowsFormsApp1
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
-            var startingDate = source[0].EndTime.Substring(11);
+            var startingDate = source[0].EndTime.Substring(9);
 
             //  use to get trade end date to be used for comparison
             var currentTradeDate = "";
@@ -485,7 +485,7 @@ namespace WindowsFormsApp1
             foreach (var c in sourceOrderBy)
             {
                 //  get date of trade ("/MM/dd/yyy")
-                currentTradeDate = c.EndTime.Substring(11);
+                currentTradeDate = c.EndTime.Substring(9);
 
                 //  has date changed - value less than zero is change
                 if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
@@ -802,7 +802,7 @@ namespace WindowsFormsApp1
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
-            var startingDate = source.Csv[0].EndTime.Substring(11);
+            var startingDate = source.Csv[0].EndTime.Substring(9);
 
             //  use to get trade end date to be used for comparison
             var currentTradeDate = "";
@@ -823,7 +823,7 @@ namespace WindowsFormsApp1
                 //  Keep track of line in list
                 iD++;
                 //  get date of trade ("/MM/dd/yyy")
-                currentTradeDate = winLoss.EndTime.Substring(11);
+                currentTradeDate = winLoss.EndTime.Substring(9);
 
                 //  has date changed - value less than zero is change
                 //  Date doesn't change - fill sourve.Csv values
