@@ -1105,10 +1105,10 @@ namespace WindowsFormsApp1
 
                 // Check how many symbols.  If more than one need to fill in summary for each different symbol
                 // Step through lists from bottom to get result on last line of symbols
-                if (multipleSymbolsNew.Count() > 1)
-                //if (multipleSymbolsNew.Count() == 1)
+                //if (multipleSymbolsNew.Count() > 1)
+                ////if (multipleSymbolsNew.Count() == 1)
 
-                {
+                //{
                         var rows = workingCsv.Count() - 1;
                     //  Calculate sums of P/L and percent columns in workingCsv -> sums
                     var sums = workingCsv
@@ -1164,7 +1164,7 @@ namespace WindowsFormsApp1
                             }
                         }
 
-                    }
+                    //}
                     workingCsv.ToList();
 
                     source.Csv = workingCsv;
